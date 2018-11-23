@@ -76,6 +76,7 @@
             this.CSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CDate_created = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CDate_modified = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.toolStripButton12 = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
@@ -143,6 +144,7 @@
             this.deleteDelToolStripMenuItem.Name = "deleteDelToolStripMenuItem";
             this.deleteDelToolStripMenuItem.Size = new System.Drawing.Size(185, 26);
             this.deleteDelToolStripMenuItem.Text = "Delete        Del";
+            this.deleteDelToolStripMenuItem.Click += new System.EventHandler(this.deleteDelToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -249,6 +251,7 @@
             this.toolStripButton3,
             this.toolStripButton4,
             this.toolStripButton5,
+            this.toolStripButton12,
             this.toolStripSeparator2,
             this.toolStripButton6,
             this.toolStripButton7});
@@ -289,6 +292,7 @@
             this.toolStripButton4.Name = "toolStripButton4";
             this.toolStripButton4.Size = new System.Drawing.Size(89, 36);
             this.toolStripButton4.Text = "Delete";
+            this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
             // 
             // toolStripButton5
             // 
@@ -408,7 +412,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listView);
             this.splitContainer1.Size = new System.Drawing.Size(1382, 454);
-            this.splitContainer1.SplitterDistance = 460;
+            this.splitContainer1.SplitterDistance = 459;
             this.splitContainer1.TabIndex = 3;
             // 
             // treeView
@@ -416,7 +420,7 @@
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
-            this.treeView.Size = new System.Drawing.Size(460, 454);
+            this.treeView.Size = new System.Drawing.Size(459, 454);
             this.treeView.TabIndex = 0;
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
             // 
@@ -431,7 +435,7 @@
             this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView.Location = new System.Drawing.Point(0, 0);
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(918, 454);
+            this.listView.Size = new System.Drawing.Size(919, 454);
             this.listView.TabIndex = 0;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
@@ -458,6 +462,15 @@
             // 
             this.CDate_modified.Text = "Date modified";
             this.CDate_modified.Width = 166;
+            // 
+            // toolStripButton12
+            // 
+            this.toolStripButton12.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton12.Image")));
+            this.toolStripButton12.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton12.Name = "toolStripButton12";
+            this.toolStripButton12.Size = new System.Drawing.Size(94, 36);
+            this.toolStripButton12.Text = "Refresh";
+            this.toolStripButton12.Click += new System.EventHandler(this.toolStripButton12_Click);
             // 
             // MainForm
             // 
@@ -536,6 +549,7 @@
         private System.Windows.Forms.ColumnHeader CSize;
         private System.Windows.Forms.ColumnHeader CDate_created;
         private System.Windows.Forms.ColumnHeader CDate_modified;
+        private System.Windows.Forms.ToolStripButton toolStripButton12;
     }
 }
 

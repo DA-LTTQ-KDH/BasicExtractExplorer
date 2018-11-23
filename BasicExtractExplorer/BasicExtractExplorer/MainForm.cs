@@ -145,8 +145,60 @@ namespace BasicExtractExplorer
             }
             catch (Exception)
             {
-                MessageBox.Show("Something went wrong!!");
+                MessageBox.Show("Something went wrong!");
             }
         }
+
+
+        #region các hàm Delete
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            if (treeView.SelectedNode.Text == "This PC") return;
+            //Tạo đường dẫn đến node đang được chọn ở treeView
+            string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+
+            
+            while (listView.SelectedItems.Count > 0)   //Kiểm tra có item nào trong listView được chọn không
+            {
+                //Ghép đường dẫn đến item đang xét
+                string path =selected_node_path + listView.SelectedItems[0].SubItems[0].Text;
+                //kiem tra duong dan
+                try
+                {
+                    if (listView.SelectedItems[0].SubItems[1].Text.CompareTo("Folder") == 0)
+                    {
+                        //Kiểm tra và xóa Folder
+                        if (Directory.Exists(path))
+                            Directory.Delete(path, true);
+                    }
+                    else
+                    {
+                        //Kiểm tra và xóa File
+                        if (File.Exists(path))
+                            File.Delete(path);
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Access to "+path+" is denied", "warning");
+                }
+
+                listView.Items.Remove(listView.SelectedItems[0]); // Xóa SelectedItems ở đầu
+            }
+        }
+
+        private void deleteDelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toolStripButton4_Click(sender, e);
+        }
+        #endregion
+
+
+        #region refresh
+        private void toolStripButton12_Click(object sender, EventArgs e)
+        { 
+            treeView_AfterSelect(sender, new TreeViewEventArgs(treeView.SelectedNode));
+        }
+        #endregion
     }
 }
