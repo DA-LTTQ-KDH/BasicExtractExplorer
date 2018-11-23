@@ -69,8 +69,13 @@
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripButton11 = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.treeView1 = new System.Windows.Forms.TreeView();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.treeView = new System.Windows.Forms.TreeView();
+            this.listView = new System.Windows.Forms.ListView();
+            this.CName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CDate_created = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CDate_modified = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
@@ -90,7 +95,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1053, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1382, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -118,13 +123,13 @@
             // folderToolStripMenuItem
             // 
             this.folderToolStripMenuItem.Name = "folderToolStripMenuItem";
-            this.folderToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.folderToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
             this.folderToolStripMenuItem.Text = "Folder";
             // 
             // itemToolStripMenuItem
             // 
             this.itemToolStripMenuItem.Name = "itemToolStripMenuItem";
-            this.itemToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.itemToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
             this.itemToolStripMenuItem.Text = "Item";
             // 
             // renameToolStripMenuItem
@@ -200,25 +205,25 @@
             // largeIconToolStripMenuItem
             // 
             this.largeIconToolStripMenuItem.Name = "largeIconToolStripMenuItem";
-            this.largeIconToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.largeIconToolStripMenuItem.Size = new System.Drawing.Size(153, 26);
             this.largeIconToolStripMenuItem.Text = "Large icon";
             // 
             // smallIconToolStripMenuItem
             // 
             this.smallIconToolStripMenuItem.Name = "smallIconToolStripMenuItem";
-            this.smallIconToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.smallIconToolStripMenuItem.Size = new System.Drawing.Size(153, 26);
             this.smallIconToolStripMenuItem.Text = "Small icon";
             // 
             // listToolStripMenuItem
             // 
             this.listToolStripMenuItem.Name = "listToolStripMenuItem";
-            this.listToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.listToolStripMenuItem.Size = new System.Drawing.Size(153, 26);
             this.listToolStripMenuItem.Text = "List";
             // 
             // detailsToolStripMenuItem
             // 
             this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
-            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(153, 26);
             this.detailsToolStripMenuItem.Text = "Details";
             // 
             // helpToolStripMenuItem
@@ -232,7 +237,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(125, 26);
             this.aboutToolStripMenuItem.Text = "About";
             // 
             // toolStrip1
@@ -249,7 +254,7 @@
             this.toolStripButton7});
             this.toolStrip1.Location = new System.Drawing.Point(0, 28);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1053, 39);
+            this.toolStrip1.Size = new System.Drawing.Size(1382, 39);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -328,7 +333,7 @@
             this.toolStripButton11});
             this.toolStrip2.Location = new System.Drawing.Point(0, 67);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(1053, 28);
+            this.toolStrip2.Size = new System.Drawing.Size(1382, 28);
             this.toolStrip2.TabIndex = 2;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -378,7 +383,7 @@
             // toolStripComboBox1
             // 
             this.toolStripComboBox1.Name = "toolStripComboBox1";
-            this.toolStripComboBox1.Size = new System.Drawing.Size(600, 28);
+            this.toolStripComboBox1.Size = new System.Drawing.Size(800, 28);
             this.toolStripComboBox1.Click += new System.EventHandler(this.toolStripComboBox1_Click);
             // 
             // toolStripButton11
@@ -397,42 +402,74 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.treeView1);
+            this.splitContainer1.Panel1.Controls.Add(this.treeView);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.listView1);
-            this.splitContainer1.Size = new System.Drawing.Size(1053, 403);
-            this.splitContainer1.SplitterDistance = 351;
+            this.splitContainer1.Panel2.Controls.Add(this.listView);
+            this.splitContainer1.Size = new System.Drawing.Size(1382, 454);
+            this.splitContainer1.SplitterDistance = 460;
             this.splitContainer1.TabIndex = 3;
             // 
-            // treeView1
+            // treeView
             // 
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 0);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(351, 403);
-            this.treeView1.TabIndex = 0;
+            this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView.Location = new System.Drawing.Point(0, 0);
+            this.treeView.Name = "treeView";
+            this.treeView.Size = new System.Drawing.Size(460, 454);
+            this.treeView.TabIndex = 0;
+            this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
             // 
-            // listView1
+            // listView
             // 
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.Location = new System.Drawing.Point(0, 0);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(698, 403);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.CName,
+            this.CType,
+            this.CSize,
+            this.CDate_created,
+            this.CDate_modified});
+            this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView.Location = new System.Drawing.Point(0, 0);
+            this.listView.Name = "listView";
+            this.listView.Size = new System.Drawing.Size(918, 454);
+            this.listView.TabIndex = 0;
+            this.listView.UseCompatibleStateImageBehavior = false;
+            this.listView.View = System.Windows.Forms.View.Details;
+            // 
+            // CName
+            // 
+            this.CName.Text = "Name";
+            this.CName.Width = 157;
+            // 
+            // CType
+            // 
+            this.CType.Text = "Type";
+            // 
+            // CSize
+            // 
+            this.CSize.Text = "Size";
+            // 
+            // CDate_created
+            // 
+            this.CDate_created.Text = "Date created";
+            this.CDate_created.Width = 142;
+            // 
+            // CDate_modified
+            // 
+            this.CDate_modified.Text = "Date modified";
+            this.CDate_modified.Width = 166;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1053, 498);
+            this.ClientSize = new System.Drawing.Size(1382, 549);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip2);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(1400, 500);
             this.Name = "MainForm";
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);
@@ -492,8 +529,13 @@
         private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
         private System.Windows.Forms.ToolStripButton toolStripButton11;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.TreeView treeView1;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.TreeView treeView;
+        private System.Windows.Forms.ListView listView;
+        private System.Windows.Forms.ColumnHeader CName;
+        private System.Windows.Forms.ColumnHeader CType;
+        private System.Windows.Forms.ColumnHeader CSize;
+        private System.Windows.Forms.ColumnHeader CDate_created;
+        private System.Windows.Forms.ColumnHeader CDate_modified;
     }
 }
 
