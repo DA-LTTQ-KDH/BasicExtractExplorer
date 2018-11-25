@@ -231,6 +231,8 @@ namespace BasicExtractExplorer
         private void largeIconToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             listView.View = View.LargeIcon;
+            listView_ImageList.ImageSize = new Size(60, 60);
+            toolStripButton12_Click(sender, e);
         }
 
         private void largeIconToolStripMenuItem_Click(object sender, EventArgs e)
@@ -241,6 +243,8 @@ namespace BasicExtractExplorer
         private void smallIconsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             listView.View = View.SmallIcon;
+            listView_ImageList.ImageSize = new Size(20, 20);
+            toolStripButton12_Click(sender, e);
         }
 
         private void smallIconToolStripMenuItem_Click(object sender, EventArgs e)
@@ -251,6 +255,8 @@ namespace BasicExtractExplorer
         private void listToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             listView.View = View.List;
+            listView_ImageList.ImageSize = new Size(20, 20);
+            toolStripButton12_Click(sender, e);
         }
 
         private void listToolStripMenuItem_Click(object sender, EventArgs e)
@@ -261,6 +267,8 @@ namespace BasicExtractExplorer
         private void detailsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             listView.View = View.Details;
+            listView_ImageList.ImageSize = new Size(20, 20);
+            toolStripButton12_Click(sender, e);
         }
 
         private void detailsToolStripMenuItem_Click(object sender, EventArgs e)
