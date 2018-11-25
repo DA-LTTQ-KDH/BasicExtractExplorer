@@ -13,6 +13,8 @@ namespace BasicExtractExplorer
 {
     public partial class MainForm : Form
     {
+        ImageList listView_ImageList = new ImageList();
+        //ImageList treeView_ImageList = new ImageList();
         int isCopying; //0: nothing, 1: đang copy, 2: đang cut
         List<string> fileSelectedName; //Danh sách tên các file/folder đang được chọn để copy hoặc cut
         List<string> typeSelectedFile; //Danh sách Loại các item đang được chọn để copy hoặc cut
@@ -21,6 +23,11 @@ namespace BasicExtractExplorer
         public MainForm()
         {
             InitializeComponent();
+
+            listView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
+            //treeView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
+            listView_ImageList.ImageSize = new Size(20, 20);
+            //treeView_ImageList.ImageSize = new Size(20, 20);
 
             //Đảm bảo treeView trống
             if (treeView != null)
@@ -108,15 +115,23 @@ namespace BasicExtractExplorer
 
         private void ShowFilesAndFolders()
         {
+            int listViewImageIndex = 0;
             TreeNode node = treeView.SelectedNode;
             // Xóa các item cũ của listView
             if (listView != null)
                 listView.Items.Clear();
+            if (listView_ImageList != null) listView_ImageList.Images.Clear();
+            listView.SmallImageList = listView_ImageList;
+            listView.LargeImageList = listView_ImageList;
             try
             {
                 // Lấy danh sách thư mục
                 string path = GetPath(node.FullPath);
                 string[] folders = Directory.GetDirectories(path);
+                foreach (string folder in folders)
+                {
+                    listView_ImageList.Images.Add(IconHelper.GetIcon(folder));
+                }
                 // Thêm các thư mục vào listView
                 foreach (string folder in folders)
                 {
@@ -128,11 +143,16 @@ namespace BasicExtractExplorer
                     Field[3] = info.CreationTime.ToString();
                     Field[4] = info.LastWriteTime.ToString();
                     ListViewItem item = new ListViewItem(Field);
+                    item.ImageIndex = listViewImageIndex++;
                     listView.Items.Add(item);
                 }
 
                 //Lấy danh sách các tệp tin
                 string[] files = Directory.GetFiles(path);
+                foreach (string file in files)
+                {
+                    listView_ImageList.Images.Add(IconHelper.GetIcon(file));
+                }
                 //Thêm các tệp vào listView
                 foreach (string file in files)
                 {
@@ -146,6 +166,7 @@ namespace BasicExtractExplorer
                     Field[3] = info.CreationTime.ToString();
                     Field[4] = info.LastWriteTime.ToString();
                     ListViewItem item = new ListViewItem(Field);
+                    item.ImageIndex = listViewImageIndex++;
                     listView.Items.Add(item);
                 }
             }
@@ -210,6 +231,8 @@ namespace BasicExtractExplorer
         private void largeIconToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             listView.View = View.LargeIcon;
+            listView_ImageList.ImageSize = new Size(60, 60);
+            toolStripButton12_Click(sender, e);
         }
 
         private void largeIconToolStripMenuItem_Click(object sender, EventArgs e)
@@ -220,6 +243,8 @@ namespace BasicExtractExplorer
         private void smallIconsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             listView.View = View.SmallIcon;
+            listView_ImageList.ImageSize = new Size(20, 20);
+            toolStripButton12_Click(sender, e);
         }
 
         private void smallIconToolStripMenuItem_Click(object sender, EventArgs e)
@@ -230,6 +255,8 @@ namespace BasicExtractExplorer
         private void listToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             listView.View = View.List;
+            listView_ImageList.ImageSize = new Size(20, 20);
+            toolStripButton12_Click(sender, e);
         }
 
         private void listToolStripMenuItem_Click(object sender, EventArgs e)
@@ -240,6 +267,8 @@ namespace BasicExtractExplorer
         private void detailsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             listView.View = View.Details;
+            listView_ImageList.ImageSize = new Size(20, 20);
+            toolStripButton12_Click(sender, e);
         }
 
         private void detailsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -422,34 +451,6 @@ namespace BasicExtractExplorer
         }
         #endregion
 
-        
-
-        //Up
-        private void toolStripButton10_Click(object sender, EventArgs e)
-        {
-            if (treeView.SelectedNode.Text == "This PC") return;
-            treeView.SelectedNode = treeView.SelectedNode.Parent;
-            if (treeView.SelectedNode.Text == "This PC")
-                listView.Items.Clear();
-
-        }
-
-        //Close App
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        //Select All items
-        private void selectAllCrltAToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            listView.SelectedItems.Clear();
-            foreach (ListViewItem item in listView.Items)
-            {
-                item.Selected = true;
-            }
-        }
-
         #region Rename
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -496,5 +497,33 @@ namespace BasicExtractExplorer
             toolStripButton12.PerformClick();
         }
         #endregion
+
+        //Up
+        private void toolStripButton10_Click(object sender, EventArgs e)
+        {
+            if (treeView.SelectedNode.Text == "This PC") return;
+            treeView.SelectedNode = treeView.SelectedNode.Parent;
+            if (treeView.SelectedNode.Text == "This PC")
+                listView.Items.Clear();
+
+        }
+
+        //Close App
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        //Select All items
+        private void selectAllCrltAToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listView.SelectedItems.Clear();
+            foreach (ListViewItem item in listView.Items)
+            {
+                item.Selected = true;
+            }
+        }
+
+        
     }
 }

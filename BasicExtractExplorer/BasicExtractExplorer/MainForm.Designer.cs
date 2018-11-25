@@ -382,6 +382,36 @@
             this.toolStripButton12.Text = "Refresh";
             this.toolStripButton12.Click += new System.EventHandler(this.toolStripButton12_Click);
             // 
+            // toolStripButton12
+            // 
+            this.toolStripButton12.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton12.Image")));
+            this.toolStripButton12.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton12.Name = "toolStripButton12";
+            this.toolStripButton12.Size = new System.Drawing.Size(94, 36);
+            this.toolStripButton12.Text = "Refresh";
+            this.toolStripButton12.Click += new System.EventHandler(this.toolStripButton12_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
+            // 
+            // toolStripButton6
+            // 
+            this.toolStripButton6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton6.Image")));
+            this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton6.Name = "toolStripButton6";
+            this.toolStripButton6.Size = new System.Drawing.Size(73, 36);
+            this.toolStripButton6.Text = "Add";
+            // 
+            // toolStripButton7
+            // 
+            this.toolStripButton7.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton7.Image")));
+            this.toolStripButton7.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton7.Name = "toolStripButton7";
+            this.toolStripButton7.Size = new System.Drawing.Size(90, 36);
+            this.toolStripButton7.Text = "Extract";
+            // 
             // toolStrip2
             // 
             this.toolStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
