@@ -46,6 +46,10 @@ namespace BasicExtractExplorer
             isCopying = 0; //không đang copy hay cut
             fileSelectedName = new List<string>();
             typeSelectedFile = new List<string>();
+
+            toolStripStatusLabel1.Text = "";
+            toolStripStatusLabel2.Text = "";
+            toolStripStatusLabel3.Text = "";
         }
 
         private string GetPath(string treeNodePath) //Lấy đường dẫn từ treeNodePath
@@ -111,6 +115,8 @@ namespace BasicExtractExplorer
             {
                 MessageBox.Show("Access is denied");
             }
+
+            toolStripStatusLabel1.Text = listView.Items.Count.ToString() + " items";
         }
 
         private void ShowFilesAndFolders()
@@ -162,7 +168,7 @@ namespace BasicExtractExplorer
                     string add = "";
                     if(info.Extension!="") add= info.Extension.ToString().Substring(1);
                     Field[1] = "File "+add;
-                    Field[2] = (info.Length / 1024).ToString() + "KB";
+                    Field[2] = (info.Length / 1024).ToString() + " KB";
                     Field[3] = info.CreationTime.ToString();
                     Field[4] = info.LastWriteTime.ToString();
                     ListViewItem item = new ListViewItem(Field);
@@ -212,6 +218,7 @@ namespace BasicExtractExplorer
 
                 listView.Items.Remove(listView.SelectedItems[0]); // Xóa SelectedItems ở đầu
             }
+            listView_Click(sender, e);
         }
 
         private void deleteDelToolStripMenuItem_Click(object sender, EventArgs e)
@@ -224,6 +231,7 @@ namespace BasicExtractExplorer
         private void toolStripButton12_Click(object sender, EventArgs e)
         { 
             treeView_AfterSelect(sender, new TreeViewEventArgs(treeView.SelectedNode));
+            listView_Click(sender, e);
         }
         #endregion
 
@@ -505,6 +513,7 @@ namespace BasicExtractExplorer
             treeView.SelectedNode = treeView.SelectedNode.Parent;
             if (treeView.SelectedNode.Text == "This PC")
                 listView.Items.Clear();
+            listView_Click(sender, e);
 
         }
 
@@ -518,12 +527,63 @@ namespace BasicExtractExplorer
         private void selectAllCrltAToolStripMenuItem_Click(object sender, EventArgs e)
         {
             listView.SelectedItems.Clear();
+            //listView.FullRowSelect = true;
+            
             foreach (ListViewItem item in listView.Items)
             {
                 item.Selected = true;
             }
         }
 
-        
+        private void listView_DoubleClick(object sender, EventArgs e)
+        {
+            String tmpNode = listView.SelectedItems[0].SubItems[0].Text;
+            foreach (TreeNode node in treeView.SelectedNode.Nodes)
+            {
+                if (node.Text.Equals(tmpNode)) treeView.SelectedNode = node;
+            }
+            listView_Click( sender, e);
+        }
+
+        //Hiện status bar
+        private void listView_Click(object sender, EventArgs e)
+        {
+            string status1;
+            string status2;
+            string status3;
+            //status1
+            if (listView.Items.Count == 1) status1 = " item";
+            else status1 = " items";
+            toolStripStatusLabel1.Text = listView.Items.Count.ToString() + status1;
+            //status2
+            if (listView.SelectedItems.Count > 0)
+            {
+                if (listView.SelectedItems.Count == 1)
+                    status2 = " item selected";
+                else status2 = " items selected";
+                toolStripStatusLabel2.Text = listView.SelectedItems.Count.ToString() + status2;
+            }
+            else toolStripStatusLabel2.Text = "";
+            //status3
+            toolStripStatusLabel3.Text = "";
+            if (listView.SelectedItems.Count > 0)
+            {
+                int size = 0;//Tổng dung lượng các File được chọn
+                bool check = false;//Số File trong selecteditems
+                foreach (ListViewItem item in listView.SelectedItems)
+                    if (item.SubItems[1].Text != "Folder")
+                    {
+                        size += int.Parse(item.SubItems[2].Text.Substring(0, item.SubItems[2].Text.Length - 3));
+                        check = true;
+                    }
+
+                if (check==true) toolStripStatusLabel3.Text = size.ToString() + " KB";
+
+            }
+            
+
+
+
+        }
     }
 }
