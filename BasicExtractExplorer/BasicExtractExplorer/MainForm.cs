@@ -422,6 +422,7 @@ namespace BasicExtractExplorer
         }
         #endregion
 
+        
 
         //Up
         private void toolStripButton10_Click(object sender, EventArgs e)
@@ -438,5 +439,62 @@ namespace BasicExtractExplorer
         {
             this.Close();
         }
+
+        //Select All items
+        private void selectAllCrltAToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listView.SelectedItems.Clear();
+            foreach (ListViewItem item in listView.Items)
+            {
+                item.Selected = true;
+            }
+        }
+
+        #region Rename
+        private void renameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            listView.SelectedItems[0].BeginEdit();
+
+        }
+
+        private void listView_AfterLabelEdit(object sender, LabelEditEventArgs e)
+        {
+            //Lấy đường dẫn của thư mục hiện tại
+            string currentPath = GetPath(treeView.SelectedNode.FullPath);
+            //Lấy tên trước chỉnh sửa
+            string currentName = listView.SelectedItems[0].Text;
+            //Lấy tên sau khi chỉnh sửa
+            string newName = e.Label;
+
+            string extension = ""; //Phần mở rộng trong tên
+            //Lấy phần mở rộng nếu là File
+            if ((listView.SelectedItems[0].SubItems[1].Text != "Folder") && (listView.SelectedItems[0].Text.LastIndexOf(".") >= 0))
+                extension = listView.SelectedItems[0].Text.Substring(listView.SelectedItems[0].Text.LastIndexOf("."));
+            //Kiểm tra có tồn tại tên giống newName không
+            if (!Directory.Exists(currentPath + newName) && !File.Exists(currentPath + newName))
+            {
+                bool change = true;
+                if (extension != "") //Nếu là File
+                {
+                    if ((newName.Length < currentName.Length) || (newName.Substring(newName.Length - currentName.Length) != extension))
+                    {
+                        DialogResult result = MessageBox.Show("New Name can change the type of this file!", "Warning", MessageBoxButtons.YesNo);
+                        if (result == System.Windows.Forms.DialogResult.No)
+                            change = false;
+                    }
+                }
+
+                if (change == true)
+                    Directory.Move(currentPath + listView.SelectedItems[0].Text, currentPath + newName);
+            }
+            else
+                MessageBox.Show("Tên \"" + newName + "\" đã tồn tại!", "Can't rename", MessageBoxButtons.OK);
+
+            e.CancelEdit = true; //Kết thúc Edit
+            //Làm mới lại listView
+            toolStripButton12.PerformClick();
+        }
+        #endregion
     }
 }
