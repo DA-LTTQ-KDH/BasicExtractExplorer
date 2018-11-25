@@ -13,9 +13,16 @@ namespace BasicExtractExplorer
 {
     public partial class MainForm : Form
     {
+        ImageList listView_ImageList = new ImageList();
+        //ImageList treeView_ImageList = new ImageList();
         public MainForm()
         {
             InitializeComponent();
+
+            listView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
+            //treeView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
+            listView_ImageList.ImageSize = new Size(20, 20);
+            //treeView_ImageList.ImageSize = new Size(20, 20);
 
             //Đảm bảo treeView trống
             if (treeView != null)
@@ -102,15 +109,23 @@ namespace BasicExtractExplorer
 
         private void ShowFilesAndFolders()
         {
+            int listViewImageIndex = 0;
             TreeNode node = treeView.SelectedNode;
             // Xóa các item cũ của listView
             if (listView != null)
                 listView.Items.Clear();
+            if (listView_ImageList != null) listView_ImageList.Images.Clear();
+            listView.SmallImageList = listView_ImageList;
+            listView.LargeImageList = listView_ImageList;
             try
             {
                 // Lấy danh sách thư mục
                 string path = GetPath(node.FullPath);
                 string[] folders = Directory.GetDirectories(path);
+                foreach (string folder in folders)
+                {
+                    listView_ImageList.Images.Add(IconHelper.GetIcon(folder));
+                }
                 // Thêm các thư mục vào listView
                 foreach (string folder in folders)
                 {
@@ -122,11 +137,16 @@ namespace BasicExtractExplorer
                     Field[3] = info.CreationTime.ToString();
                     Field[4] = info.LastWriteTime.ToString();
                     ListViewItem item = new ListViewItem(Field);
+                    item.ImageIndex = listViewImageIndex++;
                     listView.Items.Add(item);
                 }
 
                 //Lấy danh sách các tệp tin
                 string[] files = Directory.GetFiles(path);
+                foreach (string file in files)
+                {
+                    listView_ImageList.Images.Add(IconHelper.GetIcon(file));
+                }
                 //Thêm các tệp vào listView
                 foreach (string file in files)
                 {
@@ -140,6 +160,7 @@ namespace BasicExtractExplorer
                     Field[3] = info.CreationTime.ToString();
                     Field[4] = info.LastWriteTime.ToString();
                     ListViewItem item = new ListViewItem(Field);
+                    item.ImageIndex = listViewImageIndex++;
                     listView.Items.Add(item);
                 }
             }
