@@ -13,15 +13,15 @@ namespace TestCompress
         /// </summary>
         static void Main()
         {
-            SevenZipBase.SetLibraryPath(@"C:\Program Files\7-Zip\7z.dll");
+            SevenZipBase.SetLibraryPath(@"7z.dll");
             SevenZip.SevenZipExtractor sevenZipExtractor = new SevenZipExtractor(@"D:\qn.zip");
-            foreach(string info in GetSubFoldersAndFiles(sevenZipExtractor.ArchiveFileNames, @"Windows\L10_Data\StreamingAssets\assets\res\scenes\randomscenetopic"))
+            foreach(string info in sevenZipExtractor.ArchiveFileNames)
             {
                 Console.WriteLine(info);
             }
             
 
-            Console.WriteLine("HelloWorld");
+            Console.WriteLine("---End");
 
             Console.Read();
         }
