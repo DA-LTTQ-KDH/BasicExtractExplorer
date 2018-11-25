@@ -15,6 +15,11 @@ namespace BasicExtractExplorer
     {
         ImageList listView_ImageList = new ImageList();
         //ImageList treeView_ImageList = new ImageList();
+        int isCopying; //0: nothing, 1: đang copy, 2: đang cut
+        List<string> fileSelectedName; //Danh sách tên các file/folder đang được chọn để copy hoặc cut
+        List<string> typeSelectedFile; //Danh sách Loại các item đang được chọn để copy hoặc cut
+        string old_selected_node_path; //Đường dẫn cũ tại folder chọn copy hoặc cut, trước khi Paste
+
         public MainForm()
         {
             InitializeComponent();
@@ -37,6 +42,10 @@ namespace BasicExtractExplorer
                 ThisPC.Nodes.Add(folder);
             }
             ThisPC.Expand();
+
+            isCopying = 0; //không đang copy hay cut
+            fileSelectedName = new List<string>();
+            typeSelectedFile = new List<string>();
         }
 
         private string GetPath(string treeNodePath) //Lấy đường dẫn từ treeNodePath
@@ -50,9 +59,6 @@ namespace BasicExtractExplorer
             }
             return result;
         }
-
-
-
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -214,12 +220,244 @@ namespace BasicExtractExplorer
         }
         #endregion
 
-
         #region refresh
         private void toolStripButton12_Click(object sender, EventArgs e)
         { 
             treeView_AfterSelect(sender, new TreeViewEventArgs(treeView.SelectedNode));
         }
         #endregion
+
+        #region View
+        private void largeIconToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            listView.View = View.LargeIcon;
+        }
+
+        private void largeIconToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            largeIconToolStripMenuItem1_Click(sender, e);
+        }
+
+        private void smallIconsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listView.View = View.SmallIcon;
+        }
+
+        private void smallIconToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            smallIconsToolStripMenuItem_Click(sender, e);
+        }
+
+        private void listToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            listView.View = View.List;
+        }
+
+        private void listToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listToolStripMenuItem1_Click(sender, e);
+        }
+
+        private void detailsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            listView.View = View.Details;
+        }
+
+        private void detailsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            detailsToolStripMenuItem1_Click(sender, e);
+        }
+        #endregion
+
+        #region Các hàm Copy
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            if (listView.SelectedItems.Count == 0) return;
+            if (isCopying != 2) isCopying = 1; // Xác định xem đang copy hay cut
+            old_selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+            if (!(Directory.Exists(old_selected_node_path))) //Kiểm tra đường dẫn tồn tại
+            {
+                isCopying = 0;
+                return;
+            }
+
+            fileSelectedName.Clear();
+            //typeSelectedFile.Clear();
+
+            for (int i = 0; i < listView.SelectedItems.Count; i++)
+            {
+                fileSelectedName.Add(listView.SelectedItems[i].SubItems[0].Text);
+                typeSelectedFile.Add(listView.SelectedItems[i].SubItems[1].Text);
+
+            }
+            //pathCut = selected_node_path;
+        }
+
+        private void copyCrltCToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toolStripButton1_Click(sender, e);
+        }
+        # endregion
+
+        #region Các hàm Cut
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            if (listView.SelectedItems.Count == 0) return;
+            isCopying = 2;
+            toolStripButton1_Click(sender, e);
+        }
+
+        private void cutCrltXToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toolStripButton2_Click(sender, e);
+        }
+        #endregion
+
+        #region Các hàm Paste
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+
+            if (isCopying == 0 || fileSelectedName.Count == 0) return; //Không đang copy hay cut
+            string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+
+            string desPath = selected_node_path; //Địa chỉ đích
+            if (desPath == old_selected_node_path && isCopying == 2) //Nếu Cut và Paste tại cùng thư mục thì thoát
+            {
+                isCopying = 0;
+                return;
+            }
+
+            for (int i = 0; i < fileSelectedName.Count; i++)
+            {
+                if (typeSelectedFile[i].CompareTo("Folder") == 0) //Copy Folder
+                {
+                    int count = 0; //Đếm folder có tên trùng
+                    //Kiểm tra xem có Folder nào trùng tên với item đang được Paste không
+                    foreach (ListViewItem item in listView.Items)
+                        if ((fileSelectedName[i] == item.Text) && (item.SubItems[1].Text.CompareTo("Folder") == 0))
+                        {
+                            count++;
+                            break;
+                        }
+
+                    string NewName= fileSelectedName[i];
+                    //Nếu có Folder trùng tên, đánh số thứ tự cho tên cũ
+                    while (count > 0) 
+                    {
+                        int stop = 1; //Dừng lặp
+                        NewName = fileSelectedName[i] + "(" + count.ToString() + ")";//Tên mới 
+                        foreach (ListViewItem item in listView.Items)
+                        {
+                            if ((NewName == item.Text) && (item.SubItems[1].Text.CompareTo("Folder") == 0))
+                            {
+                                count++;
+                                stop = 0;
+                                break;
+                            }
+                        }
+                        if (stop == 1) break;
+                    }
+
+                    Directory.CreateDirectory(desPath+NewName); //Tạo Folder copy
+
+                    string old_fileSelectedPath = old_selected_node_path + fileSelectedName[i];
+                    string desItem = desPath + NewName;
+                    //Tạo các Folder con 
+                    foreach (string dirPath in Directory.GetDirectories(old_fileSelectedPath, "*", SearchOption.AllDirectories))
+                        Directory.CreateDirectory(dirPath.Replace(old_fileSelectedPath, desItem));
+
+                    //Tạo các File con
+                    foreach (string newPath in Directory.GetFiles(old_fileSelectedPath, "*.*", SearchOption.AllDirectories))
+                        File.Copy(newPath, newPath.Replace(old_fileSelectedPath, desItem), true);
+
+                }
+                else //Copy File
+                {
+                    
+                    int count = 0; //Đếm file có tên trùng
+                    //Kiểm tra xem có File nào trùng tên với item đang được Paste không
+                    foreach (ListViewItem item in listView.Items)
+                        if ((fileSelectedName[i] == item.Text) && (item.SubItems[1].Text.CompareTo("Folder") != 0))
+                        {
+                            count++;
+                            break;
+                        }
+
+                    string NewName = fileSelectedName[i]; //Tên mới
+                    //Nếu có File trùng tên, đánh số thứ tự cho tên cũ
+                    while (count > 0)
+                    {
+                        int stop = 1;
+                        NewName = fileSelectedName[i].Substring(0, fileSelectedName[i].LastIndexOf(".")) + "(" + count.ToString() + ")";
+                        foreach (ListViewItem item in listView.Items)
+                            if((item.SubItems[1].Text.CompareTo("Folder") != 0) && (NewName==item.Text.Substring(0, item.Text.LastIndexOf("."))))
+                            {
+                                count++;
+                                stop = 0;
+                                break;
+                            }
+
+                        if (stop == 1)
+                        {
+                            NewName += fileSelectedName[i].Substring(fileSelectedName[i].LastIndexOf("."));
+                            break;
+                        }
+                    }
+                    
+                    //Copy File tới địa chỉ mới
+                    try
+                    {
+                        File.Copy(old_selected_node_path + fileSelectedName[i], desPath + NewName);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Access is denied","Warning");
+                    }
+                    
+                }
+                
+            }
+
+            toolStripButton12_Click(sender, e); //Refresh lại listView
+
+            //Nếu đang cut: Xóa items bị cut
+            if (isCopying == 2) 
+            {
+                for (int i = 0; i < fileSelectedName.Count; i++)
+                    if (typeSelectedFile[i] == "Folder")
+                    {
+                        Directory.Delete(old_selected_node_path+fileSelectedName[i], true);
+                    }
+                    else
+                    {
+                        File.Delete(old_selected_node_path + fileSelectedName[i]);
+                    }
+                isCopying = 0;
+            }
+
+        }
+
+        private void pasteCrltVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toolStripButton3_Click(sender, e);
+        }
+        #endregion
+
+
+        //Up
+        private void toolStripButton10_Click(object sender, EventArgs e)
+        {
+            if (treeView.SelectedNode.Text == "This PC") return;
+            treeView.SelectedNode = treeView.SelectedNode.Parent;
+            if (treeView.SelectedNode.Text == "This PC")
+                listView.Items.Clear();
+
+        }
+
+        //Close App
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
