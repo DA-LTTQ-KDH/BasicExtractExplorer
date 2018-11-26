@@ -298,7 +298,7 @@ namespace BasicExtractExplorer
             }
 
             fileSelectedName.Clear();
-            //typeSelectedFile.Clear();
+            typeSelectedFile.Clear();
 
             for (int i = 0; i < listView.SelectedItems.Count; i++)
             {
@@ -306,7 +306,7 @@ namespace BasicExtractExplorer
                 typeSelectedFile.Add(listView.SelectedItems[i].SubItems[1].Text);
 
             }
-            //pathCut = selected_node_path;
+
         }
 
         private void copyCrltCToolStripMenuItem_Click(object sender, EventArgs e)
@@ -462,9 +462,10 @@ namespace BasicExtractExplorer
         #region Rename
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-            listView.SelectedItems[0].BeginEdit();
-
+            //Lưu lại vị trí item đầu tiên được chọn
+            ListViewItem tmp = listView.SelectedItems[0];
+            //Bật chế độ chỉnh sửa
+            tmp.BeginEdit();
         }
 
         private void listView_AfterLabelEdit(object sender, LabelEditEventArgs e)
@@ -475,6 +476,9 @@ namespace BasicExtractExplorer
             string currentName = listView.SelectedItems[0].Text;
             //Lấy tên sau khi chỉnh sửa
             string newName = e.Label;
+            if (newName == null) return;
+            if(newName=="")
+                MessageBox.Show("You must type a file name.", "Can't rename");
 
             string extension = ""; //Phần mở rộng trong tên
             //Lấy phần mở rộng nếu là File
@@ -486,7 +490,7 @@ namespace BasicExtractExplorer
                 bool change = true;
                 if (extension != "") //Nếu là File
                 {
-                    if ((newName.Length < currentName.Length) || (newName.Substring(newName.Length - currentName.Length) != extension))
+                    if ((newName.Length < currentName.Length) || (newName.Substring(newName.Length - extension.Length) != extension))
                     {
                         DialogResult result = MessageBox.Show("New Name can change the type of this file!", "Warning", MessageBoxButtons.YesNo);
                         if (result == System.Windows.Forms.DialogResult.No)
@@ -495,7 +499,9 @@ namespace BasicExtractExplorer
                 }
 
                 if (change == true)
+                {
                     Directory.Move(currentPath + listView.SelectedItems[0].Text, currentPath + newName);
+                }
             }
             else
                 MessageBox.Show("Tên \"" + newName + "\" đã tồn tại!", "Can't rename", MessageBoxButtons.OK);
@@ -583,6 +589,88 @@ namespace BasicExtractExplorer
             
 
 
+
+        }
+
+        private void listView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            listView_Click( sender,  e);
+        }
+
+        private void listView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.C)
+            {
+                toolStripButton1_Click(sender, e);
+                return;
+            }
+            if (e.Control && e.KeyCode == Keys.X)
+            {
+                toolStripButton2_Click(sender, e);
+                return;
+            }
+            if (e.Control && e.KeyCode == Keys.V)
+            {
+                toolStripButton3_Click(sender, e);
+                return;
+            }
+            if (e.Alt && e.KeyCode == Keys.F4)
+            {
+                this.Close();
+            }
+            if (e.KeyCode == Keys.F2)
+            {
+                renameToolStripMenuItem_Click(sender, e);
+                return;
+            }
+            if (e.KeyCode == Keys.Delete)
+            {
+                toolStripButton4_Click(sender, e);
+                return;
+            }
+        }
+
+        //Go to Path
+        private void toolStripButton11_Click(object sender, EventArgs e)
+        {
+            string path = toolStripComboBox1.Text; //Lấy đường dẫn được nhập vào từ thanh address
+            string[] nodes = path.Split('\\'); //Cắt lấy từng phần folder
+            path = "";
+            for (int i = 0; i < nodes.Length; i++)
+                if (i != 0 || nodes[i] != "This PC")
+                    path += nodes[i]+"\\";
+            string[] newNodes = path.Split('\\'); //danh sách mới
+            if (!Directory.Exists(path))
+            {
+                toolStripButton12_Click(sender, e);
+                return;
+            }
+
+            //Trở về nốt gốc This PC
+            while (treeView.SelectedNode.Parent!=null)
+            {
+                treeView.SelectedNode = treeView.SelectedNode.Parent;
+            }
+            /*
+            if (nodes[0] == "This PC" && nodes.Length==1)
+            {
+                return;
+            }
+            */
+
+
+            for (int i = 0; i < newNodes.Length - 1; i++) //Xét các node từ cao đến thấp
+            {
+                string add = "";
+                if (i == 0) add += "\\";
+                foreach (TreeNode node in treeView.SelectedNode.Nodes) //Xét các node con
+                    if (node.Text == newNodes[i] + add)
+                    {
+                        treeView.SelectedNode = node;
+                        break;
+                    }
+
+            }
 
         }
     }
