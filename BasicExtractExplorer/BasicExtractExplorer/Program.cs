@@ -29,6 +29,10 @@ namespace BasicExtractExplorer
                         AddToArchive addToArchive = new AddToArchive(ls);
                         Application.Run(addToArchive);
                     }
+                    else if(args[0] == "extract")
+                    {
+
+                    }
                 }
 
             }

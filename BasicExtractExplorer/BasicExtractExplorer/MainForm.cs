@@ -14,7 +14,7 @@ namespace BasicExtractExplorer
     public partial class MainForm : Form
     {
         ImageList listView_ImageList = new ImageList();
-        //ImageList treeView_ImageList = new ImageList();
+        ImageList treeView_ImageList = new ImageList();
         int isCopying; //0: nothing, 1: đang copy, 2: đang cut
         List<string> fileSelectedName; //Danh sách tên các file/folder đang được chọn để copy hoặc cut
         List<string> typeSelectedFile; //Danh sách Loại các item đang được chọn để copy hoặc cut
@@ -25,9 +25,9 @@ namespace BasicExtractExplorer
             InitializeComponent();
 
             listView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
-            //treeView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
+            treeView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
             listView_ImageList.ImageSize = new Size(20, 20);
-            //treeView_ImageList.ImageSize = new Size(20, 20);
+            treeView_ImageList.ImageSize = new Size(20, 20);
 
             //Đảm bảo treeView trống
             if (treeView != null)
@@ -141,6 +141,7 @@ namespace BasicExtractExplorer
                 // Thêm các thư mục vào listView
                 foreach (string folder in folders)
                 {
+                    
                     DirectoryInfo info = new DirectoryInfo(folder);
                     string[] Field = new string[5];
                     Field[0] = info.Name;
@@ -676,14 +677,22 @@ namespace BasicExtractExplorer
 
         private void toolStripButton6_Click(object sender, EventArgs e)
         {
-            string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            startInfo.FileName = "BasicExtractExplorer.exe";
-            startInfo.Arguments = "compress " + selected_node_path + listView.SelectedItems[0].Text;
-            process.StartInfo = startInfo;
-            process.Start();
+            if(listView.SelectedItems.Count > 0)
+            {
+                string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = "BasicExtractExplorer.exe";
+                startInfo.Arguments = "compress " + "\"" + selected_node_path + listView.SelectedItems[0].Text + "\"";
+                process.StartInfo = startInfo;
+                process.Start();
+            }
+            else
+            {
+                MessageBox.Show("Please select a folder", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
         }
     }
 }

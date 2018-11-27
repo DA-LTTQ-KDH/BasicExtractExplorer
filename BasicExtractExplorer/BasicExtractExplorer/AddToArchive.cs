@@ -39,22 +39,20 @@ namespace BasicExtractExplorer
 
         private void button2_Click(object sender, EventArgs e)
         {
+            //Lấy tên archive
             string archiveName = textBoxArchiveName.Text;
+            //Load thư viện (64bit)
             SevenZip.SevenZipCompressor.SetLibraryPath("7z.dll");
             SevenZip.SevenZipCompressor zipCompressor = new SevenZip.SevenZipCompressor();
-            zipCompressor.Compressing += ZipCompressor_Compressing;
-            zipCompressor.BeginCompressDirectory(Paths[0], archiveName, "", "*", true);
-            zipCompressor.CompressionFinished += ZipCompressor_CompressionFinished;
+            //chuyển quá trình nén qua form Processing
+            Processing processing = new Processing(zipCompressor, Paths, archiveName);
+            processing.Show();
+            this.Hide();
+            processing.FormClosed += delegate { this.Close(); };
+
         }
 
-        private void ZipCompressor_CompressionFinished(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        
 
-        private void ZipCompressor_Compressing(object sender, SevenZip.ProgressEventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
     }
 }
