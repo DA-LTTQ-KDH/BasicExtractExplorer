@@ -676,8 +676,14 @@ namespace BasicExtractExplorer
 
         private void toolStripButton6_Click(object sender, EventArgs e)
         {
-            AddToArchive addToArchive = new AddToArchive();
-            addToArchive.ShowDialog();
+            string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+            //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            startInfo.FileName = "BasicExtractExplorer.exe";
+            startInfo.Arguments = "compress " + selected_node_path + listView.SelectedItems[0].Text;
+            process.StartInfo = startInfo;
+            process.Start();
         }
     }
 }
