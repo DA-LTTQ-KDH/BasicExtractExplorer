@@ -33,7 +33,7 @@
             this.buttonBrowse = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxArchiveName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
@@ -60,7 +60,7 @@
             this.tabPage1.Controls.Add(this.buttonBrowse);
             this.tabPage1.Controls.Add(this.comboBox1);
             this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.textBox1);
+            this.tabPage1.Controls.Add(this.textBoxArchiveName);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
@@ -102,12 +102,12 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "Archive format";
             // 
-            // textBox1
+            // textBoxArchiveName
             // 
-            this.textBox1.Location = new System.Drawing.Point(8, 24);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(275, 22);
-            this.textBox1.TabIndex = 5;
+            this.textBoxArchiveName.Location = new System.Drawing.Point(8, 24);
+            this.textBoxArchiveName.Name = "textBoxArchiveName";
+            this.textBoxArchiveName.Size = new System.Drawing.Size(275, 22);
+            this.textBoxArchiveName.TabIndex = 5;
             // 
             // label1
             // 
@@ -145,6 +145,7 @@
             this.button2.TabIndex = 2;
             this.button2.Text = "OK";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
@@ -169,6 +170,7 @@
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.tabControl1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "AddToArchive";
             this.Text = "AddToArchive";
             this.tabControl1.ResumeLayout(false);
@@ -184,7 +186,7 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxArchiveName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button buttonBrowse;

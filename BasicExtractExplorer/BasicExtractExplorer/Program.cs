@@ -12,11 +12,31 @@ namespace BasicExtractExplorer
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            try
+            {
+                if(args.Length == 0)
+                    Application.Run(new MainForm());
+                else
+                {
+                    if (args[0] == "compress")
+                    {
+                        List<string> ls = new List<string>();
+                        ls.Add(args[1]);
+                        AddToArchive addToArchive = new AddToArchive(ls);
+                        Application.Run(addToArchive);
+                    }
+                }
+
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
         }
     }
 }
