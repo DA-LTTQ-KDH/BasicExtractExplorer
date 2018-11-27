@@ -673,5 +673,11 @@ namespace BasicExtractExplorer
             }
 
         }
+
+        private void toolStripButton6_Click(object sender, EventArgs e)
+        {
+            AddToArchive addToArchive = new AddToArchive();
+            addToArchive.ShowDialog();
+        }
     }
 }
