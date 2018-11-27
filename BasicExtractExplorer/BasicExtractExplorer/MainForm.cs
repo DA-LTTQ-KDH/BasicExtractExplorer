@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
+using System.Security.Cryptography;
 
 namespace BasicExtractExplorer
 {
@@ -678,6 +679,65 @@ namespace BasicExtractExplorer
         {
             AddToArchive addToArchive = new AddToArchive();
             addToArchive.ShowDialog();
+        }
+        public static string CalculateMD5(string filename)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(filename))
+                {
+                    var hash = md5.ComputeHash(stream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                }
+            }
+        }
+        private void mD5ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeView.SelectedNode.Text.Equals("This PC")) return;
+            //Copy danh sách các items sang mảng các items để đảm bảo vị trí
+            ListViewItem[] items = new ListViewItem[listView.SelectedItems.Count];
+            listView.SelectedItems.CopyTo(items, 0);
+            //Lưu lại đường dẫn các thư mục (tệp tin) cần copy
+            string[] tmpPathssum = new string[items.Length];
+            string currentPath = GetPath(treeView.SelectedNode.FullPath);
+            for (int j = 0; j < items.Length; j++)
+            {
+                tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
+                // textBox1.Text += tmpPathsNen[j];
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                {
+                    MessageBox.Show(CalculateMD5(tmpPathssum[j]), tmpPathssum[j] + "  MD5 ");
+                }
+            }
+        }
+        private static string GetSHA256(string file)
+        {
+            // 7z
+            using (FileStream stream = File.OpenRead(file))
+            {
+                var sha = new SHA256Managed();
+                byte[] checksum = sha.ComputeHash(stream);
+                return BitConverter.ToString(checksum).Replace("-", String.Empty);
+            }
+        }
+        private void sHA256ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeView.SelectedNode.Text.Equals("This PC")) return;
+            //Copy danh sách các items sang mảng các items để đảm bảo vị trí
+            ListViewItem[] items = new ListViewItem[listView.SelectedItems.Count];
+            listView.SelectedItems.CopyTo(items, 0);
+            //Lưu lại đường dẫn các thư mục (tệp tin) cần copy
+            string[] tmpPathssum = new string[items.Length];
+            string currentPath = GetPath(treeView.SelectedNode.FullPath);
+            for (int j = 0; j < items.Length; j++)
+            {
+                tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
+                // textBox1.Text += tmpPathsNen[j];
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                {
+                    MessageBox.Show(GetSHA256(tmpPathssum[j]), tmpPathssum[j] + "  SHA-256 ");
+                }
+            }
         }
     }
 }
