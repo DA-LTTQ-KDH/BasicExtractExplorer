@@ -25,7 +25,11 @@ namespace BasicExtractExplorer
                     if (args[0] == "compress")
                     {
                         List<string> ls = new List<string>();
-                        ls.Add(args[1]);
+                        for(int i = 1; i < args.Length; i++)
+                        {
+                            ls.Add(args[i]);
+                        }
+
                         AddToArchive addToArchive = new AddToArchive(ls);
                         Application.Run(addToArchive);
                     }
