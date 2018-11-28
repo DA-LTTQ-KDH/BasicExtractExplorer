@@ -94,7 +94,8 @@ namespace BasicExtractExplorer
                     //Kiểm tra đường dẫn hợp lệ
                     if (Directory.Exists(selected_node_path))
                     {
-                        string[] folders = Directory.GetDirectories(selected_node_path);
+                        var folders = Directory.GetDirectories(selected_node_path)
+                            .Where(d => !new DirectoryInfo(d).Attributes.HasFlag(FileAttributes.System | FileAttributes.Hidden));
                         foreach (string folder in folders)
                         {
                             
@@ -147,7 +148,8 @@ namespace BasicExtractExplorer
                 // Lấy danh sách thư mục
                 string path = GetPath(node.FullPath);
                 
-                string[] folders = Directory.GetDirectories(path);
+                var folders = Directory.GetDirectories(path)
+                    .Where(d => !new DirectoryInfo(d).Attributes.HasFlag(FileAttributes.System | FileAttributes.Hidden));
                 foreach (string folder in folders)
                 {
                     listView_ImageList.Images.Add(IconHelper.GetIcon(folder));
@@ -169,7 +171,8 @@ namespace BasicExtractExplorer
                 }
 
                 //Lấy danh sách các tệp tin
-                string[] files = Directory.GetFiles(path);
+                var files = Directory.GetFiles(path)
+                    .Where(d => !new FileInfo(d).Attributes.HasFlag(FileAttributes.System | FileAttributes.Hidden));
                 foreach (string file in files)
                 {
                     listView_ImageList.Images.Add(IconHelper.GetIcon(file));
