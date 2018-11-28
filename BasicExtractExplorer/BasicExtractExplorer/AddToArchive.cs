@@ -45,27 +45,27 @@ namespace BasicExtractExplorer
                 textBoxArchiveName.Text = saveFileDialog.FileName;
                 switch (saveFileDialog.FilterIndex)
                 {
-                    case 0:
+                    case 1:
                         format = OutArchiveFormat.Zip;
                         //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".zip");
                         break;
-                    case 1:
+                    case 2:
                         format = OutArchiveFormat.Tar;
                         //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".tar");
                         break;
-                    case 2:
+                    case 3:
                         format = OutArchiveFormat.SevenZip;
                         //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".7z");
                         break;
-                    case 3:
+                    case 4:
                         format = OutArchiveFormat.BZip2;
                         //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".bz2");
                         break;
-                    case 4:
+                    case 5:
                         format = OutArchiveFormat.GZip;
                         //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".gz");
                         break;
-                    case 5:
+                    case 6:
                         //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".xz");
                         format = OutArchiveFormat.XZ;
                         break;

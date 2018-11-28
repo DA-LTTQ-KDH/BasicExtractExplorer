@@ -32,7 +32,7 @@ namespace BasicExtractExplorer
         }
         public void DoCompress()
         {
-            this.Invoke((MethodInvoker)delegate
+            Invoke((MethodInvoker)delegate
             {
                 Refresh();
                 labelArchiveName.Text = archiveName;
@@ -71,7 +71,10 @@ namespace BasicExtractExplorer
                 }
                 
             }
-            Close();
+            Invoke((MethodInvoker)delegate
+            {
+                Close();
+            });
         }
         private void SevenZipCompressor_FileCompressionFinished(object sender, EventArgs e)
         {
