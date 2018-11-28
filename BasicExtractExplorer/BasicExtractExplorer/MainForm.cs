@@ -874,5 +874,25 @@ namespace BasicExtractExplorer
         {
 
         }
+
+        private void listView_MouseClick(object sender, MouseEventArgs e)
+        {
+            ContextMenu cm = new ContextMenu();
+            listView.ContextMenu = cm;
+            var mi = new MenuItem("Rename");
+            mi.MenuItems.Add(mi);
+            mi.Click += renameToolStripMenuItem_Click;
+            cm.MenuItems.Add(mi);
+
+            var mi1 = new MenuItem("Copy");
+            mi1.MenuItems.Add(mi1);
+            mi1.Click += toolStripButton1_Click;
+            cm.MenuItems.Add(mi1);
+
+            var mi2 = new MenuItem("Delete");
+            mi2.MenuItems.Add(mi2);
+            mi2.Click += toolStripButton4_Click;
+            cm.MenuItems.Add(mi2);
+        }
     }
 }
