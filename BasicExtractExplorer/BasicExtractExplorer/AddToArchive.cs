@@ -26,8 +26,7 @@ namespace BasicExtractExplorer
             zipCompressor = new SevenZipCompressor();
             this.Paths = paths;
             textBoxArchiveName.Text = Paths[0] + ".zip";
-            
-
+            format = OutArchiveFormat.Zip;
         }
         public List<string> Paths
         {
@@ -45,6 +44,10 @@ namespace BasicExtractExplorer
                 textBoxArchiveName.Text = saveFileDialog.FileName;
                 switch (saveFileDialog.FilterIndex)
                 {
+                    case 0:
+                        format = OutArchiveFormat.Zip;
+                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".zip");
+                        break;
                     case 1:
                         format = OutArchiveFormat.Zip;
                         //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".zip");
@@ -101,9 +104,6 @@ namespace BasicExtractExplorer
         {
             switch (comboBoxLevel.SelectedIndex)
             {
-                case 0:
-                    level = CompressionLevel.Fast;
-                    break;
                 case 1:
                     level = CompressionLevel.High;
                     break;
