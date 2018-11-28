@@ -695,7 +695,7 @@ namespace BasicExtractExplorer
             }
 
         }
-        public static string CalculateMD5(string filename)
+        private static string CalculateMD5(string filename)
         {
             using (var md5 = MD5.Create())
             {
@@ -753,6 +753,12 @@ namespace BasicExtractExplorer
                     MessageBox.Show(GetSHA256(tmpPathssum[j]), tmpPathssum[j] + "  SHA-256 ");
                 }
             }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            About ab = new About();
+            ab.Show();
         }
     }
 }
