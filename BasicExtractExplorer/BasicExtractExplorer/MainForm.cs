@@ -185,7 +185,8 @@ namespace BasicExtractExplorer
                     Field[0] = info.Name;
                     string add = "";
                     if(info.Extension!="") add= info.Extension.ToString().Substring(1);
-                    Field[1] = "File "+add;
+                    //Field[1] = "File "+add;
+                    Field[1] = IconHelper.GetFileTypeDescription(file);
                     Field[2] = (info.Length / 1024).ToString() + " KB";
                     Field[3] = info.CreationTime.ToString();
                     Field[4] = info.LastWriteTime.ToString();

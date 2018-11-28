@@ -18,11 +18,19 @@ namespace BasicExtractExplorer
                        Win32.SHGFI_ICON | Win32.SHGFI_LARGEICON);
             return Icon.FromHandle(shinfo.hIcon);
         }
-
+        public static string GetFileTypeDescription(string fileName)
+        {
+            if (IntPtr.Zero != Win32.SHGetFileInfo(fileName, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), Win32.SHGFI_TYPENAME))
+            {
+                return Convert.ToString(shinfo.szTypeName.Trim());
+            }
+            return null;
+        }
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct SHFILEINFO
         {
             public IntPtr hIcon;
-            public IntPtr iIcon;
+            public int iIcon;
             public uint dwAttributes;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
             public string szDisplayName;
@@ -34,8 +42,11 @@ namespace BasicExtractExplorer
             public const uint SHGFI_ICON = 0x100;
             public const uint SHGFI_LARGEICON = 0x0;    // 'Large icon
             public const uint SHGFI_SMALLICON = 0x1;    // 'Small icon
+            public const uint FILE_ATTRIBUTE_NORMAL = 0x00000080;
+            public const uint SHGFI_USEFILEATTRIBUTES = 0x000000010;
+            public const uint SHGFI_TYPENAME = 0x000000400;
 
-            [DllImport("shell32.dll")]
+            [DllImport("shell32.dll",CharSet = CharSet.Auto)]
             public static extern IntPtr SHGetFileInfo(string pszPath,
                                         uint dwFileAttributes,
                                         ref SHFILEINFO psfi,
