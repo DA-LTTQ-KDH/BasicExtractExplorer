@@ -48,12 +48,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
     <Compile Include="AddToArchive.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="AddToArchive.Designer.cs">
       <DependentUpon>AddToArchive.cs</DependentUpon>
     </Compile>
+    <Compile Include="Crc32.cs" />
     <Compile Include="ExtractTo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,6 +82,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AddToArchive.resx">
       <DependentUpon>AddToArchive.cs</DependentUpon>
     </EmbeddedResource>
