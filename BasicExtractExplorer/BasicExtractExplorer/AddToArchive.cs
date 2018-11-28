@@ -95,11 +95,6 @@ namespace BasicExtractExplorer
 
         }
 
-        private void comboBoxFormat_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            
-        }
-
         private void comboBoxLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (comboBoxLevel.SelectedIndex)

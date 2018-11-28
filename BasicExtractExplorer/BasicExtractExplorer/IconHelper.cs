@@ -18,6 +18,7 @@ namespace BasicExtractExplorer
                        Win32.SHGFI_ICON | Win32.SHGFI_LARGEICON);
             return Icon.FromHandle(shinfo.hIcon);
         }
+
         public struct SHFILEINFO
         {
             public IntPtr hIcon;

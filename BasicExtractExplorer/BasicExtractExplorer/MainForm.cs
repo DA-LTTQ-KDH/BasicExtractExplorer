@@ -20,6 +20,7 @@ namespace BasicExtractExplorer
         List<string> fileSelectedName; //Danh sách tên các file/folder đang được chọn để copy hoặc cut
         List<string> typeSelectedFile; //Danh sách Loại các item đang được chọn để copy hoặc cut
         string old_selected_node_path; //Đường dẫn cũ tại folder chọn copy hoặc cut, trước khi Paste
+        int treeView_ImageIndex = 0;
         public MainForm()
         {
             InitializeComponent();
@@ -28,7 +29,7 @@ namespace BasicExtractExplorer
             treeView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
             listView_ImageList.ImageSize = new Size(20, 20);
             treeView_ImageList.ImageSize = new Size(20, 20);
-
+            treeView.ImageList = treeView_ImageList;
             //Đảm bảo treeView trống
             if (treeView != null)
                 treeView.Nodes.Clear();
@@ -39,7 +40,13 @@ namespace BasicExtractExplorer
             string[] folders = Directory.GetLogicalDrives();
             foreach (string folder in folders)
             {
-                ThisPC.Nodes.Add(folder);
+                treeView_ImageList.Images.Add(IconHelper.GetIcon(folder));
+            }
+            foreach (string folder in folders)
+            {
+                TreeNode treeNode = ThisPC.Nodes.Add(folder);
+                treeNode.ImageIndex = treeView_ImageIndex++;
+                treeNode.SelectedImageIndex = treeNode.ImageIndex;
             }
             ThisPC.Expand();
 
@@ -51,27 +58,6 @@ namespace BasicExtractExplorer
             toolStripStatusLabel2.Text = "";
             toolStripStatusLabel3.Text = "";
         }
-
-        private void Watcher_Renamed(object sender, RenamedEventArgs e)
-        {
-            toolStripButton12_Click(sender, null);
-        }
-
-        private void Watcher_Deleted(object sender, FileSystemEventArgs e)
-        {
-            toolStripButton12_Click(sender, null);
-        }
-
-        private void Watcher_Created(object sender, FileSystemEventArgs e)
-        {
-            toolStripButton12_Click(sender, null);
-        }
-
-        private void Watcher_Changed(object sender, FileSystemEventArgs e)
-        {
-            toolStripButton12_Click(sender, null);
-        }
-
         private string GetPath(string treeNodePath) //Lấy đường dẫn từ treeNodePath
         {
             //Loại bỏ phần "My Computer\"
@@ -109,10 +95,18 @@ namespace BasicExtractExplorer
                     if (Directory.Exists(selected_node_path))
                     {
                         string[] folders = Directory.GetDirectories(selected_node_path);
+                        foreach (string folder in folders)
+                        {
+                            
+                            treeView_ImageList.Images.Add(IconHelper.GetIcon(folder));
+                        }
+
                         //Lấy tên các thư mục là node con của node được chọn
                         foreach (string folder in folders)
                         {
-                            e.Node.Nodes.Add(Path.GetFileName(folder));
+                            TreeNode treeNode = e.Node.Nodes.Add(Path.GetFileName(folder));
+                            treeNode.ImageIndex = treeView_ImageIndex++;
+                            treeNode.SelectedImageIndex = treeNode.ImageIndex;
                         }
                         //Hiện các files và folder lên listView
                         ShowFilesAndFolders();
@@ -855,6 +849,11 @@ namespace BasicExtractExplorer
                     MessageBox.Show(GetSHA1(tmpPathssum[j]), tmpPathssum[j] + "  SHA-1 ");
                 }
             }
+        }
+
+        private void toolStripButton7_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
