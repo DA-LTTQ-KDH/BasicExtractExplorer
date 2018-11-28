@@ -685,7 +685,12 @@ namespace BasicExtractExplorer
                 System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
                 //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 startInfo.FileName = "BasicExtractExplorer.exe";
-                startInfo.Arguments = "compress " + "\"" + selected_node_path + listView.SelectedItems[0].Text + "\"";
+                startInfo.Arguments = "compress ";
+                foreach (ListViewItem item in listView.SelectedItems)
+                {
+                    startInfo.Arguments +="\"" + selected_node_path + item.Text + "\" ";
+                }
+                
                 process.StartInfo = startInfo;
                 process.Start();
             }

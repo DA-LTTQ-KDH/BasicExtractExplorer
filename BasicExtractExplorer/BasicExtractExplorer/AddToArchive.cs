@@ -44,6 +44,7 @@ namespace BasicExtractExplorer
             //Load thư viện (64bit)
             SevenZip.SevenZipCompressor.SetLibraryPath("7z.dll");
             SevenZip.SevenZipCompressor zipCompressor = new SevenZip.SevenZipCompressor();
+            zipCompressor.ArchiveFormat = SevenZip.OutArchiveFormat.Zip;
             //chuyển quá trình nén qua form Processing
             Processing processing = new Processing(zipCompressor, Paths, archiveName);
             processing.Show();
