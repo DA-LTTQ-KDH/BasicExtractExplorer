@@ -20,7 +20,6 @@ namespace BasicExtractExplorer
         List<string> fileSelectedName; //Danh sách tên các file/folder đang được chọn để copy hoặc cut
         List<string> typeSelectedFile; //Danh sách Loại các item đang được chọn để copy hoặc cut
         string old_selected_node_path; //Đường dẫn cũ tại folder chọn copy hoặc cut, trước khi Paste
-
         public MainForm()
         {
             InitializeComponent();
@@ -51,6 +50,26 @@ namespace BasicExtractExplorer
             toolStripStatusLabel1.Text = "";
             toolStripStatusLabel2.Text = "";
             toolStripStatusLabel3.Text = "";
+        }
+
+        private void Watcher_Renamed(object sender, RenamedEventArgs e)
+        {
+            toolStripButton12_Click(sender, null);
+        }
+
+        private void Watcher_Deleted(object sender, FileSystemEventArgs e)
+        {
+            toolStripButton12_Click(sender, null);
+        }
+
+        private void Watcher_Created(object sender, FileSystemEventArgs e)
+        {
+            toolStripButton12_Click(sender, null);
+        }
+
+        private void Watcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            toolStripButton12_Click(sender, null);
         }
 
         private string GetPath(string treeNodePath) //Lấy đường dẫn từ treeNodePath
@@ -86,7 +105,6 @@ namespace BasicExtractExplorer
                         e.Node.Nodes.Clear();
                     //Lấy danh sách thư mục của thư mục hiện tại
                     string selected_node_path = GetPath(e.Node.FullPath);
-
                     //Kiểm tra đường dẫn hợp lệ
                     if (Directory.Exists(selected_node_path))
                     {
@@ -134,6 +152,7 @@ namespace BasicExtractExplorer
             {
                 // Lấy danh sách thư mục
                 string path = GetPath(node.FullPath);
+                
                 string[] folders = Directory.GetDirectories(path);
                 foreach (string folder in folders)
                 {
@@ -692,7 +711,16 @@ namespace BasicExtractExplorer
                 }
                 
                 process.StartInfo = startInfo;
+                process.EnableRaisingEvents = true;
+                process.Exited += delegate {
+                    //Refresh sau khi nén
+                    Invoke((MethodInvoker)delegate 
+                    {
+                        toolStripButton12_Click(sender, e);
+                    });
+                };
                 process.Start();
+                
             }
             else
             {

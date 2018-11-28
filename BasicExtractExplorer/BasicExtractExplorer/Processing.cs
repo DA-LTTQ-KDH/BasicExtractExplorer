@@ -61,7 +61,7 @@ namespace BasicExtractExplorer
                         compressor.CompressFiles(archiveName, path);
                     }
                 }
-                catch(ThreadAbortException ex)
+                catch(ThreadAbortException)
                 {
                     MessageBox.Show("Aborted");
                 }

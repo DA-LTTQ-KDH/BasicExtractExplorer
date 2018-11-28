@@ -22,7 +22,6 @@ namespace BasicExtractExplorer
         {
             InitializeComponent();
             SevenZipCompressor.SetLibraryPath("7z.dll");
-            comboBoxFormat.SelectedIndex = 0;
             comboBoxLevel.SelectedIndex = 0;
             zipCompressor = new SevenZipCompressor();
             this.Paths = paths;
@@ -37,10 +36,43 @@ namespace BasicExtractExplorer
         }
         private void buttonBrowse_Click(object sender, EventArgs e)
         {
-            saveFileDialog.FileName = textBoxArchiveName.Text;
+            saveFileDialog.FileName = Path.GetFileName(textBoxArchiveName.Text);
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.InitialDirectory =saveFileDialog.FileName;
+            saveFileDialog.Filter = "zip|*.zip|tar|*.tar|7z|*.7z|bzip2|*.bz2|gzip|*.gz|xz|*.xz";
             saveFileDialog.FileOk += (sd, ev) =>
             {
                 textBoxArchiveName.Text = saveFileDialog.FileName;
+                switch (saveFileDialog.FilterIndex)
+                {
+                    case 0:
+                        format = OutArchiveFormat.Zip;
+                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".zip");
+                        break;
+                    case 1:
+                        format = OutArchiveFormat.Tar;
+                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".tar");
+                        break;
+                    case 2:
+                        format = OutArchiveFormat.SevenZip;
+                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".7z");
+                        break;
+                    case 3:
+                        format = OutArchiveFormat.BZip2;
+                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".bz2");
+                        break;
+                    case 4:
+                        format = OutArchiveFormat.GZip;
+                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".gz");
+                        break;
+                    case 5:
+                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".xz");
+                        format = OutArchiveFormat.XZ;
+                        break;
+                    default:
+                        format = OutArchiveFormat.Zip;
+                        break;
+                }
             };
             saveFileDialog.ShowDialog();
         }
@@ -56,42 +88,13 @@ namespace BasicExtractExplorer
             Processing processing = new Processing(zipCompressor, Paths, archiveName);
             processing.Show();
             this.Hide();
-            processing.FormClosed += delegate { this.Close(); };
+            processing.FormClosed += delegate { Application.Exit(); };
 
         }
 
         private void comboBoxFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch(comboBoxFormat.SelectedIndex)
-            {
-                case 0:
-                    format = OutArchiveFormat.Zip;
-                    textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".zip");
-                    break;
-                case 1:
-                    format = OutArchiveFormat.Tar;
-                    textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".tar");
-                    break;
-                case 2:
-                    format = OutArchiveFormat.SevenZip;
-                    textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".7z");
-                    break;
-                case 3:
-                    format = OutArchiveFormat.BZip2;
-                    textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".bz2");
-                    break;
-                case 4:
-                    format = OutArchiveFormat.GZip;
-                    textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".gz");
-                    break;
-                case 5:
-                    textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".xz");
-                    format = OutArchiveFormat.XZ;
-                    break;
-                default:
-                    format = OutArchiveFormat.Zip;
-                    break;
-            }
+            
         }
 
         private void comboBoxLevel_SelectedIndexChanged(object sender, EventArgs e)

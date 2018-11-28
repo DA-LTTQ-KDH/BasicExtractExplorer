@@ -30,9 +30,9 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.comboBoxLevel = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.buttonBrowse = new System.Windows.Forms.Button();
-            this.comboBoxFormat = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.textBoxArchiveName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -40,8 +40,6 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.label3 = new System.Windows.Forms.Label();
-            this.comboBoxLevel = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.SuspendLayout();
@@ -62,8 +60,6 @@
             this.tabPage1.Controls.Add(this.comboBoxLevel);
             this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.buttonBrowse);
-            this.tabPage1.Controls.Add(this.comboBoxFormat);
-            this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.textBoxArchiveName);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
@@ -74,6 +70,32 @@
             this.tabPage1.Text = "Archive";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // comboBoxLevel
+            // 
+            this.comboBoxLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLevel.FormattingEnabled = true;
+            this.comboBoxLevel.Items.AddRange(new object[] {
+            "Fast",
+            "High",
+            "Low",
+            "Ultra",
+            "None",
+            "Normal"});
+            this.comboBoxLevel.Location = new System.Drawing.Point(8, 75);
+            this.comboBoxLevel.Name = "comboBoxLevel";
+            this.comboBoxLevel.Size = new System.Drawing.Size(360, 24);
+            this.comboBoxLevel.TabIndex = 10;
+            this.comboBoxLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxLevel_SelectedIndexChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(8, 54);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(128, 17);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Compression Level";
+            // 
             // buttonBrowse
             // 
             this.buttonBrowse.Location = new System.Drawing.Point(289, 23);
@@ -83,32 +105,6 @@
             this.buttonBrowse.Text = "Browse";
             this.buttonBrowse.UseVisualStyleBackColor = true;
             this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
-            // 
-            // comboBoxFormat
-            // 
-            this.comboBoxFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxFormat.FormattingEnabled = true;
-            this.comboBoxFormat.Items.AddRange(new object[] {
-            "ZIP",
-            "TAR",
-            "7Z",
-            "BZIP2",
-            "GZIP",
-            "XZ"});
-            this.comboBoxFormat.Location = new System.Drawing.Point(8, 74);
-            this.comboBoxFormat.Name = "comboBoxFormat";
-            this.comboBoxFormat.Size = new System.Drawing.Size(360, 24);
-            this.comboBoxFormat.TabIndex = 7;
-            this.comboBoxFormat.SelectedIndexChanged += new System.EventHandler(this.comboBoxFormat_SelectedIndexChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 53);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(99, 17);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Archive format";
             // 
             // textBoxArchiveName
             // 
@@ -169,32 +165,6 @@
             // 
             this.saveFileDialog.Title = "Find Archive";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 105);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(128, 17);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "Compression Level";
-            // 
-            // comboBoxLevel
-            // 
-            this.comboBoxLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxLevel.FormattingEnabled = true;
-            this.comboBoxLevel.Items.AddRange(new object[] {
-            "Fast",
-            "High",
-            "Low",
-            "Ultra",
-            "None",
-            "Normal"});
-            this.comboBoxLevel.Location = new System.Drawing.Point(8, 126);
-            this.comboBoxLevel.Name = "comboBoxLevel";
-            this.comboBoxLevel.Size = new System.Drawing.Size(360, 24);
-            this.comboBoxLevel.TabIndex = 10;
-            this.comboBoxLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxLevel_SelectedIndexChanged);
-            // 
             // AddToArchive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -218,8 +188,6 @@
 
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.ComboBox comboBoxFormat;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxArchiveName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabPage tabPage2;
