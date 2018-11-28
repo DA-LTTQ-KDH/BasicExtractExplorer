@@ -563,9 +563,24 @@ namespace BasicExtractExplorer
         private void listView_DoubleClick(object sender, EventArgs e)
         {
             String tmpNode = listView.SelectedItems[0].SubItems[0].Text;
-            foreach (TreeNode node in treeView.SelectedNode.Nodes)
+            string fullpath = treeView.SelectedNode.FullPath;
+            string str = GetPath(fullpath);
+            str += listView.SelectedItems[0].SubItems[0].Text;
+            if (Path.GetExtension(str).CompareTo("") != 0)
             {
-                if (node.Text.Equals(tmpNode)) treeView.SelectedNode = node;
+                try { System.Diagnostics.Process.Start(str); }
+                catch (Win32Exception)
+                {
+                    MessageBox.Show("Mở file thất bại, bạn vui lòng xem lại!");
+                }
+            }
+            else
+            {
+                foreach (TreeNode node in treeView.SelectedNode.Nodes)
+                {
+                    if (node.Text.Equals(tmpNode)) treeView.SelectedNode = node;
+                }
+                listView_Click(sender, e);
             }
             listView_Click( sender, e);
         }
