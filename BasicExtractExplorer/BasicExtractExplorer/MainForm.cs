@@ -700,11 +700,11 @@ namespace BasicExtractExplorer
             }
 
         }
-        private static string CalculateMD5(string filename)
+        private static string CalculateMD5(string fileName)
         {
             using (var md5 = MD5.Create())
             {
-                using (var stream = File.OpenRead(filename))
+                using (var stream = File.OpenRead(fileName))
                 {
                     var hash = md5.ComputeHash(stream);
                     return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
@@ -730,10 +730,10 @@ namespace BasicExtractExplorer
                 }
             }
         }
-        private static string GetSHA256(string file)
+        private static string GetSHA256(string fileName)
         {
             // 7z
-            using (FileStream stream = File.OpenRead(file))
+            using (FileStream stream = File.OpenRead(fileName))
             {
                 var sha = new SHA256Managed();
                 byte[] checksum = sha.ComputeHash(stream);
@@ -764,6 +764,69 @@ namespace BasicExtractExplorer
         {
             About ab = new About();
             ab.Show();
+        }
+        private static string GetCRC32(string fileName)
+        {
+            Crc32 crc32 = new Crc32();
+            String hash = String.Empty;
+
+            // using (FileStream fs = File.Open("c:\\myfile.txt", FileMode.Open))
+            using (FileStream stream = File.OpenRead(fileName))
+                foreach (byte b in crc32.ComputeHash(stream)) hash += b.ToString("x2");
+            return hash;
+        }
+        private void cRC32ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeView.SelectedNode.Text.Equals("This PC")) return;
+            //Copy danh sách các items sang mảng các items để đảm bảo vị trí
+            ListViewItem[] items = new ListViewItem[listView.SelectedItems.Count];
+            listView.SelectedItems.CopyTo(items, 0);
+            //Lưu lại đường dẫn các thư mục (tệp tin) cần copy
+            string[] tmpPathssum = new string[items.Length];
+            string currentPath = GetPath(treeView.SelectedNode.FullPath);
+            for (int j = 0; j < items.Length; j++)
+            {
+                tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
+                // textBox1.Text += tmpPathsNen[j];
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                {
+                    MessageBox.Show(GetCRC32(tmpPathssum[j]), tmpPathssum[j] + "  CRC-32 ");
+                }
+            }
+        }
+        private static string GetSHA1(string fileName)
+        {
+            try
+            {
+                using (var shaHasher = new System.Security.Cryptography.SHA1CryptoServiceProvider())
+                using (FileStream stream = File.OpenRead(fileName))
+                {
+                    return BitConverter.ToString(shaHasher.ComputeHash(stream)).Replace("-", string.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+        private void sHA1ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeView.SelectedNode.Text.Equals("This PC")) return;
+            //Copy danh sách các items sang mảng các items để đảm bảo vị trí
+            ListViewItem[] items = new ListViewItem[listView.SelectedItems.Count];
+            listView.SelectedItems.CopyTo(items, 0);
+            //Lưu lại đường dẫn các thư mục (tệp tin) cần copy
+            string[] tmpPathssum = new string[items.Length];
+            string currentPath = GetPath(treeView.SelectedNode.FullPath);
+            for (int j = 0; j < items.Length; j++)
+            {
+                tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
+                // textBox1.Text += tmpPathsNen[j];
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                {
+                    MessageBox.Show(GetSHA1(tmpPathssum[j]), tmpPathssum[j] + "  SHA-1 ");
+                }
+            }
         }
     }
 }

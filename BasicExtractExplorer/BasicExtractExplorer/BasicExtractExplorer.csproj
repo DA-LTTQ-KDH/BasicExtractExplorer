@@ -60,6 +60,7 @@
     <Compile Include="AddToArchive.Designer.cs">
       <DependentUpon>AddToArchive.cs</DependentUpon>
     </Compile>
+    <Compile Include="Crc32.cs" />
     <Compile Include="ExtractTo.cs">
       <SubType>Form</SubType>
     </Compile>

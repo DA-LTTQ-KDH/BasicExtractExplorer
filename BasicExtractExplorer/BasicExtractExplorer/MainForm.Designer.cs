@@ -88,6 +88,8 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.sHA1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cRC32ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
@@ -398,7 +400,9 @@
             // 
             this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mD5ToolStripMenuItem,
-            this.sHA256ToolStripMenuItem});
+            this.sHA256ToolStripMenuItem,
+            this.sHA1ToolStripMenuItem,
+            this.cRC32ToolStripMenuItem});
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
@@ -603,6 +607,20 @@
             this.toolStripStatusLabel3.Size = new System.Drawing.Size(10, 17);
             this.toolStripStatusLabel3.Text = ".";
             // 
+            // sHA1ToolStripMenuItem
+            // 
+            this.sHA1ToolStripMenuItem.Name = "sHA1ToolStripMenuItem";
+            this.sHA1ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sHA1ToolStripMenuItem.Text = "SHA-1";
+            this.sHA1ToolStripMenuItem.Click += new System.EventHandler(this.sHA1ToolStripMenuItem_Click);
+            // 
+            // cRC32ToolStripMenuItem
+            // 
+            this.cRC32ToolStripMenuItem.Name = "cRC32ToolStripMenuItem";
+            this.cRC32ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cRC32ToolStripMenuItem.Text = "CRC-32";
+            this.cRC32ToolStripMenuItem.Click += new System.EventHandler(this.cRC32ToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -697,6 +715,8 @@
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.Windows.Forms.ToolStripMenuItem mD5ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sHA256ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sHA1ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cRC32ToolStripMenuItem;
     }
 }
 
