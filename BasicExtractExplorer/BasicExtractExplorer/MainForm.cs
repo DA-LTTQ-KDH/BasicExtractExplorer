@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
 using System.Security.Cryptography;
+using SevenZip;
 
 namespace BasicExtractExplorer
 {
@@ -16,6 +17,8 @@ namespace BasicExtractExplorer
     {
         ImageList listView_ImageList = new ImageList();
         ImageList treeView_ImageList = new ImageList();
+        PathNode pnode;
+        SevenZip.SevenZipExtractor sevenZipExtractor;
         int isCopying; //0: nothing, 1: đang copy, 2: đang cut
         List<string> fileSelectedName; //Danh sách tên các file/folder đang được chọn để copy hoặc cut
         List<string> typeSelectedFile; //Danh sách Loại các item đang được chọn để copy hoặc cut
@@ -24,13 +27,14 @@ namespace BasicExtractExplorer
         public MainForm()
         {
             InitializeComponent();
+            listViewArchive.Visible = false;
             ComponentResourceManager resources = new ComponentResourceManager(typeof(MainForm));
             listView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
             treeView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
             listView_ImageList.ImageSize = new Size(20, 20);
             treeView_ImageList.ImageSize = new Size(20, 20);
             treeView.ImageList = treeView_ImageList;
-            treeView_ImageList.Images.Add((System.Drawing.Image)resources.GetObject("this-pc-computer-icon"));
+            treeView_ImageList.Images.Add(Image.FromFile(@"Resources\this-pc-computer-icon.png"));
             //Đảm bảo treeView trống
             if (treeView != null)
                 treeView.Nodes.Clear();
@@ -83,6 +87,12 @@ namespace BasicExtractExplorer
 
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            if (listViewArchive.Visible)
+            {
+                listViewArchive.Visible = false;
+                treeViewArchive.Nodes.Clear();
+            }
+            
             try
             {
                 if (e.Node.Text.CompareTo("This PC") != 0)
@@ -158,7 +168,6 @@ namespace BasicExtractExplorer
                 // Thêm các thư mục vào listView
                 foreach (string folder in folders)
                 {
-                    
                     DirectoryInfo info = new DirectoryInfo(folder);
                     string[] Field = new string[5];
                     Field[0] = info.Name;
@@ -535,11 +544,21 @@ namespace BasicExtractExplorer
         //Up
         private void toolStripButton10_Click(object sender, EventArgs e)
         {
-            if (treeView.SelectedNode.Text == "This PC") return;
-            treeView.SelectedNode = treeView.SelectedNode.Parent;
-            if (treeView.SelectedNode.Text == "This PC")
-                listView.Items.Clear();
-            listView_Click(sender, e);
+            if(!listViewArchive.Visible)
+            {
+                if (treeView.SelectedNode.Text == "This PC") return;
+                treeView.SelectedNode = treeView.SelectedNode.Parent;
+                if (treeView.SelectedNode.Text == "This PC")
+                    listView.Items.Clear();
+                listView_Click(sender, e);
+            }
+            else
+            {
+                if (treeViewArchive.SelectedNode == treeViewArchive.Nodes[0]) return;
+                treeViewArchive.SelectedNode = treeViewArchive.SelectedNode.Parent;
+                //listView_Click(sender, e);
+            }
+            
 
         }
 
@@ -569,7 +588,19 @@ namespace BasicExtractExplorer
             str += listView.SelectedItems[0].SubItems[0].Text;
             if (Path.GetExtension(str).CompareTo("") != 0)
             {
-                try { System.Diagnostics.Process.Start(str); }
+                try
+                {
+                    if(Path.GetExtension(str).CompareTo(".zip") == 0)
+                    {
+                        listViewArchive.Visible = true;
+                        ShowArchiveFiles(str);
+                    }
+                    else
+                    {
+                        System.Diagnostics.Process.Start(str);
+                    }
+                    
+                }
                 catch (Win32Exception)
                 {
                     MessageBox.Show("Mở file thất bại, bạn vui lòng xem lại!");
@@ -945,6 +976,228 @@ namespace BasicExtractExplorer
                 toolStripButton11_Click(sender, e);
         }
 
-        
+        private void ShowArchiveFiles(string archivePath)
+        {
+            if (listViewArchive != null) listViewArchive.Items.Clear();
+            if (treeViewArchive != null) treeViewArchive.Nodes.Clear();
+            SevenZip.SevenZipExtractor.SetLibraryPath("7z.dll");
+            sevenZipExtractor = new SevenZip.SevenZipExtractor(archivePath);
+            var files = sevenZipExtractor.ArchiveFileNames;
+            var filedata = sevenZipExtractor.ArchiveFileData;
+            pnode = new PathNode();
+            TreeNode rootNode = new TreeNode(Path.GetFileName(archivePath));
+            treeViewArchive.Nodes.Add(rootNode);
+            treeViewArchive.SelectedNode = rootNode;
+            for(int i = 0; i < files.Count; i++)
+            {
+                pnode.AddPath(files[i],filedata[i]);
+            }
+            for (int i = 0; i < pnode.nodes.Count; i++)
+            {
+                rootNode.Nodes.Add(pnode.nodes.ElementAt(i).Key);
+                if (IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
+                {
+                    ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
+                    string[] tmp = new string[9];
+                    tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
+                    tmp[1] = info.Size.ToString();
+                    tmp[2] = "File";
+                    tmp[3] = info.LastWriteTime.ToString();
+                    tmp[4] = info.CreationTime.ToString();
+                    tmp[5] = info.LastAccessTime.ToString();
+                    tmp[6] = info.Attributes.ToString();
+                    tmp[7] = info.Crc.ToString("X2");
+                    tmp[8] = info.Comment;
+                    listViewArchive.Items.Add(new ListViewItem(tmp));
+                }
+                else
+                {
+                    ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
+                    string[] tmp = new string[9];
+                    tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
+                    tmp[1] = "";
+                    tmp[2] = "Folder";
+                    tmp[3] = "";
+                    tmp[4] = "";
+                    tmp[5] = "";
+                    tmp[6] = "";
+                    tmp[7] = "";
+                    tmp[8] = "";
+                    listViewArchive.Items.Add(new ListViewItem(tmp));
+                }
+
+                //listViewArchive.Items.Add(pnode.nodes.ElementAt(i).Key);
+            }
+
+            rootNode.Expand();
+            //current_path_node = pnode;
+        }
+        #region Path
+        //https://stackoverflow.com/questions/10870443/how-to-create-hierarchical-structure-with-list-of-path
+        public class PathNode
+        {
+            public readonly IDictionary<string, PathNode> nodes = new Dictionary<string, PathNode>();
+            public string Path { get; set; }
+            public ArchiveFileInfo Info { get; set; }
+            public void AddPath(string path, ArchiveFileInfo info)
+            {
+                char[] charSeparators = new char[] { '\\' };
+
+                // Parse into a sequence of parts.
+                string[] parts = path.Split(charSeparators,
+                    StringSplitOptions.RemoveEmptyEntries);
+
+                // The current node.  Start with this.
+                PathNode current = this;
+                // Iterate through the parts.
+                foreach (string part in parts)
+                {
+                    // The child node.
+                    PathNode child;
+
+                    // Does the part exist in the current node?  If
+                    // not, then add.
+                    if (!current.nodes.TryGetValue(part, out child))
+                    {
+                        // Add the child.
+                        child = new PathNode
+                        {
+                            Path = part,
+                            Info = info
+                        };
+
+                        // Add to the dictionary.
+                        current.nodes[part] = child;
+                    }
+
+                    // Set the current to the child.
+                    current = child;
+                }
+            }
+        }
+
+        #endregion Path
+
+        private void listViewArchive_DoubleClick(object sender, EventArgs e)
+        {
+            string tmpNode = listViewArchive.SelectedItems[0].SubItems[0].Text;
+            //string fullpath = treeViewArchive.SelectedNode.FullPath;
+            string str = "";
+            str += listViewArchive.SelectedItems[0].SubItems[0].Text;
+            foreach (TreeNode node in treeViewArchive.SelectedNode.Nodes)
+            {
+                if (node.Text.Equals(tmpNode)) treeViewArchive.SelectedNode = node;
+            }
+        }
+        private PathNode FindPathNode(string treeNodePath)
+        {
+            //Loại bỏ phần "My Computer\"
+            var parts = treeNodePath.Split('\\');
+            PathNode current = pnode.nodes[parts[1]];
+            for (int i = 2; i < parts.Length; i++)
+            {
+                current = current.nodes[parts[i]];
+            }
+            return current;
+        }
+        private bool IsFile(string treeNodePath)
+        {
+            PathNode pathNode = FindPathNode(treeNodePath);
+            if(pathNode.nodes.Count.Equals(0))
+            {
+                return true;
+            }
+            return false;
+        }
+        private void treeViewArchive_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            try
+            {
+                PathNode current_path_node;
+                if (e.Node != null)
+                    e.Node.Nodes.Clear();
+                if (e.Node != treeViewArchive.Nodes[0]) // Nếu không phải node gốc
+                {
+                    current_path_node = FindPathNode(e.Node.FullPath);
+                }
+                else
+                {
+                    current_path_node = pnode;
+                }
+                foreach (string folder in current_path_node.nodes.Keys)
+                {
+                    if (!IsFile(e.Node.FullPath + "\\" + folder))
+                        e.Node.Nodes.Add(folder);
+                }
+
+                //}
+                ShowFoldersAndFilesArchive();
+                toolStripComboBox1.Text = e.Node.FullPath;
+                e.Node.Expand();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void ShowFoldersAndFilesArchive()
+        {
+            if (listViewArchive != null)
+                listViewArchive.Items.Clear();
+            try
+            {
+                PathNode current_path_node;
+                if (treeViewArchive.SelectedNode != treeViewArchive.Nodes[0]) // Nếu không phải node gốc
+                {
+                    current_path_node = FindPathNode(treeViewArchive.SelectedNode.FullPath);
+                }
+                else
+                {
+                    current_path_node = pnode;
+                }
+                    for (int i = 0; i < current_path_node.nodes.Count; i++)
+                    {
+                        if (!IsFile(treeViewArchive.SelectedNode.FullPath + "\\" + current_path_node.nodes.Keys.ElementAt(i)))
+                        {
+                            ArchiveFileInfo info = current_path_node.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
+                            string[] tmp = new string[9];
+                            tmp[0] = current_path_node.nodes.Values.ElementAt(i).Path;
+                            tmp[1] = "...";
+                            tmp[2] = "Folder";
+                            tmp[3] = "";
+                            tmp[4] = "";
+                            tmp[5] = "";
+                            tmp[6] = "";
+                            tmp[7] = "";
+                            tmp[8] = "";
+                            listViewArchive.Items.Add(new ListViewItem(tmp));
+                        }
+                        else
+                        {
+                            
+                            ArchiveFileInfo info = current_path_node.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
+                            string[] tmp = new string[9];
+                            tmp[0] = current_path_node.nodes.Values.ElementAt(i).Path;
+                            tmp[1] = info.Size.ToString();
+                            tmp[2] = "File";
+                            tmp[3] = info.LastWriteTime.ToString();
+                            tmp[4] = info.CreationTime.ToString();
+                            tmp[5] = info.LastAccessTime.ToString();
+                            tmp[6] = info.Attributes.ToString();
+                            tmp[7] = info.Crc.ToString("X2");
+                            tmp[8] = info.Comment;
+                            listViewArchive.Items.Add(new ListViewItem(tmp));
+                        }
+                            
+                    }
+                //}
+                    
+                
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }
