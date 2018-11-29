@@ -631,39 +631,6 @@ namespace BasicExtractExplorer
             listView_Click( sender,  e);
         }
 
-        private void listView_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Control && e.KeyCode == Keys.C)
-            {
-                toolStripButton1_Click(sender, e);
-                return;
-            }
-            if (e.Control && e.KeyCode == Keys.X)
-            {
-                toolStripButton2_Click(sender, e);
-                return;
-            }
-            if (e.Control && e.KeyCode == Keys.V)
-            {
-                toolStripButton3_Click(sender, e);
-                return;
-            }
-            if (e.Alt && e.KeyCode == Keys.F4)
-            {
-                this.Close();
-            }
-            if (e.KeyCode == Keys.F2)
-            {
-                renameToolStripMenuItem_Click(sender, e);
-                return;
-            }
-            if (e.KeyCode == Keys.Delete)
-            {
-                toolStripButton4_Click(sender, e);
-                return;
-            }
-        }
-
         //Go to Path
         private void toolStripButton11_Click(object sender, EventArgs e)
         {
@@ -964,7 +931,19 @@ namespace BasicExtractExplorer
         {
             detailsToolStripMenuItem1_Click(sender, e);
         }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listView_DoubleClick(sender, e);
+        }
         #endregion
 
+        private void toolStripComboBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                toolStripButton11_Click(sender, e);
+        }
+
+        
     }
 }
