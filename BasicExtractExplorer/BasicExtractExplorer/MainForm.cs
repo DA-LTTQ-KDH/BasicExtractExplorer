@@ -875,24 +875,96 @@ namespace BasicExtractExplorer
 
         }
 
-        private void listView_MouseClick(object sender, MouseEventArgs e)
+        
+        #region Right Click Menu
+        private void listView_MouseDown(object sender, MouseEventArgs e)
         {
-            ContextMenu cm = new ContextMenu();
-            listView.ContextMenu = cm;
-            var mi = new MenuItem("Rename");
-            mi.MenuItems.Add(mi);
-            mi.Click += renameToolStripMenuItem_Click;
-            cm.MenuItems.Add(mi);
 
-            var mi1 = new MenuItem("Copy");
-            mi1.MenuItems.Add(mi1);
-            mi1.Click += toolStripButton1_Click;
-            cm.MenuItems.Add(mi1);
+            bool Focusing = false;
+            if (treeView.SelectedNode.Text.Equals("This PC")) return;
+            if (e.Button == MouseButtons.Right)
+            {
+                foreach (ListViewItem item in listView.Items)
+                {
+                    if (item.Bounds.Contains(e.Location))
+                    {
+                        Focusing = true;
+                        break;
+                    }
+                }
 
-            var mi2 = new MenuItem("Delete");
-            mi2.MenuItems.Add(mi2);
-            mi2.Click += toolStripButton4_Click;
-            cm.MenuItems.Add(mi2);
+                if (!Focusing)
+                {
+                    contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(viewToolStripMenuItem1)].Enabled = true;
+                    contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(refreshToolStripMenuItem)].Enabled = true;
+                    contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(newToolStripMenuItem)].Enabled = true;
+                    contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(propertiesToolStripMenuItem)].Enabled = true;
+                    contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(pasteToolStripMenuItem)].Enabled = (isCopying != 0);
+                    contextMenuStrip1.Show(Cursor.Position);
+                }
+                else
+                {
+                    contextMenuStrip2.Show(Cursor.Position);
+                }
+            }
         }
+
+
+        private void refreshToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            toolStripButton12_Click(sender, e);
+        }
+
+        private void pasteToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            toolStripButton3_Click(sender, e);
+        }
+
+        private void cutToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            toolStripButton2_Click(sender, e);
+        }
+
+        private void copyToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            toolStripButton1_Click(sender, e);
+        }
+
+        private void deleteToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            toolStripButton4_Click(sender, e);
+        }
+
+        private void renameToolStripMenuItem1_Click_1(object sender, EventArgs e)
+        {
+            renameToolStripMenuItem_Click(sender, e);
+        }
+
+        private void addToToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            toolStripButton6_Click(sender, e);
+        }
+
+        private void largeIconsToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            largeIconToolStripMenuItem1_Click(sender, e);
+        }
+
+        private void smallIconsToolStripMenuItem1_Click_1(object sender, EventArgs e)
+        {
+            smallIconsToolStripMenuItem_Click(sender, e);
+        }
+
+        private void listToolStripMenuItem2_Click_1(object sender, EventArgs e)
+        {
+            listToolStripMenuItem1_Click(sender, e);
+        }
+
+        private void detailsToolStripMenuItem2_Click_1(object sender, EventArgs e)
+        {
+            detailsToolStripMenuItem1_Click(sender, e);
+        }
+        #endregion
+
     }
 }
