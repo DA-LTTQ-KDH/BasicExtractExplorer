@@ -20,16 +20,17 @@ namespace BasicExtractExplorer
         List<string> fileSelectedName; //Danh sách tên các file/folder đang được chọn để copy hoặc cut
         List<string> typeSelectedFile; //Danh sách Loại các item đang được chọn để copy hoặc cut
         string old_selected_node_path; //Đường dẫn cũ tại folder chọn copy hoặc cut, trước khi Paste
-        int treeView_ImageIndex = 0;
+        int treeView_ImageIndex = 1;
         public MainForm()
         {
             InitializeComponent();
-
+            ComponentResourceManager resources = new ComponentResourceManager(typeof(MainForm));
             listView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
             treeView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
             listView_ImageList.ImageSize = new Size(20, 20);
             treeView_ImageList.ImageSize = new Size(20, 20);
             treeView.ImageList = treeView_ImageList;
+            treeView_ImageList.Images.Add((System.Drawing.Image)resources.GetObject("this-pc-computer-icon"));
             //Đảm bảo treeView trống
             if (treeView != null)
                 treeView.Nodes.Clear();
