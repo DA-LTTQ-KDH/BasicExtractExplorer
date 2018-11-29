@@ -632,39 +632,6 @@ namespace BasicExtractExplorer
             listView_Click( sender,  e);
         }
 
-        private void listView_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Control && e.KeyCode == Keys.C)
-            {
-                toolStripButton1_Click(sender, e);
-                return;
-            }
-            if (e.Control && e.KeyCode == Keys.X)
-            {
-                toolStripButton2_Click(sender, e);
-                return;
-            }
-            if (e.Control && e.KeyCode == Keys.V)
-            {
-                toolStripButton3_Click(sender, e);
-                return;
-            }
-            if (e.Alt && e.KeyCode == Keys.F4)
-            {
-                this.Close();
-            }
-            if (e.KeyCode == Keys.F2)
-            {
-                renameToolStripMenuItem_Click(sender, e);
-                return;
-            }
-            if (e.KeyCode == Keys.Delete)
-            {
-                toolStripButton4_Click(sender, e);
-                return;
-            }
-        }
-
         //Go to Path
         private void toolStripButton11_Click(object sender, EventArgs e)
         {
@@ -875,5 +842,109 @@ namespace BasicExtractExplorer
         {
 
         }
+
+        
+        #region Right Click Menu
+        private void listView_MouseDown(object sender, MouseEventArgs e)
+        {
+
+            bool Focusing = false;
+            if (treeView.SelectedNode.Text.Equals("This PC")) return;
+            if (e.Button == MouseButtons.Right)
+            {
+                foreach (ListViewItem item in listView.Items)
+                {
+                    if (item.Bounds.Contains(e.Location))
+                    {
+                        Focusing = true;
+                        break;
+                    }
+                }
+
+                if (!Focusing)
+                {
+                    contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(viewToolStripMenuItem1)].Enabled = true;
+                    contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(refreshToolStripMenuItem)].Enabled = true;
+                    contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(newToolStripMenuItem)].Enabled = true;
+                    contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(propertiesToolStripMenuItem)].Enabled = true;
+                    contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(pasteToolStripMenuItem)].Enabled = (isCopying != 0);
+                    contextMenuStrip1.Show(Cursor.Position);
+                }
+                else
+                {
+                    contextMenuStrip2.Show(Cursor.Position);
+                }
+            }
+        }
+
+
+        private void refreshToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            toolStripButton12_Click(sender, e);
+        }
+
+        private void pasteToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            toolStripButton3_Click(sender, e);
+        }
+
+        private void cutToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            toolStripButton2_Click(sender, e);
+        }
+
+        private void copyToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            toolStripButton1_Click(sender, e);
+        }
+
+        private void deleteToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            toolStripButton4_Click(sender, e);
+        }
+
+        private void renameToolStripMenuItem1_Click_1(object sender, EventArgs e)
+        {
+            renameToolStripMenuItem_Click(sender, e);
+        }
+
+        private void addToToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            toolStripButton6_Click(sender, e);
+        }
+
+        private void largeIconsToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            largeIconToolStripMenuItem1_Click(sender, e);
+        }
+
+        private void smallIconsToolStripMenuItem1_Click_1(object sender, EventArgs e)
+        {
+            smallIconsToolStripMenuItem_Click(sender, e);
+        }
+
+        private void listToolStripMenuItem2_Click_1(object sender, EventArgs e)
+        {
+            listToolStripMenuItem1_Click(sender, e);
+        }
+
+        private void detailsToolStripMenuItem2_Click_1(object sender, EventArgs e)
+        {
+            detailsToolStripMenuItem1_Click(sender, e);
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listView_DoubleClick(sender, e);
+        }
+        #endregion
+
+        private void toolStripComboBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                toolStripButton11_Click(sender, e);
+        }
+
+        
     }
 }
