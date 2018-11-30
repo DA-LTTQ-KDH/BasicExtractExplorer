@@ -79,8 +79,6 @@ namespace BasicExtractExplorer
         }
         private string GetPath(string treeNodePath) //Lấy đường dẫn từ treeNodePath
         {
-            //Loại bỏ phần "My Computer\"
-            //if (treeNodePath == "This PC") return "";
             string[] nodes = treeNodePath.Split('\\');
             string result = nodes[1];
             for (int i = 2; i < nodes.Length; i++)
@@ -106,7 +104,6 @@ namespace BasicExtractExplorer
             {
                 listViewArchive.Visible = false;
                 treeViewArchive.Nodes.Clear();
-                //if (treeView.SelectedNode.Parent.Text == "This PC") listView.Items.Clear();
 
             }
 
@@ -1026,7 +1023,7 @@ namespace BasicExtractExplorer
                     treeNode.ImageIndex = 0;
                     treeNode.SelectedImageIndex = 0;
                     rootNode.Nodes.Add(treeNode);
-                    ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
+                    ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;
                     string[] tmp = new string[9];
                     tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
                     tmp[1] = "";
