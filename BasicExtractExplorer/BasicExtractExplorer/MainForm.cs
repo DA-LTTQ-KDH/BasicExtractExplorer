@@ -34,6 +34,11 @@ namespace BasicExtractExplorer
         public MainForm()
         {
             InitializeComponent();
+            initialization();
+        }
+
+        private void initialization()
+        {
             listViewArchive.Visible = false;
             ComponentResourceManager resources = new ComponentResourceManager(typeof(MainForm));
 
@@ -49,7 +54,7 @@ namespace BasicExtractExplorer
             archiveView_ImageList.ImageSize = new Size(20, 20);
             listViewArchive.SmallImageList = archiveView_ImageList;
             treeViewArchive.ImageList = archiveView_ImageList;
-            archiveView_ImageList.Images.Add(IconHelper.Extract(IconHelper.Shell32,3, true));//load folder icon
+            archiveView_ImageList.Images.Add(IconHelper.Extract(IconHelper.Shell32, 3, true));//load folder icon
             archiveView_ImageList.Images.Add(IconHelper.Extract(IconHelper.Shell32, 0, true));//load file icon
             archiveView_ImageList.Images.Add(IconHelper.Extract(IconHelper.Shell32, 2, true));
 
@@ -84,7 +89,8 @@ namespace BasicExtractExplorer
 
             pathBack.Add(ThisPC.FullPath);
             isBacking = false;
-        }
+        } //Khởi tạo form
+
         private string GetPath(string treeNodePath) //Lấy đường dẫn từ treeNodePath
         {
             //Loại bỏ phần "My Computer\"
@@ -96,16 +102,6 @@ namespace BasicExtractExplorer
                 result += nodes[i] + '\\';
             }
             return result;
-        }
-
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void toolStripComboBox1_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
@@ -177,19 +173,6 @@ namespace BasicExtractExplorer
             if (treeView.SelectedNode.Text == "This PC") return;
             pathBack.Add(treeView.SelectedNode.FullPath);
             Back++;
-        }
-
-        //Back
-        private void toolStripButton8_Click(object sender, EventArgs e)
-        {
-            isBacking = true;
-            toolStripButton11_Click(sender, e);
-            isBacking = false;
-            if (Back > 0)
-            {
-                pathBack.RemoveAt(pathBack.Count - 1);
-                Back--;
-            }
         }
 
         private void ShowFilesAndFolders()
@@ -592,6 +575,8 @@ namespace BasicExtractExplorer
         }
         #endregion
 
+        #region Other Buttons
+
         //Up
         private void toolStripButton10_Click(object sender, EventArgs e)
         {
@@ -631,102 +616,19 @@ namespace BasicExtractExplorer
             }
         }
 
-        private void listView_DoubleClick(object sender, EventArgs e)
-        {
-            string[] archiveExtension = { ".zip", ".rar", ".7z",".tar",".xz",".bz2",".gz",".iso" };
-            String tmpNode = listView.SelectedItems[0].SubItems[0].Text;
-            string fullpath = treeView.SelectedNode.FullPath;
-            string str = GetPath(fullpath);
-            str += listView.SelectedItems[0].SubItems[0].Text;
-            if (Path.GetExtension(str).CompareTo("") != 0)
-            {
-                try
-                {
-                    if(archiveExtension.Contains(Path.GetExtension(str)))
-                    {
-                        listViewArchive.Visible = true;
-                        ShowArchiveFiles(str);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Process.Start(str);
-                    }
-                    
-                }
-                catch (Win32Exception)
-                {
-                    MessageBox.Show("Mở file thất bại, bạn vui lòng xem lại!");
-                }
-            }
-            else
-            {
-                foreach (TreeNode node in treeView.SelectedNode.Nodes)
-                {
-                    if (node.Text.Equals(tmpNode)) treeView.SelectedNode = node;
-                }
-                listView_Click(sender, e);
-            }
-            listView_Click( sender, e);
-        }
-
-        //Hiện status bar
-        private void listView_Click(object sender, EventArgs e)
-        {
-            string status1;
-            string status2;
-            string status3;
-            //status1
-            if (listView.Items.Count == 1) status1 = " item";
-            else status1 = " items";
-            toolStripStatusLabel1.Text = listView.Items.Count.ToString() + status1;
-            //status2
-            if (listView.SelectedItems.Count > 0)
-            {
-                if (listView.SelectedItems.Count == 1)
-                    status2 = " item selected";
-                else status2 = " items selected";
-                toolStripStatusLabel2.Text = listView.SelectedItems.Count.ToString() + status2;
-            }
-            else toolStripStatusLabel2.Text = "";
-            //status3
-            toolStripStatusLabel3.Text = "";
-            if (listView.SelectedItems.Count > 0)
-            {
-                int size = 0;//Tổng dung lượng các File được chọn
-                bool check = false;//Số File trong selecteditems
-                foreach (ListViewItem item in listView.SelectedItems)
-                    if (item.SubItems[1].Text != "Folder")
-                    {
-                        size += int.Parse(item.SubItems[2].Text.Substring(0, item.SubItems[2].Text.Length - 3));
-                        check = true;
-                    }
-
-                if (check==true) toolStripStatusLabel3.Text = size.ToString() + " KB";
-
-            }
-            
-
-
-
-        }
-
-        private void listView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
-            listView_Click( sender,  e);
-        }
-
         //Go to Path
         private void toolStripButton11_Click(object sender, EventArgs e)
         {
             string path = toolStripComboBox1.Text; //Lấy đường dẫn được nhập vào từ thanh address
             //Thay path= stack[back] nếu đang back
-            if (isBacking)
+            if (isBacking) 
             {
                 if (Back > 0)
                     path = pathBack[Back - 1];
                 else
                     path = pathBack[Back];
             }
+
             string[] nodes = path.Split('\\'); //Cắt lấy từng phần folder
             path = "";
             for (int i = 0; i < nodes.Length; i++)
@@ -754,13 +656,6 @@ namespace BasicExtractExplorer
             {
                 treeView.SelectedNode = treeView.SelectedNode.Parent;
             }
-            /*
-            if (nodes[0] == "This PC" && nodes.Length==1)
-            {
-                return;
-            }
-            */
-
 
             for (int i = 0; i < newNodes.Length - 1; i++) //Xét các node từ cao đến thấp
             {
@@ -772,179 +667,32 @@ namespace BasicExtractExplorer
                         treeView.SelectedNode = node;
                         break;
                     }
-
             }
 
         }
 
-        private void toolStripButton6_Click(object sender, EventArgs e)
+        //Back
+        private void toolStripButton8_Click(object sender, EventArgs e)
         {
-            if(listView.SelectedItems.Count > 0)
+            isBacking = true;
+            toolStripButton11_Click(sender, e);
+            isBacking = false;
+            if (Back > 0)
             {
-                string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = "BasicExtractExplorer.exe";
-                startInfo.Arguments = "compress ";
-                foreach (ListViewItem item in listView.SelectedItems)
-                {
-                    startInfo.Arguments +="\"" + selected_node_path + item.Text + "\" ";
-                }
-                
-                process.StartInfo = startInfo;
-                process.EnableRaisingEvents = true;
-                process.Exited += delegate {
-                    //Refresh sau khi nén
-                    Invoke((MethodInvoker)delegate 
-                    {
-                        toolStripButton12_Click(sender, e);
-                    });
-                };
-                process.Start();
-                
-            }
-            else
-            {
-                MessageBox.Show("Please select a folder", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
-        }
-        private static string CalculateMD5(string fileName)
-        {
-            using (var md5 = MD5.Create())
-            {
-                using (var stream = File.OpenRead(fileName))
-                {
-                    var hash = md5.ComputeHash(stream);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                }
-            }
-        }
-        private void mD5ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (treeView.SelectedNode.Text.Equals("This PC")) return;
-            //Copy danh sách các items sang mảng các items để đảm bảo vị trí
-            ListViewItem[] items = new ListViewItem[listView.SelectedItems.Count];
-            listView.SelectedItems.CopyTo(items, 0);
-            //Lưu lại đường dẫn các thư mục (tệp tin) cần copy
-            string[] tmpPathssum = new string[items.Length];
-            string currentPath = GetPath(treeView.SelectedNode.FullPath);
-            for (int j = 0; j < items.Length; j++)
-            {
-                tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
-                // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
-                {
-                    MessageBox.Show(CalculateMD5(tmpPathssum[j]), tmpPathssum[j] + "  MD5 ");
-                }
-            }
-        }
-        private static string GetSHA256(string fileName)
-        {
-            // 7z
-            using (FileStream stream = File.OpenRead(fileName))
-            {
-                var sha = new SHA256Managed();
-                byte[] checksum = sha.ComputeHash(stream);
-                return BitConverter.ToString(checksum).Replace("-", String.Empty);
-            }
-        }
-        private void sHA256ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (treeView.SelectedNode.Text.Equals("This PC")) return;
-            //Copy danh sách các items sang mảng các items để đảm bảo vị trí
-            ListViewItem[] items = new ListViewItem[listView.SelectedItems.Count];
-            listView.SelectedItems.CopyTo(items, 0);
-            //Lưu lại đường dẫn các thư mục (tệp tin) cần copy
-            string[] tmpPathssum = new string[items.Length];
-            string currentPath = GetPath(treeView.SelectedNode.FullPath);
-            for (int j = 0; j < items.Length; j++)
-            {
-                tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
-                // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
-                {
-                    MessageBox.Show(GetSHA256(tmpPathssum[j]), tmpPathssum[j] + "  SHA-256 ");
-                }
+                pathBack.RemoveAt(pathBack.Count - 1);
+                Back--;
             }
         }
 
+        //About
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             About ab = new About();
             ab.Show();
         }
-        private static string GetCRC32(string fileName)
-        {
-            Crc32 crc32 = new Crc32();
-            String hash = String.Empty;
 
-            // using (FileStream fs = File.Open("c:\\myfile.txt", FileMode.Open))
-            using (FileStream stream = File.OpenRead(fileName))
-                foreach (byte b in crc32.ComputeHash(stream)) hash += b.ToString("x2");
-            return hash;
-        }
-        private void cRC32ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (treeView.SelectedNode.Text.Equals("This PC")) return;
-            //Copy danh sách các items sang mảng các items để đảm bảo vị trí
-            ListViewItem[] items = new ListViewItem[listView.SelectedItems.Count];
-            listView.SelectedItems.CopyTo(items, 0);
-            //Lưu lại đường dẫn các thư mục (tệp tin) cần copy
-            string[] tmpPathssum = new string[items.Length];
-            string currentPath = GetPath(treeView.SelectedNode.FullPath);
-            for (int j = 0; j < items.Length; j++)
-            {
-                tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
-                // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
-                {
-                    MessageBox.Show(GetCRC32(tmpPathssum[j]), tmpPathssum[j] + "  CRC-32 ");
-                }
-            }
-        }
-        private static string GetSHA1(string fileName)
-        {
-            try
-            {
-                using (var shaHasher = new System.Security.Cryptography.SHA1CryptoServiceProvider())
-                using (FileStream stream = File.OpenRead(fileName))
-                {
-                    return BitConverter.ToString(shaHasher.ComputeHash(stream)).Replace("-", string.Empty);
-                }
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-        }
-        private void sHA1ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (treeView.SelectedNode.Text.Equals("This PC")) return;
-            //Copy danh sách các items sang mảng các items để đảm bảo vị trí
-            ListViewItem[] items = new ListViewItem[listView.SelectedItems.Count];
-            listView.SelectedItems.CopyTo(items, 0);
-            //Lưu lại đường dẫn các thư mục (tệp tin) cần copy
-            string[] tmpPathssum = new string[items.Length];
-            string currentPath = GetPath(treeView.SelectedNode.FullPath);
-            for (int j = 0; j < items.Length; j++)
-            {
-                tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
-                // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
-                {
-                    MessageBox.Show(GetSHA1(tmpPathssum[j]), tmpPathssum[j] + "  SHA-1 ");
-                }
-            }
-        }
+        #endregion
 
-        private void toolStripButton7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        
         #region Right Click Menu
         private void listView_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1040,82 +788,255 @@ namespace BasicExtractExplorer
         }
         #endregion
 
+        //Hiện status bar
+        private void listView_Click(object sender, EventArgs e)
+        {
+            string status1;
+            string status2;
+            string status3;
+            //status1
+            if (listView.Items.Count == 1) status1 = " item";
+            else status1 = " items";
+            toolStripStatusLabel1.Text = listView.Items.Count.ToString() + status1;
+            //status2
+            if (listView.SelectedItems.Count > 0)
+            {
+                if (listView.SelectedItems.Count == 1)
+                    status2 = " item selected";
+                else status2 = " items selected";
+                toolStripStatusLabel2.Text = listView.SelectedItems.Count.ToString() + status2;
+            }
+            else toolStripStatusLabel2.Text = "";
+            //status3
+            toolStripStatusLabel3.Text = "";
+            if (listView.SelectedItems.Count > 0)
+            {
+                int size = 0;//Tổng dung lượng các File được chọn
+                bool check = false;//Số File trong selecteditems
+                foreach (ListViewItem item in listView.SelectedItems)
+                    if (item.SubItems[1].Text != "Folder")
+                    {
+                        size += int.Parse(item.SubItems[2].Text.Substring(0, item.SubItems[2].Text.Length - 3));
+                        check = true;
+                    }
+
+                if (check == true) toolStripStatusLabel3.Text = size.ToString() + " KB";
+
+            }
+        }
+
+        private void listView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            listView_Click(sender, e);
+        }
+
+        private void listView_DoubleClick(object sender, EventArgs e)
+        {
+            string[] archiveExtension = { ".zip", ".rar", ".7z", ".tar", ".xz", ".bz2", ".gz", ".iso" };
+            String tmpNode = listView.SelectedItems[0].SubItems[0].Text;
+            string fullpath = treeView.SelectedNode.FullPath;
+            string str = GetPath(fullpath);
+            str += listView.SelectedItems[0].SubItems[0].Text;
+            if (Path.GetExtension(str).CompareTo("") != 0)
+            {
+                try
+                {
+                    if (archiveExtension.Contains(Path.GetExtension(str)))
+                    {
+                        listViewArchive.Visible = true;
+                        ShowArchiveFiles(str);
+                    }
+                    else
+                    {
+                        System.Diagnostics.Process.Start(str);
+                    }
+
+                }
+                catch (Win32Exception)
+                {
+                    MessageBox.Show("Mở file thất bại, bạn vui lòng xem lại!");
+                }
+            }
+            else
+            {
+                foreach (TreeNode node in treeView.SelectedNode.Nodes)
+                {
+                    if (node.Text.Equals(tmpNode)) treeView.SelectedNode = node;
+                }
+                listView_Click(sender, e);
+            }
+            listView_Click(sender, e);
+        }
+
+        //button Add
+        private void toolStripButton6_Click(object sender, EventArgs e)
+        {
+            if(listView.SelectedItems.Count > 0)
+            {
+                string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = "BasicExtractExplorer.exe";
+                startInfo.Arguments = "compress ";
+                foreach (ListViewItem item in listView.SelectedItems)
+                {
+                    startInfo.Arguments +="\"" + selected_node_path + item.Text + "\" ";
+                }
+                
+                process.StartInfo = startInfo;
+                process.EnableRaisingEvents = true;
+                process.Exited += delegate {
+                    //Refresh sau khi nén
+                    Invoke((MethodInvoker)delegate 
+                    {
+                        toolStripButton12_Click(sender, e);
+                    });
+                };
+                process.Start();
+                
+            }
+            else
+            {
+                MessageBox.Show("Please select a folder", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+        }
+
+        //enter Address Bar
         private void toolStripComboBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
                 toolStripButton11_Click(sender, e);
         }
 
-        private void ShowArchiveFiles(string archivePath)
-        {
-            if (listViewArchive != null) listViewArchive.Items.Clear();
-            if (treeViewArchive != null) treeViewArchive.Nodes.Clear();
-            SevenZip.SevenZipExtractor.SetLibraryPath("7z.dll");
-            sevenZipExtractor = new SevenZip.SevenZipExtractor(archivePath);
-            var files = sevenZipExtractor.ArchiveFileNames;
-            var filedata = sevenZipExtractor.ArchiveFileData;
-            pnode = new PathNode();
-            TreeNode rootNode = new TreeNode(Path.GetFileName(archivePath));
-            rootNode.ImageIndex = 2;
-            rootNode.SelectedImageIndex = 2;
-            treeViewArchive.Nodes.Add(rootNode);
-            treeViewArchive.SelectedNode = rootNode;
-            for (int i = 0; i < files.Count; i++)
-            {
-                pnode.AddPath(files[i], filedata[i]);
-            }
-            for (int i = 0; i < pnode.nodes.Count; i++)
-            {
-                
-                if (!IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
-                {
-                    TreeNode treeNode = new TreeNode(pnode.nodes.ElementAt(i).Key);
-                    treeNode.ImageIndex = 0;
-                    treeNode.SelectedImageIndex = 0;
-                    rootNode.Nodes.Add(treeNode);
-                    ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
-                    string[] tmp = new string[9];
-                    tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
-                    tmp[1] = "";
-                    tmp[2] = "Folder";
-                    tmp[3] = "";
-                    tmp[4] = "";
-                    tmp[5] = "";
-                    tmp[6] = "";
-                    tmp[7] = "";
-                    tmp[8] = "";
-                    ListViewItem item = new ListViewItem(tmp);
-                    item.ImageIndex = 0;
-                    listViewArchive.Items.Add(item);
-                }
-                //listViewArchive.Items.Add(pnode.nodes.ElementAt(i).Key);
-            }
-            for (int i = 0; i < pnode.nodes.Count; i++)
-            {
-                //rootNode.Nodes.Add(pnode.nodes.ElementAt(i).Key);
-                if (IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
-                {
-                    ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
-                    string[] tmp = new string[9];
-                    tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
-                    tmp[1] = info.Size.ToString();
-                    tmp[2] = "File";
-                    tmp[3] = info.LastWriteTime.ToString();
-                    tmp[4] = info.CreationTime.ToString();
-                    tmp[5] = info.LastAccessTime.ToString();
-                    tmp[6] = info.Attributes.ToString();
-                    tmp[7] = info.Crc.ToString("X2");
-                    tmp[8] = info.Comment;
-                    ListViewItem item = new ListViewItem(tmp);
-                    item.ImageIndex = 1;
-                    listViewArchive.Items.Add(item);
-                }
-            }
-            
 
-            rootNode.Expand();
-            //current_path_node = pnode;
+        #region CheckSum
+        private static string CalculateMD5(string fileName)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(fileName))
+                {
+                    var hash = md5.ComputeHash(stream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                }
+            }
         }
+        private void mD5ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeView.SelectedNode.Text.Equals("This PC")) return;
+            //Copy danh sách các items sang mảng các items để đảm bảo vị trí
+            ListViewItem[] items = new ListViewItem[listView.SelectedItems.Count];
+            listView.SelectedItems.CopyTo(items, 0);
+            //Lưu lại đường dẫn các thư mục (tệp tin) cần copy
+            string[] tmpPathssum = new string[items.Length];
+            string currentPath = GetPath(treeView.SelectedNode.FullPath);
+            for (int j = 0; j < items.Length; j++)
+            {
+                tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
+                // textBox1.Text += tmpPathsNen[j];
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                {
+                    MessageBox.Show(CalculateMD5(tmpPathssum[j]), tmpPathssum[j] + "  MD5 ");
+                }
+            }
+        }
+        private static string GetSHA256(string fileName)
+        {
+            // 7z
+            using (FileStream stream = File.OpenRead(fileName))
+            {
+                var sha = new SHA256Managed();
+                byte[] checksum = sha.ComputeHash(stream);
+                return BitConverter.ToString(checksum).Replace("-", String.Empty);
+            }
+        }
+        private void sHA256ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeView.SelectedNode.Text.Equals("This PC")) return;
+            //Copy danh sách các items sang mảng các items để đảm bảo vị trí
+            ListViewItem[] items = new ListViewItem[listView.SelectedItems.Count];
+            listView.SelectedItems.CopyTo(items, 0);
+            //Lưu lại đường dẫn các thư mục (tệp tin) cần copy
+            string[] tmpPathssum = new string[items.Length];
+            string currentPath = GetPath(treeView.SelectedNode.FullPath);
+            for (int j = 0; j < items.Length; j++)
+            {
+                tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
+                // textBox1.Text += tmpPathsNen[j];
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                {
+                    MessageBox.Show(GetSHA256(tmpPathssum[j]), tmpPathssum[j] + "  SHA-256 ");
+                }
+            }
+        }
+        private static string GetCRC32(string fileName)
+        {
+            Crc32 crc32 = new Crc32();
+            String hash = String.Empty;
+
+            // using (FileStream fs = File.Open("c:\\myfile.txt", FileMode.Open))
+            using (FileStream stream = File.OpenRead(fileName))
+                foreach (byte b in crc32.ComputeHash(stream)) hash += b.ToString("x2");
+            return hash;
+        }
+        private void cRC32ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeView.SelectedNode.Text.Equals("This PC")) return;
+            //Copy danh sách các items sang mảng các items để đảm bảo vị trí
+            ListViewItem[] items = new ListViewItem[listView.SelectedItems.Count];
+            listView.SelectedItems.CopyTo(items, 0);
+            //Lưu lại đường dẫn các thư mục (tệp tin) cần copy
+            string[] tmpPathssum = new string[items.Length];
+            string currentPath = GetPath(treeView.SelectedNode.FullPath);
+            for (int j = 0; j < items.Length; j++)
+            {
+                tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
+                // textBox1.Text += tmpPathsNen[j];
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                {
+                    MessageBox.Show(GetCRC32(tmpPathssum[j]), tmpPathssum[j] + "  CRC-32 ");
+                }
+            }
+        }
+        private static string GetSHA1(string fileName)
+        {
+            try
+            {
+                using (var shaHasher = new System.Security.Cryptography.SHA1CryptoServiceProvider())
+                using (FileStream stream = File.OpenRead(fileName))
+                {
+                    return BitConverter.ToString(shaHasher.ComputeHash(stream)).Replace("-", string.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+        private void sHA1ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeView.SelectedNode.Text.Equals("This PC")) return;
+            //Copy danh sách các items sang mảng các items để đảm bảo vị trí
+            ListViewItem[] items = new ListViewItem[listView.SelectedItems.Count];
+            listView.SelectedItems.CopyTo(items, 0);
+            //Lưu lại đường dẫn các thư mục (tệp tin) cần copy
+            string[] tmpPathssum = new string[items.Length];
+            string currentPath = GetPath(treeView.SelectedNode.FullPath);
+            for (int j = 0; j < items.Length; j++)
+            {
+                tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
+                // textBox1.Text += tmpPathsNen[j];
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                {
+                    MessageBox.Show(GetSHA1(tmpPathssum[j]), tmpPathssum[j] + "  SHA-1 ");
+                }
+            }
+        }
+
+        #endregion
+
         #region Path
         //https://stackoverflow.com/questions/10870443/how-to-create-hierarchical-structure-with-list-of-path
         public class PathNode
@@ -1162,6 +1083,7 @@ namespace BasicExtractExplorer
 
         #endregion Path
 
+        #region tree view archive
         private void listViewArchive_DoubleClick(object sender, EventArgs e)
         {
             string tmpNode = listViewArchive.SelectedItems[0].SubItems[0].Text;
@@ -1229,9 +1151,7 @@ namespace BasicExtractExplorer
             {
                 MessageBox.Show(ex.Message);
             }
-        }
-
-        
+        } 
         private void ShowFoldersAndFilesArchive()
         {
             if (listViewArchive != null)
@@ -1299,7 +1219,77 @@ namespace BasicExtractExplorer
                 MessageBox.Show(ex.Message);
             }
         }
+        private void ShowArchiveFiles(string archivePath)
+        {
+            if (listViewArchive != null) listViewArchive.Items.Clear();
+            if (treeViewArchive != null) treeViewArchive.Nodes.Clear();
+            SevenZip.SevenZipExtractor.SetLibraryPath("7z.dll");
+            sevenZipExtractor = new SevenZip.SevenZipExtractor(archivePath);
+            var files = sevenZipExtractor.ArchiveFileNames;
+            var filedata = sevenZipExtractor.ArchiveFileData;
+            pnode = new PathNode();
+            TreeNode rootNode = new TreeNode(Path.GetFileName(archivePath));
+            rootNode.ImageIndex = 2;
+            rootNode.SelectedImageIndex = 2;
+            treeViewArchive.Nodes.Add(rootNode);
+            treeViewArchive.SelectedNode = rootNode;
+            for (int i = 0; i < files.Count; i++)
+            {
+                pnode.AddPath(files[i], filedata[i]);
+            }
+            for (int i = 0; i < pnode.nodes.Count; i++)
+            {
 
-        
+                if (!IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
+                {
+                    TreeNode treeNode = new TreeNode(pnode.nodes.ElementAt(i).Key);
+                    treeNode.ImageIndex = 0;
+                    treeNode.SelectedImageIndex = 0;
+                    rootNode.Nodes.Add(treeNode);
+                    ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
+                    string[] tmp = new string[9];
+                    tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
+                    tmp[1] = "";
+                    tmp[2] = "Folder";
+                    tmp[3] = "";
+                    tmp[4] = "";
+                    tmp[5] = "";
+                    tmp[6] = "";
+                    tmp[7] = "";
+                    tmp[8] = "";
+                    ListViewItem item = new ListViewItem(tmp);
+                    item.ImageIndex = 0;
+                    listViewArchive.Items.Add(item);
+                }
+                //listViewArchive.Items.Add(pnode.nodes.ElementAt(i).Key);
+            }
+            for (int i = 0; i < pnode.nodes.Count; i++)
+            {
+                //rootNode.Nodes.Add(pnode.nodes.ElementAt(i).Key);
+                if (IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
+                {
+                    ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
+                    string[] tmp = new string[9];
+                    tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
+                    tmp[1] = info.Size.ToString();
+                    tmp[2] = "File";
+                    tmp[3] = info.LastWriteTime.ToString();
+                    tmp[4] = info.CreationTime.ToString();
+                    tmp[5] = info.LastAccessTime.ToString();
+                    tmp[6] = info.Attributes.ToString();
+                    tmp[7] = info.Crc.ToString("X2");
+                    tmp[8] = info.Comment;
+                    ListViewItem item = new ListViewItem(tmp);
+                    item.ImageIndex = 1;
+                    listViewArchive.Items.Add(item);
+                }
+            }
+
+
+            rootNode.Expand();
+            //current_path_node = pnode;
+        }
+        #endregion
+
     }
 }
