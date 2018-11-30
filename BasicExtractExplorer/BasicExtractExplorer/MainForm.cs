@@ -37,7 +37,7 @@ namespace BasicExtractExplorer
             initialization();
         }
 
-        private void initialization()
+        private void initialization() //Khởi tạo form
         {
             listViewArchive.Visible = false;
             ComponentResourceManager resources = new ComponentResourceManager(typeof(MainForm));
@@ -80,6 +80,10 @@ namespace BasicExtractExplorer
             ThisPC.Expand();
 
             isCopying = 0; //không đang copy hay cut
+            pasteCrltVToolStripMenuItem.Enabled = false;
+            copyCrltCToolStripMenuItem.Enabled = false;
+            cutCrltXToolStripMenuItem.Enabled = false;
+            selectAllCrltAToolStripMenuItem.Enabled = false;
             fileSelectedName = new List<string>();
             typeSelectedFile = new List<string>();
 
@@ -89,7 +93,9 @@ namespace BasicExtractExplorer
 
             pathBack.Add(ThisPC.FullPath);
             isBacking = false;
-        } //Khởi tạo form
+
+            
+        } 
 
         private string GetPath(string treeNodePath) //Lấy đường dẫn từ treeNodePath
         {
@@ -352,6 +358,7 @@ namespace BasicExtractExplorer
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             if (listView.SelectedItems.Count == 0) return;
+
             if (isCopying != 2) isCopying = 1; // Xác định xem đang copy hay cut
             old_selected_node_path = GetPath(treeView.SelectedNode.FullPath);
             if (!(Directory.Exists(old_selected_node_path))) //Kiểm tra đường dẫn tồn tại
@@ -370,6 +377,7 @@ namespace BasicExtractExplorer
 
             }
 
+            pasteCrltVToolStripMenuItem.Enabled = true;
         }
 
         private void copyCrltCToolStripMenuItem_Click(object sender, EventArgs e)
@@ -402,6 +410,7 @@ namespace BasicExtractExplorer
             string desPath = selected_node_path; //Địa chỉ đích
             if (desPath == old_selected_node_path && isCopying == 2) //Nếu Cut và Paste tại cùng thư mục thì thoát
             {
+                pasteCrltVToolStripMenuItem.Enabled = false;
                 isCopying = 0;
                 return;
             }
@@ -512,6 +521,7 @@ namespace BasicExtractExplorer
                         File.Delete(old_selected_node_path + fileSelectedName[i]);
                     }
                 isCopying = 0;
+                pasteCrltVToolStripMenuItem.Enabled = false;
             }
 
         }
@@ -828,6 +838,18 @@ namespace BasicExtractExplorer
         private void listView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             listView_Click(sender, e);
+            if (listView.SelectedItems.Count > 0)
+            {
+                copyCrltCToolStripMenuItem.Enabled = true;
+                cutCrltXToolStripMenuItem.Enabled = true;
+                selectAllCrltAToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                copyCrltCToolStripMenuItem.Enabled = false;
+                cutCrltXToolStripMenuItem.Enabled = false;
+                selectAllCrltAToolStripMenuItem.Enabled == false;
+            }
         }
 
         private void listView_DoubleClick(object sender, EventArgs e)
@@ -1290,6 +1312,5 @@ namespace BasicExtractExplorer
             //current_path_node = pnode;
         }
         #endregion
-
     }
 }

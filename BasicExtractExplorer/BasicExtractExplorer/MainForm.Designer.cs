@@ -189,13 +189,13 @@
             // folderToolStripMenuItem
             // 
             this.folderToolStripMenuItem.Name = "folderToolStripMenuItem";
-            this.folderToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.folderToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
             this.folderToolStripMenuItem.Text = "Folder";
             // 
             // itemToolStripMenuItem
             // 
             this.itemToolStripMenuItem.Name = "itemToolStripMenuItem";
-            this.itemToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.itemToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
             this.itemToolStripMenuItem.Text = "Item";
             // 
             // renameToolStripMenuItem
