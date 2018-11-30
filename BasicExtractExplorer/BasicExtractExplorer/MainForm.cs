@@ -25,7 +25,7 @@ namespace BasicExtractExplorer
         List<string> fileSelectedName; //Danh sách tên các file/folder đang được chọn để copy hoặc cut
         List<string> typeSelectedFile; //Danh sách Loại các item đang được chọn để copy hoặc cut
         string old_selected_node_path; //Đường dẫn cũ tại folder chọn copy hoặc cut, trước khi Paste
-        int treeView_ImageIndex = 1;
+        int treeView_ImageIndex = 2;
 
         List<string> pathBack = new List<string>(); //stack Back
         int Back; //vị trí node trong stack dùng cho back
@@ -47,6 +47,7 @@ namespace BasicExtractExplorer
             //treeView Icons
             treeView_ImageList.ImageSize = new Size(20, 20);
             treeView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
+            treeView_ImageList.Images.Add(IconHelper.Extract(IconHelper.Shell32, 3, true));
             treeView_ImageList.Images.Add(IconHelper.Extract(IconHelper.Shell32, 15, true));//load thispc icon
             treeView.ImageList = treeView_ImageList;
             //archiveView Icons
@@ -64,6 +65,8 @@ namespace BasicExtractExplorer
                 treeView.Nodes.Clear();
             //Tạo node gốc: My Computer;
             TreeNode ThisPC = new TreeNode("This PC");
+            ThisPC.ImageIndex = 1;
+            ThisPC.SelectedImageIndex = 1;
             treeView.Nodes.Add(ThisPC);
             //Thêm các node là các ổ drives vào node gốc
             string[] folders = Directory.GetLogicalDrives();
@@ -145,20 +148,13 @@ namespace BasicExtractExplorer
                     {
                         var folders = Directory.GetDirectories(selected_node_path)
                             .Where(d => !new DirectoryInfo(d).Attributes.HasFlag(FileAttributes.System | FileAttributes.Hidden));
-                        
-                        foreach (string folder in folders)
-                        {
-
-                            //treeView_ImageList.Images.Add(IconHelper.GetIcon(folder));
-                            treeView_ImageList.Images.Add(IconHelper.Extract(IconHelper.Shell32, 3, true));
-                        }
 
                         //Lấy tên các thư mục là node con của node được chọn
                         foreach (string folder in folders)
                         {
                             TreeNode treeNode = e.Node.Nodes.Add(Path.GetFileName(folder));
-                            treeNode.ImageIndex = treeView_ImageIndex++;
-                            treeNode.SelectedImageIndex = treeNode.ImageIndex;
+                            treeNode.ImageIndex = 0;
+                            treeNode.SelectedImageIndex = 0;
                         }
                         //Hiện các files và folder lên listView
                         ShowFilesAndFolders();
@@ -1161,83 +1157,6 @@ namespace BasicExtractExplorer
         }
 
         #endregion
-
-        private void toolStripComboBox1_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                toolStripButton11_Click(sender, e);
-        }
-
-        private void ShowArchiveFiles(string archivePath)
-        {
-            if (listViewArchive != null) listViewArchive.Items.Clear();
-            if (treeViewArchive != null) treeViewArchive.Nodes.Clear();
-            SevenZip.SevenZipExtractor.SetLibraryPath("7z.dll");
-            sevenZipExtractor = new SevenZip.SevenZipExtractor(archivePath);
-            var files = sevenZipExtractor.ArchiveFileNames;
-            var filedata = sevenZipExtractor.ArchiveFileData;
-            pnode = new PathNode();
-            TreeNode rootNode = new TreeNode(Path.GetFileName(archivePath));
-            rootNode.ImageIndex = 2;
-            rootNode.SelectedImageIndex = 2;
-            treeViewArchive.Nodes.Add(rootNode);
-            treeViewArchive.SelectedNode = rootNode;
-            for (int i = 0; i < files.Count; i++)
-            {
-                pnode.AddPath(files[i], filedata[i]);
-            }
-            for (int i = 0; i < pnode.nodes.Count; i++)
-            {
-                
-                if (!IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
-                {
-                    TreeNode treeNode = new TreeNode(pnode.nodes.ElementAt(i).Key);
-                    treeNode.ImageIndex = 0;
-                    treeNode.SelectedImageIndex = 0;
-                    rootNode.Nodes.Add(treeNode);
-                    ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
-                    string[] tmp = new string[9];
-                    tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
-                    tmp[1] = "";
-                    tmp[2] = "Folder";
-                    tmp[3] = "";
-                    tmp[4] = "";
-                    tmp[5] = "";
-                    tmp[6] = "";
-                    tmp[7] = "";
-                    tmp[8] = "";
-                    ListViewItem item = new ListViewItem(tmp);
-                    item.ImageIndex = 0;
-                    listViewArchive.Items.Add(item);
-                }
-                //listViewArchive.Items.Add(pnode.nodes.ElementAt(i).Key);
-            }
-            for (int i = 0; i < pnode.nodes.Count; i++)
-            {
-                //rootNode.Nodes.Add(pnode.nodes.ElementAt(i).Key);
-                if (IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
-                {
-                    ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
-                    string[] tmp = new string[9];
-                    tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
-                    tmp[1] = info.Size.ToString();
-                    tmp[2] = "File";
-                    tmp[3] = info.LastWriteTime.ToString();
-                    tmp[4] = info.CreationTime.ToString();
-                    tmp[5] = info.LastAccessTime.ToString();
-                    tmp[6] = info.Attributes.ToString();
-                    tmp[7] = info.Crc.ToString("X2");
-                    tmp[8] = info.Comment;
-                    ListViewItem item = new ListViewItem(tmp);
-                    item.ImageIndex = 1;
-                    listViewArchive.Items.Add(item);
-                }
-            }
-            
-
-            rootNode.Expand();
-            //current_path_node = pnode;
-        }
         #region Path
         //https://stackoverflow.com/questions/10870443/how-to-create-hierarchical-structure-with-list-of-path
         public class PathNode
