@@ -80,10 +80,7 @@ namespace BasicExtractExplorer
             ThisPC.Expand();
 
             isCopying = 0; //không đang copy hay cut
-            pasteCrltVToolStripMenuItem.Enabled = false;
-            copyCrltCToolStripMenuItem.Enabled = false;
-            cutCrltXToolStripMenuItem.Enabled = false;
-            selectAllCrltAToolStripMenuItem.Enabled = false;
+            
             fileSelectedName = new List<string>();
             typeSelectedFile = new List<string>();
 
@@ -94,8 +91,23 @@ namespace BasicExtractExplorer
             pathBack.Add(ThisPC.FullPath);
             isBacking = false;
 
-            
+            enableButtonInit();
+
+
         } 
+
+        private void enableButtonInit()
+        {
+            pasteCrltVToolStripMenuItem.Enabled = false;
+            copyCrltCToolStripMenuItem.Enabled = false;
+            cutCrltXToolStripMenuItem.Enabled = false;
+            selectAllCrltAToolStripMenuItem.Enabled = false;
+            renameToolStripMenuItem.Enabled = false;
+            deleteDelToolStripMenuItem.Enabled = false;
+
+            folderToolStripMenuItem.Enabled = false;
+            itemToolStripMenuItem.Enabled = false;
+        }
 
         private string GetPath(string treeNodePath) //Lấy đường dẫn từ treeNodePath
         {
@@ -124,6 +136,8 @@ namespace BasicExtractExplorer
             {
                 if (e.Node.Text.CompareTo("This PC") != 0)
                 {
+                    folderToolStripMenuItem.Enabled = true;
+                    itemToolStripMenuItem.Enabled = true;
                     //Xóa các node con cũ của node được chọn
                     if (e.Node != null)
                         e.Node.Nodes.Clear();
@@ -134,6 +148,7 @@ namespace BasicExtractExplorer
                     {
                         var folders = Directory.GetDirectories(selected_node_path)
                             .Where(d => !new DirectoryInfo(d).Attributes.HasFlag(FileAttributes.System | FileAttributes.Hidden));
+                        
                         foreach (string folder in folders)
                         {
 
@@ -161,6 +176,8 @@ namespace BasicExtractExplorer
                 {
                     if (treeView.SelectedNode.Text == "This PC") listView.Items.Clear();
                     toolStripComboBox1.Text = "This PC";
+                    folderToolStripMenuItem.Enabled = false;
+                    itemToolStripMenuItem.Enabled = false;
                 }
 
             }
@@ -604,8 +621,8 @@ namespace BasicExtractExplorer
                 treeViewArchive.SelectedNode = treeViewArchive.SelectedNode.Parent;
                 //listView_Click(sender, e);
             }
-            
 
+            enableButton();
         }
 
         //Close App
@@ -726,13 +743,58 @@ namespace BasicExtractExplorer
 
             ListViewItem tmp = null;
             foreach (ListViewItem item in listView.Items)
-                if (item.Text == "New folder(" + count.ToString() + ")")
+                if ((count>0 && item.Text == "New folder(" + count.ToString() + ")") || (count==0 && item.Text == "New folder"))
                 {
                     tmp = item;
                     break;
                 }
             if (tmp != null)
                 tmp.BeginEdit();
+        }
+
+        private void folderToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            folderToolStripMenuItem_Click(sender, e);
+        }
+
+        //New File
+        private void itemToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeView.SelectedNode.Text == "This PC") return;
+            int count = 0;
+            foreach (ListViewItem item in listView.Items)
+                if (item.Text == "New file")
+                {
+                    count++;
+                    break;
+                }
+            string fileName = toolStripComboBox1.Text + "\\New file";
+            if (count > 0)
+            {
+                while (Directory.Exists(fileName + "(" + count.ToString() + ")"))
+                {
+                    count++;
+                }
+                fileName += "(" + count.ToString() + ")";
+            }
+
+            File.Create(fileName);
+            toolStripButton12_Click(sender, e); //refresh
+
+            ListViewItem tmp = null;
+            foreach (ListViewItem item in listView.Items)
+                if ((count>0 && item.Text == "New file(" + count.ToString() + ")") || (item.Text=="New file"))
+                {
+                    tmp = item;
+                    break;
+                }
+            if (tmp != null)
+                tmp.BeginEdit();
+        }
+
+        private void shortCutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            itemToolStripMenuItem_Click(sender, e);
         }
 
         #endregion
@@ -872,17 +934,27 @@ namespace BasicExtractExplorer
         private void listView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             listView_Click(sender, e);
+            enableButton();
+        }
+
+        //Enable buttons
+        private void enableButton()
+        {
             if (listView.SelectedItems.Count > 0)
             {
                 copyCrltCToolStripMenuItem.Enabled = true;
                 cutCrltXToolStripMenuItem.Enabled = true;
                 selectAllCrltAToolStripMenuItem.Enabled = true;
+                renameToolStripMenuItem.Enabled = true;
+                deleteDelToolStripMenuItem.Enabled = true;
             }
             else
             {
                 copyCrltCToolStripMenuItem.Enabled = false;
                 cutCrltXToolStripMenuItem.Enabled = false;
                 selectAllCrltAToolStripMenuItem.Enabled = false;
+                renameToolStripMenuItem.Enabled = false;
+                deleteDelToolStripMenuItem.Enabled = false;
             }
         }
 
@@ -1345,8 +1417,11 @@ namespace BasicExtractExplorer
             rootNode.Expand();
             //current_path_node = pnode;
         }
+
+
+
         #endregion
 
-       
+        
     }
 }

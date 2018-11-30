@@ -197,7 +197,8 @@
             // 
             this.itemToolStripMenuItem.Name = "itemToolStripMenuItem";
             this.itemToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
-            this.itemToolStripMenuItem.Text = "Item";
+            this.itemToolStripMenuItem.Text = "File";
+            this.itemToolStripMenuItem.Click += new System.EventHandler(this.itemToolStripMenuItem_Click);
             // 
             // renameToolStripMenuItem
             // 
@@ -869,20 +870,22 @@
             this.folderToolStripMenuItem1,
             this.shortCutToolStripMenuItem});
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(145, 24);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(175, 24);
             this.newToolStripMenuItem.Text = "New";
             // 
             // folderToolStripMenuItem1
             // 
             this.folderToolStripMenuItem1.Name = "folderToolStripMenuItem1";
-            this.folderToolStripMenuItem1.Size = new System.Drawing.Size(139, 26);
+            this.folderToolStripMenuItem1.Size = new System.Drawing.Size(181, 26);
             this.folderToolStripMenuItem1.Text = "Folder";
+            this.folderToolStripMenuItem1.Click += new System.EventHandler(this.folderToolStripMenuItem1_Click);
             // 
             // shortCutToolStripMenuItem
             // 
             this.shortCutToolStripMenuItem.Name = "shortCutToolStripMenuItem";
-            this.shortCutToolStripMenuItem.Size = new System.Drawing.Size(139, 26);
-            this.shortCutToolStripMenuItem.Text = "Shortcut";
+            this.shortCutToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.shortCutToolStripMenuItem.Text = "File";
+            this.shortCutToolStripMenuItem.Click += new System.EventHandler(this.shortCutToolStripMenuItem_Click);
             // 
             // dToolStripMenuItem
             // 
