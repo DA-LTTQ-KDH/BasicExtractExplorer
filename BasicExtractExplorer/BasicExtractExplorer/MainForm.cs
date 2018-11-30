@@ -26,6 +26,11 @@ namespace BasicExtractExplorer
         List<string> typeSelectedFile; //Danh sách Loại các item đang được chọn để copy hoặc cut
         string old_selected_node_path; //Đường dẫn cũ tại folder chọn copy hoặc cut, trước khi Paste
         int treeView_ImageIndex = 1;
+
+        List<string> pathBack = new List<string>(); //stack Back
+        int Back; //vị trí node trong stack dùng cho back
+        bool isBacking;//Đang Back
+
         public MainForm()
         {
             InitializeComponent();
@@ -76,6 +81,9 @@ namespace BasicExtractExplorer
             toolStripStatusLabel1.Text = "";
             toolStripStatusLabel2.Text = "";
             toolStripStatusLabel3.Text = "";
+
+            pathBack.Add(ThisPC.FullPath);
+            isBacking = false;
         }
         private string GetPath(string treeNodePath) //Lấy đường dẫn từ treeNodePath
         {
@@ -143,12 +151,15 @@ namespace BasicExtractExplorer
                         //Hiện đường dẫn lên address
                         toolStripComboBox1.Text = GetPath(treeView.SelectedNode.FullPath);
                     }
-                    
+
                     e.Node.Expand();
-                    
+
                 }
                 else
+                {
                     if (treeView.SelectedNode.Text == "This PC") listView.Items.Clear();
+                    toolStripComboBox1.Text = "This PC";
+                }
 
             }
             catch (DirectoryNotFoundException)
@@ -161,6 +172,24 @@ namespace BasicExtractExplorer
             }
 
             toolStripStatusLabel1.Text = listView.Items.Count.ToString() + " items";
+
+            if (isBacking) return;
+            if (treeView.SelectedNode.Text == "This PC") return;
+            pathBack.Add(treeView.SelectedNode.FullPath);
+            Back++;
+        }
+
+        //Back
+        private void toolStripButton8_Click(object sender, EventArgs e)
+        {
+            isBacking = true;
+            toolStripButton11_Click(sender, e);
+            isBacking = false;
+            if (Back > 0)
+            {
+                pathBack.RemoveAt(pathBack.Count - 1);
+                Back--;
+            }
         }
 
         private void ShowFilesAndFolders()
@@ -690,12 +719,30 @@ namespace BasicExtractExplorer
         private void toolStripButton11_Click(object sender, EventArgs e)
         {
             string path = toolStripComboBox1.Text; //Lấy đường dẫn được nhập vào từ thanh address
+            //Thay path= stack[back] nếu đang back
+            if (isBacking)
+            {
+                if (Back > 0)
+                    path = pathBack[Back - 1];
+                else
+                    path = pathBack[Back];
+            }
             string[] nodes = path.Split('\\'); //Cắt lấy từng phần folder
             path = "";
             for (int i = 0; i < nodes.Length; i++)
                 if (i != 0 || nodes[i] != "This PC")
                     path += nodes[i]+"\\";
             string[] newNodes = path.Split('\\'); //danh sách mới
+
+            if (path == "")
+            {
+                while (treeView.SelectedNode.Parent != null)
+                {
+                    treeView.SelectedNode = treeView.SelectedNode.Parent;
+                }
+                return;
+            }
+
             if (!Directory.Exists(path))
             {
                 toolStripButton12_Click(sender, e);
@@ -1183,6 +1230,8 @@ namespace BasicExtractExplorer
                 MessageBox.Show(ex.Message);
             }
         }
+
+        
         private void ShowFoldersAndFilesArchive()
         {
             if (listViewArchive != null)
@@ -1250,5 +1299,7 @@ namespace BasicExtractExplorer
                 MessageBox.Show(ex.Message);
             }
         }
+
+        
     }
 }

@@ -80,11 +80,17 @@
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripButton11 = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.treeView = new System.Windows.Forms.TreeView();
+            this.treeViewArchive = new System.Windows.Forms.TreeView();
             this.listViewArchive = new System.Windows.Forms.ListView();
             this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderModified = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderCreated = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderAccessed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderAttributes = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderCRC = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderComment = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.listView = new System.Windows.Forms.ListView();
@@ -128,12 +134,7 @@
             this.renameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.propertiesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.treeViewArchive = new System.Windows.Forms.TreeView();
-            this.columnHeaderCreated = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderAccessed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderAttributes = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.label1 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
@@ -141,13 +142,13 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
-            this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -161,7 +162,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1287, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1317, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -341,7 +342,7 @@
             this.toolStripDropDownButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 28);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1287, 39);
+            this.toolStrip1.Size = new System.Drawing.Size(1317, 39);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -509,7 +510,7 @@
             this.toolStripButton11});
             this.toolStrip2.Location = new System.Drawing.Point(0, 67);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(1287, 28);
+            this.toolStrip2.Size = new System.Drawing.Size(1317, 28);
             this.toolStrip2.TabIndex = 2;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -521,6 +522,7 @@
             this.toolStripButton8.Name = "toolStripButton8";
             this.toolStripButton8.Size = new System.Drawing.Size(24, 25);
             this.toolStripButton8.Text = "Back";
+            this.toolStripButton8.Click += new System.EventHandler(this.toolStripButton8_Click);
             // 
             // toolStripButton9
             // 
@@ -588,9 +590,28 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listViewArchive);
             this.splitContainer1.Panel2.Controls.Add(this.listView);
-            this.splitContainer1.Size = new System.Drawing.Size(1287, 454);
-            this.splitContainer1.SplitterDistance = 300;
+            this.splitContainer1.Size = new System.Drawing.Size(1317, 506);
+            this.splitContainer1.SplitterDistance = 306;
             this.splitContainer1.TabIndex = 3;
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.treeView);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.treeViewArchive);
+            this.splitContainer2.Panel2.Controls.Add(this.label1);
+            this.splitContainer2.Size = new System.Drawing.Size(306, 506);
+            this.splitContainer2.SplitterDistance = 263;
+            this.splitContainer2.TabIndex = 0;
             // 
             // treeView
             // 
@@ -598,9 +619,19 @@
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.treeView.Name = "treeView";
-            this.treeView.Size = new System.Drawing.Size(300, 236);
+            this.treeView.Size = new System.Drawing.Size(306, 263);
             this.treeView.TabIndex = 0;
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
+            // 
+            // treeViewArchive
+            // 
+            this.treeViewArchive.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeViewArchive.Location = new System.Drawing.Point(0, 28);
+            this.treeViewArchive.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.treeViewArchive.Name = "treeViewArchive";
+            this.treeViewArchive.Size = new System.Drawing.Size(306, 211);
+            this.treeViewArchive.TabIndex = 1;
+            this.treeViewArchive.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewArchive_AfterSelect);
             // 
             // listViewArchive
             // 
@@ -617,7 +648,7 @@
             this.listViewArchive.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewArchive.Location = new System.Drawing.Point(0, 0);
             this.listViewArchive.Name = "listViewArchive";
-            this.listViewArchive.Size = new System.Drawing.Size(983, 454);
+            this.listViewArchive.Size = new System.Drawing.Size(1007, 506);
             this.listViewArchive.TabIndex = 1;
             this.listViewArchive.UseCompatibleStateImageBehavior = false;
             this.listViewArchive.View = System.Windows.Forms.View.Details;
@@ -633,10 +664,28 @@
             this.columnHeaderSize.Text = "Size";
             this.columnHeaderSize.Width = 92;
             // 
+            // columnHeaderType
+            // 
+            this.columnHeaderType.Text = "Type";
+            // 
             // columnHeaderModified
             // 
             this.columnHeaderModified.Text = "Modified";
             this.columnHeaderModified.Width = 93;
+            // 
+            // columnHeaderCreated
+            // 
+            this.columnHeaderCreated.Text = "Created";
+            this.columnHeaderCreated.Width = 73;
+            // 
+            // columnHeaderAccessed
+            // 
+            this.columnHeaderAccessed.Text = "Accessed";
+            this.columnHeaderAccessed.Width = 61;
+            // 
+            // columnHeaderAttributes
+            // 
+            this.columnHeaderAttributes.Text = "Attributes";
             // 
             // columnHeaderCRC
             // 
@@ -661,7 +710,7 @@
             this.listView.Location = new System.Drawing.Point(0, 0);
             this.listView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(983, 454);
+            this.listView.Size = new System.Drawing.Size(1007, 506);
             this.listView.TabIndex = 0;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
@@ -701,10 +750,10 @@
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2,
             this.toolStripStatusLabel3});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 524);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 576);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 13, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(1287, 25);
+            this.statusStrip1.Size = new System.Drawing.Size(1317, 25);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -949,57 +998,23 @@
             this.propertiesToolStripMenuItem1.Size = new System.Drawing.Size(184, 24);
             this.propertiesToolStripMenuItem1.Text = "Properties";
             // 
-            // treeViewArchive
+            // label1
             // 
-            this.treeViewArchive.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeViewArchive.Location = new System.Drawing.Point(0, 0);
-            this.treeViewArchive.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.treeViewArchive.Name = "treeViewArchive";
-            this.treeViewArchive.Size = new System.Drawing.Size(300, 214);
-            this.treeViewArchive.TabIndex = 1;
-            this.treeViewArchive.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewArchive_AfterSelect);
-            // 
-            // columnHeaderCreated
-            // 
-            this.columnHeaderCreated.Text = "Created";
-            this.columnHeaderCreated.Width = 73;
-            // 
-            // columnHeaderAccessed
-            // 
-            this.columnHeaderAccessed.Text = "Accessed";
-            this.columnHeaderAccessed.Width = 61;
-            // 
-            // columnHeaderAttributes
-            // 
-            this.columnHeaderAttributes.Text = "Attributes";
-            // 
-            // columnHeaderType
-            // 
-            this.columnHeaderType.Text = "Type";
-            // 
-            // splitContainer2
-            // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.treeView);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.treeViewArchive);
-            this.splitContainer2.Size = new System.Drawing.Size(300, 454);
-            this.splitContainer2.SplitterDistance = 236;
-            this.splitContainer2.TabIndex = 0;
+            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(306, 28);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Compressed file Tree:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1287, 549);
+            this.ClientSize = new System.Drawing.Size(1317, 601);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip2);
@@ -1021,14 +1036,14 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
-            this.contextMenuStrip2.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
+            this.contextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1140,6 +1155,7 @@
         private System.Windows.Forms.ColumnHeader columnHeaderAttributes;
         private System.Windows.Forms.ColumnHeader columnHeaderType;
         private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.Label label1;
     }
 }
 
