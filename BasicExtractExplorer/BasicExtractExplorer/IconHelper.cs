@@ -11,6 +11,7 @@ namespace BasicExtractExplorer
     public class IconHelper
     {
         static SHFILEINFO shinfo = new SHFILEINFO();
+        public static string Shell32 = Environment.SystemDirectory + "\\shell32.dll";
         public static Icon GetIcon(string path)
         {
             IntPtr hImgSmall = Win32.SHGetFileInfo(path, 0, ref shinfo,
@@ -37,6 +38,24 @@ namespace BasicExtractExplorer
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
             public string szTypeName;
         };
+        public static Icon Extract(string file, int number, bool largeIcon)
+        {
+            IntPtr large;
+            IntPtr small;
+            ExtractIconEx(file, number, out large, out small, 1);
+            try
+            {
+                return Icon.FromHandle(largeIcon ? large : small);
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+        [DllImport("Shell32.dll", EntryPoint = "ExtractIconExW", CharSet = CharSet.Unicode, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
+        private static extern int ExtractIconEx(string sFile, int iIndex, out IntPtr piLargeVersion, out IntPtr piSmallVersion, int amountIcons);
+
         class Win32
         {
             public const uint SHGFI_ICON = 0x100;
