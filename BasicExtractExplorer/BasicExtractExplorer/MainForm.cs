@@ -701,6 +701,40 @@ namespace BasicExtractExplorer
             ab.Show();
         }
 
+        //New folder
+        private void folderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeView.SelectedNode.Text == "This PC") return;
+            int count = 0;
+            foreach (ListViewItem item in listView.Items)
+                if (item.Text == "New folder")
+                {
+                    count++;
+                    break;
+                }
+            string folderName = toolStripComboBox1.Text + "\\New folder";
+            if (count > 0)
+            {
+                while (Directory.Exists(folderName + "(" + count.ToString() + ")"))
+                {
+                    count++;
+                }
+                folderName += "(" + count.ToString() + ")";
+            }
+            Directory.CreateDirectory(folderName);
+            toolStripButton12_Click(sender, e); //refresh
+
+            ListViewItem tmp = null;
+            foreach (ListViewItem item in listView.Items)
+                if (item.Text == "New folder(" + count.ToString() + ")")
+                {
+                    tmp = item;
+                    break;
+                }
+            if (tmp != null)
+                tmp.BeginEdit();
+        }
+
         #endregion
 
         #region Right Click Menu
@@ -848,7 +882,7 @@ namespace BasicExtractExplorer
             {
                 copyCrltCToolStripMenuItem.Enabled = false;
                 cutCrltXToolStripMenuItem.Enabled = false;
-                selectAllCrltAToolStripMenuItem.Enabled == false;
+                selectAllCrltAToolStripMenuItem.Enabled = false;
             }
         }
 
@@ -1312,5 +1346,7 @@ namespace BasicExtractExplorer
             //current_path_node = pnode;
         }
         #endregion
+
+       
     }
 }
