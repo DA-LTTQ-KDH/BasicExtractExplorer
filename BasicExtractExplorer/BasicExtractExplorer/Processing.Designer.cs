@@ -115,7 +115,6 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "Processing";
             this.Text = "Processing";
-            this.Shown += new System.EventHandler(this.Processing_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

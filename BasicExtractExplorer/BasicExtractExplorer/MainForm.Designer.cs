@@ -189,14 +189,14 @@
             // folderToolStripMenuItem
             // 
             this.folderToolStripMenuItem.Name = "folderToolStripMenuItem";
-            this.folderToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.folderToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
             this.folderToolStripMenuItem.Text = "Folder";
             this.folderToolStripMenuItem.Click += new System.EventHandler(this.folderToolStripMenuItem_Click);
             // 
             // itemToolStripMenuItem
             // 
             this.itemToolStripMenuItem.Name = "itemToolStripMenuItem";
-            this.itemToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.itemToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
             this.itemToolStripMenuItem.Text = "File";
             this.itemToolStripMenuItem.Click += new System.EventHandler(this.itemToolStripMenuItem_Click);
             // 
@@ -363,6 +363,7 @@
             this.toolStripButton7.Name = "toolStripButton7";
             this.toolStripButton7.Size = new System.Drawing.Size(90, 36);
             this.toolStripButton7.Text = "Extract";
+            this.toolStripButton7.Click += new System.EventHandler(this.toolStripButton7_Click);
             // 
             // toolStripSeparator2
             // 
@@ -870,20 +871,20 @@
             this.folderToolStripMenuItem1,
             this.shortCutToolStripMenuItem});
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(175, 24);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(145, 24);
             this.newToolStripMenuItem.Text = "New";
             // 
             // folderToolStripMenuItem1
             // 
             this.folderToolStripMenuItem1.Name = "folderToolStripMenuItem1";
-            this.folderToolStripMenuItem1.Size = new System.Drawing.Size(181, 26);
+            this.folderToolStripMenuItem1.Size = new System.Drawing.Size(126, 26);
             this.folderToolStripMenuItem1.Text = "Folder";
             this.folderToolStripMenuItem1.Click += new System.EventHandler(this.folderToolStripMenuItem1_Click);
             // 
             // shortCutToolStripMenuItem
             // 
             this.shortCutToolStripMenuItem.Name = "shortCutToolStripMenuItem";
-            this.shortCutToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.shortCutToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
             this.shortCutToolStripMenuItem.Text = "File";
             this.shortCutToolStripMenuItem.Click += new System.EventHandler(this.shortCutToolStripMenuItem_Click);
             // 

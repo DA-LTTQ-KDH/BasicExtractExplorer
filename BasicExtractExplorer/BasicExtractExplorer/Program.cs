@@ -35,7 +35,8 @@ namespace BasicExtractExplorer
                     }
                     else if(args[0] == "extract")
                     {
-
+                        ExtractTo extractTo = new ExtractTo(args[1]);
+                        Application.Run(extractTo);
                     }
                 }
 

@@ -17,18 +17,31 @@ namespace BasicExtractExplorer
     {
         Thread t;
         SevenZipCompressor compressor;
+        SevenZipExtractor extractor;
         List<string> paths;
         string archiveName;
+        string folder;
         bool isCancel = false;
         public Processing(SevenZipCompressor sevenZipCompressor, List<string> paths, string archiveName)
         {
             InitializeComponent();
+            this.Shown += Processing_Compress;
             //DoubleBuffered = true;
             this.Text = "Compressing";
             //thực hiện nén
             compressor = sevenZipCompressor;
             this.paths = paths;
             this.archiveName = archiveName;
+        }
+        public Processing(SevenZipExtractor sevenZipExtractor, string folder)
+        {
+            InitializeComponent();
+            this.Shown += Processing_Extract;
+            this.Text = "Extracting";
+            extractor = sevenZipExtractor;
+            this.archiveName = extractor.FileName;
+            this.folder = folder;
+            //Thực hiện giải nén
         }
         public void DoCompress()
         {
@@ -76,6 +89,57 @@ namespace BasicExtractExplorer
                 Close();
             });
         }
+        public void DoExtract()
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                Refresh();
+                labelArchiveName.Text = archiveName;
+            //});
+            extractor.Extracting += Extractor_Extracting;
+            extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+            extractor.ExtractionFinished += Extractor_ExtractionFinished;
+            extractor.ExtractArchive(folder);
+            //Invoke((MethodInvoker)delegate
+            //{
+                Close();
+            });
+        }
+
+        private void Extractor_ExtractionFinished(object sender, EventArgs e)
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
+                //Nén xong đóng form
+                progressBarTotal.Value = 100;
+                //Refresh();
+                //this.Close();
+            });
+        }
+
+        private void Extractor_FileExtractionStarted(object sender, FileInfoEventArgs e)
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
+                labelFile.Text = Path.GetFileName(e.FileInfo.FileName);
+                progressBarTotal.Value = e.PercentDone;
+                labelPercent.Text = e.PercentDone.ToString() + "%";
+                e.Cancel = isCancel;
+                Refresh();
+
+            });
+        }
+
+        private void Extractor_Extracting(object sender, ProgressEventArgs e)
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
+                //hiện quá trình nén
+                progressBarTotal.Value = e.PercentDone;
+                groupBox1.Refresh();
+            });
+        }
+
         private void SevenZipCompressor_FileCompressionFinished(object sender, EventArgs e)
         {
             //Refresh();
@@ -95,11 +159,7 @@ namespace BasicExtractExplorer
            
         }
 
-        public Processing(SevenZipExtractor sevenZipExtractor, string folder)
-        {
-            InitializeComponent();
-            //Thực hiện giải nén
-        }
+        
         private void ZipCompressor_CompressionFinished(object sender, EventArgs e)
         {
             this.Invoke((MethodInvoker)delegate
@@ -120,10 +180,15 @@ namespace BasicExtractExplorer
                 groupBox1.Refresh();
             });
         }
-        private void Processing_Shown(object sender, EventArgs e)
+        private void Processing_Compress(object sender, EventArgs e)
         {
             t = new Thread(new ThreadStart(DoCompress));
             //DoCompress();
+            t.Start();
+        }
+        private void Processing_Extract(object sender, EventArgs e)
+        {
+            t = new Thread(new ThreadStart(DoExtract));  
             t.Start();
         }
 

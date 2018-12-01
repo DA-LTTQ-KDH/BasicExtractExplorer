@@ -10,6 +10,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Security.Cryptography;
 using SevenZip;
+using System.Threading;
 
 namespace BasicExtractExplorer
 {
@@ -44,6 +45,8 @@ namespace BasicExtractExplorer
 
             listView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
             listView_ImageList.ImageSize = new Size(20, 20);
+            listView.SmallImageList = listView_ImageList;
+            listView.LargeImageList = listView_ImageList;
             //treeView Icons
             treeView_ImageList.ImageSize = new Size(20, 20);
             treeView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
@@ -193,26 +196,23 @@ namespace BasicExtractExplorer
 
         private void ShowFilesAndFolders()
         {
-            int listViewImageIndex = 0;
+            int listViewImageIndex = 1;
             TreeNode node = treeView.SelectedNode;
             // Xóa các item cũ của listView
             if (listView != null)
                 listView.Items.Clear();
             if (listView_ImageList != null) listView_ImageList.Images.Clear();
-            listView.SmallImageList = listView_ImageList;
-            listView.LargeImageList = listView_ImageList;
+
+            //listView_ImageList.Images.Add(IconHelper.GetIcon(folder));
+            listView_ImageList.Images.Add(IconHelper.Extract(IconHelper.Shell32, 3, true));
             try
             {
                 // Lấy danh sách thư mục
                 string path = GetPath(node.FullPath);
-                
+
                 var folders = Directory.GetDirectories(path)
                     .Where(d => !new DirectoryInfo(d).Attributes.HasFlag(FileAttributes.System | FileAttributes.Hidden));
-                foreach (string folder in folders)
-                {
-                    //listView_ImageList.Images.Add(IconHelper.GetIcon(folder));
-                    listView_ImageList.Images.Add(IconHelper.Extract(IconHelper.Shell32, 3, true));
-                }
+
                 // Thêm các thư mục vào listView
                 foreach (string folder in folders)
                 {
@@ -224,7 +224,7 @@ namespace BasicExtractExplorer
                     Field[3] = info.CreationTime.ToString();
                     Field[4] = info.LastWriteTime.ToString();
                     ListViewItem item = new ListViewItem(Field);
-                    item.ImageIndex = listViewImageIndex++;
+                    item.ImageIndex = 0; ;
                     listView.Items.Add(item);
                 }
 
@@ -233,18 +233,16 @@ namespace BasicExtractExplorer
                     .Where(d => !new FileInfo(d).Attributes.HasFlag(FileAttributes.System | FileAttributes.Hidden));
                 foreach (string file in files)
                 {
-                    //listView_ImageList.Images.Add(IconHelper.GetIcon(file));
                     listView_ImageList.Images.Add(Icon.ExtractAssociatedIcon(file));
-                    
                 }
-                //Thêm các tệp vào listView
+                    //Thêm các tệp vào listView
                 foreach (string file in files)
                 {
                     FileInfo info = new FileInfo(file);
                     string[] Field = new string[5];
                     Field[0] = info.Name;
-                    string add = "";
-                    if(info.Extension!="") add= info.Extension.ToString().Substring(1);
+                    //string add = "";
+                    //if (info.Extension != "") add = info.Extension.ToString().Substring(1);
                     //Field[1] = "File "+add;
                     Field[1] = IconHelper.GetFileTypeDescription(file);
                     Field[2] = (info.Length / 1024).ToString() + " KB";
@@ -259,6 +257,7 @@ namespace BasicExtractExplorer
             {
                 MessageBox.Show("Something went wrong!");
             }
+            
         }
 
 
@@ -1412,8 +1411,36 @@ namespace BasicExtractExplorer
 
 
 
+
         #endregion
 
-        
+        private void toolStripButton7_Click(object sender, EventArgs e)
+        {
+            string[] archiveExtension = { ".zip", ".rar", ".7z", ".tar", ".xz", ".bz2", ".gz", ".iso" };
+            if (listView.FocusedItem != null && archiveExtension.Contains(Path.GetExtension(listView.FocusedItem.Text)))
+            {
+                string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = "BasicExtractExplorer.exe";
+                startInfo.Arguments = "extract "+  "\"" + selected_node_path + listView.FocusedItem.Text + "\" ";
+                process.StartInfo = startInfo;
+                process.EnableRaisingEvents = true;
+                process.Exited += delegate {
+                    //Refresh sau khi giải nén
+                    Invoke((MethodInvoker)delegate
+                    {
+                        toolStripButton12_Click(sender, e);
+                    });
+                };
+                process.Start();
+
+            }
+            else
+            {
+                MessageBox.Show("Please select a file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
     }
 }
