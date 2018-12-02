@@ -139,25 +139,17 @@ namespace BasicExtractExplorer
             {
                 SevenZipExtractor.SetLibraryPath("7z.dll");
                 var extractor = new SevenZipExtractor(archiveName);
-                if(extractor.Format == InArchiveFormat.SevenZip)
+                var files = new ArchiveFileInfo[extractor.ArchiveFileData.Count];
+                extractor.ArchiveFileData.CopyTo(files, 0);
+                if (Array.Find(files,x => !x.IsDirectory).Encrypted)
                 {
-                    if (!extractor.Check())
+                    Password p = new Password
                     {
-                        Password p = new Password
-                        {
-                            StartPosition = FormStartPosition.CenterScreen
-                        };
-                        if (p.ShowDialog() == DialogResult.OK)
-                        {
-                            extractor = new SevenZipExtractor(archiveName, p.PasswordString);
-                            extractor.Extracting += Extractor_Extracting;
-                            extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
-                            extractor.ExtractionFinished += Extractor_ExtractionFinished;
-                            extractor.ExtractArchive(folder);
-                        }
-                    }
-                    else
+                        StartPosition = FormStartPosition.CenterScreen
+                    };
+                    if (p.ShowDialog() == DialogResult.OK)
                     {
+                        extractor = new SevenZipExtractor(archiveName, p.PasswordString);
                         extractor.Extracting += Extractor_Extracting;
                         extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
                         extractor.ExtractionFinished += Extractor_ExtractionFinished;
@@ -166,30 +158,10 @@ namespace BasicExtractExplorer
                 }
                 else
                 {
-                    var files = new ArchiveFileInfo[extractor.ArchiveFileData.Count];
-                    extractor.ArchiveFileData.CopyTo(files, 0);
-                    if (Array.Find(files,x => !x.IsDirectory).Encrypted)
-                    {
-                        Password p = new Password
-                        {
-                            StartPosition = FormStartPosition.CenterScreen
-                        };
-                        if (p.ShowDialog() == DialogResult.OK)
-                        {
-                            extractor = new SevenZipExtractor(archiveName, p.PasswordString);
-                            extractor.Extracting += Extractor_Extracting;
-                            extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
-                            extractor.ExtractionFinished += Extractor_ExtractionFinished;
-                            extractor.ExtractArchive(folder);
-                        }
-                    }
-                    else
-                    {
-                            extractor.Extracting += Extractor_Extracting;
-                            extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
-                            extractor.ExtractionFinished += Extractor_ExtractionFinished;
-                            extractor.ExtractArchive(folder);
-                    }
+                        extractor.Extracting += Extractor_Extracting;
+                        extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                        extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                        extractor.ExtractArchive(folder);
                 }
             }
             catch (Exception ex)
@@ -233,28 +205,17 @@ namespace BasicExtractExplorer
             {
                 SevenZipExtractor.SetLibraryPath("7z.dll");
                 var extractor = new SevenZipExtractor(archiveName);
-                if (extractor.Format == InArchiveFormat.SevenZip)
+                var files = new ArchiveFileInfo[extractor.ArchiveFileData.Count];
+                extractor.ArchiveFileData.CopyTo(files, 0);
+                if (Array.Find(files, x => !x.IsDirectory).Encrypted || !extractor.Check())
                 {
-                    if (!extractor.Check())
+                    Password p = new Password
                     {
-                        Password p = new Password
-                        {
-                            StartPosition = FormStartPosition.CenterScreen
-                        };
-                        if (p.ShowDialog() == DialogResult.OK)
-                        {
-                            extractor = new SevenZipExtractor(archiveName, p.PasswordString);
-                            extractor.Extracting += Extractor_Extracting;
-                            extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
-                            extractor.ExtractionFinished += Extractor_ExtractionFinished;
-                            foreach (int i in fileIndex)
-                            {
-                                extractor.ExtractFiles(folder, i);
-                            }
-                        }
-                    }
-                    else
+                        StartPosition = FormStartPosition.CenterScreen
+                    };
+                    if (p.ShowDialog() == DialogResult.OK)
                     {
+                        extractor = new SevenZipExtractor(archiveName, p.PasswordString);
                         extractor.Extracting += Extractor_Extracting;
                         extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
                         extractor.ExtractionFinished += Extractor_ExtractionFinished;
@@ -266,35 +227,12 @@ namespace BasicExtractExplorer
                 }
                 else
                 {
-                    var files = new ArchiveFileInfo[extractor.ArchiveFileData.Count];
-                    extractor.ArchiveFileData.CopyTo(files, 0);
-                    if (Array.Find(files, x => !x.IsDirectory).Encrypted || !extractor.Check())
+                    extractor.Extracting += Extractor_Extracting;
+                    extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                    extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                    foreach (int i in fileIndex)
                     {
-                        Password p = new Password
-                        {
-                            StartPosition = FormStartPosition.CenterScreen
-                        };
-                        if (p.ShowDialog() == DialogResult.OK)
-                        {
-                            extractor = new SevenZipExtractor(archiveName, p.PasswordString);
-                            extractor.Extracting += Extractor_Extracting;
-                            extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
-                            extractor.ExtractionFinished += Extractor_ExtractionFinished;
-                            foreach (int i in fileIndex)
-                            {
-                                extractor.ExtractFiles(folder, i);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        extractor.Extracting += Extractor_Extracting;
-                        extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
-                        extractor.ExtractionFinished += Extractor_ExtractionFinished;
-                        foreach (int i in fileIndex)
-                        {
-                            extractor.ExtractFiles(folder, i);
-                        }
+                        extractor.ExtractFiles(folder, i);
                     }
                 }
             }

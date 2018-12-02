@@ -69,6 +69,8 @@
             this.Controls.Add(this.textBoxPassword);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Password";
             this.Text = "Password";
             this.ResumeLayout(false);
