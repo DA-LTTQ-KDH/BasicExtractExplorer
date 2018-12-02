@@ -37,8 +37,7 @@ namespace BasicExtractExplorer
         private void buttonBrowse_Click(object sender, EventArgs e)
         {
             saveFileDialog.FileName = Path.GetFileNameWithoutExtension(textBoxArchiveName.Text);
-            saveFileDialog.RestoreDirectory = true;
-            saveFileDialog.InitialDirectory =saveFileDialog.FileName;
+            saveFileDialog.InitialDirectory = Path.GetDirectoryName(textBoxArchiveName.Text);
             saveFileDialog.Filter = "zip|*.zip|tar|*.tar|7z|*.7z|bzip2|*.bz2|gzip|*.gz|xz|*.xz";
             saveFileDialog.FileOk += (sd, ev) =>
             {
