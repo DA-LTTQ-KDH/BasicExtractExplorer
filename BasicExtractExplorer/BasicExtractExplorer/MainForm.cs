@@ -964,7 +964,7 @@ namespace BasicExtractExplorer
             string fullpath = treeView.SelectedNode.FullPath;
             string str = GetPath(fullpath);
             str += listView.SelectedItems[0].SubItems[0].Text;
-            if (Path.GetExtension(str).CompareTo("") != 0)
+            if (!Directory.Exists(str))
             {
                 try
                 {
@@ -1350,7 +1350,6 @@ namespace BasicExtractExplorer
             {
                 SevenZip.SevenZipExtractor.SetLibraryPath("7z.dll");
                 sevenZipExtractor = new SevenZip.SevenZipExtractor(archivePath);
-                //chỉ có file 7z mới có thể xác nhận mật khẩu
                 if (sevenZipExtractor.Format != InArchiveFormat.SevenZip)
                 {
                     #region
@@ -1390,11 +1389,9 @@ namespace BasicExtractExplorer
                             item.ImageIndex = 0;
                             listViewArchive.Items.Add(item);
                         }
-                        //listViewArchive.Items.Add(pnode.nodes.ElementAt(i).Key);
                     }
                     for (int i = 0; i < pnode.nodes.Count; i++)
                     {
-                        //rootNode.Nodes.Add(pnode.nodes.ElementAt(i).Key);
                         if (IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
                         {
                             ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
@@ -1485,9 +1482,6 @@ namespace BasicExtractExplorer
                         }
                         rootNode.Expand();
                         #endregion
-                    }
-                    else
-                    {
                     }
                 }
             }
