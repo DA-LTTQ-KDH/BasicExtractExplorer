@@ -25,7 +25,8 @@ namespace BasicExtractExplorer
             comboBoxLevel.SelectedIndex = 0;
             zipCompressor = new SevenZipCompressor();
             this.Paths = paths;
-            textBoxArchiveName.Text = Paths[0] + ".zip";
+            textBoxArchiveName.Text =Path.GetDirectoryName(Paths[0]) + "\\" + Path.GetFileNameWithoutExtension(Paths[0]) + ".zip";
+            textBoxArchiveName.Text = textBoxArchiveName.Text.Replace("\\\\", "\\");
             format = OutArchiveFormat.Zip;
         }
         public List<string> Paths
@@ -35,7 +36,7 @@ namespace BasicExtractExplorer
         }
         private void buttonBrowse_Click(object sender, EventArgs e)
         {
-            saveFileDialog.FileName = Path.GetFileName(textBoxArchiveName.Text);
+            saveFileDialog.FileName = Path.GetFileNameWithoutExtension(textBoxArchiveName.Text);
             saveFileDialog.RestoreDirectory = true;
             saveFileDialog.InitialDirectory =saveFileDialog.FileName;
             saveFileDialog.Filter = "zip|*.zip|tar|*.tar|7z|*.7z|bzip2|*.bz2|gzip|*.gz|xz|*.xz";
@@ -46,30 +47,23 @@ namespace BasicExtractExplorer
                 {
                     case 0:
                         format = OutArchiveFormat.Zip;
-                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".zip");
                         break;
                     case 1:
                         format = OutArchiveFormat.Zip;
-                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".zip");
                         break;
                     case 2:
                         format = OutArchiveFormat.Tar;
-                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".tar");
                         break;
                     case 3:
                         format = OutArchiveFormat.SevenZip;
-                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".7z");
                         break;
                     case 4:
                         format = OutArchiveFormat.BZip2;
-                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".bz2");
                         break;
                     case 5:
                         format = OutArchiveFormat.GZip;
-                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".gz");
                         break;
                     case 6:
-                        //textBoxArchiveName.Text = Path.ChangeExtension(textBoxArchiveName.Text, ".xz");
                         format = OutArchiveFormat.XZ;
                         break;
                     default:
@@ -132,7 +126,7 @@ namespace BasicExtractExplorer
 
         private void textBoxArchiveName_TextChanged(object sender, EventArgs e)
         {
-            string[] passwordSupportFormat = { ".zip", ".7z" };
+            string[] passwordSupportFormat = { ".zip" };
             if(passwordSupportFormat.Contains(Path.GetExtension(textBoxArchiveName.Text)))
             {
                 groupBox1.Enabled = true;

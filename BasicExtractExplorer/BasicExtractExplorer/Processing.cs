@@ -34,7 +34,7 @@ namespace BasicExtractExplorer
             {
                 ArchiveFormat = format,
                 PreserveDirectoryRoot = true,
-                CompressionLevel = level
+                CompressionLevel = level,
             };
             this.paths = paths;
             this.archiveName = archiveName;
@@ -50,7 +50,6 @@ namespace BasicExtractExplorer
                 compressor.CompressionMode = File.Exists(archiveName) ? SevenZip.CompressionMode.Append : SevenZip.CompressionMode.Create;
                 compressor.DirectoryStructure = true;
                 compressor.EncryptHeaders = true;
-                compressor.DefaultItemName = archiveName;
                 compressor.IncludeEmptyDirectories = true;
                 //compressor.ZipEncryptionMethod = ZipEncryptionMethod.ZipCrypto;
                 try
@@ -61,7 +60,7 @@ namespace BasicExtractExplorer
                     }
                     else
                     {
-                        compressor.CompressFiles(archiveName, path, pass);
+                        compressor.CompressFilesEncrypted(archiveName,pass,path);
                     }
                 }
                 catch (ThreadAbortException)
