@@ -1063,7 +1063,7 @@ namespace BasicExtractExplorer
             {
                 tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
                 // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0 && listViewArchive.Visible == false)
                 {
                     MessageBox.Show(CalculateMD5(tmpPathssum[j]), tmpPathssum[j] + "  MD5 ");
                 }
@@ -1092,7 +1092,7 @@ namespace BasicExtractExplorer
             {
                 tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
                 // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0 && listViewArchive.Visible == false)
                 {
                     MessageBox.Show(GetSHA256(tmpPathssum[j]), tmpPathssum[j] + "  SHA-256 ");
                 }
@@ -1121,7 +1121,7 @@ namespace BasicExtractExplorer
             {
                 tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
                 // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0 && listViewArchive.Visible == false)
                 {
                     MessageBox.Show(GetCRC32(tmpPathssum[j]), tmpPathssum[j] + "  CRC-32 ");
                 }
@@ -1155,7 +1155,7 @@ namespace BasicExtractExplorer
             {
                 tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
                 // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0 && listViewArchive.Visible == false)
                 {
                     MessageBox.Show(GetSHA1(tmpPathssum[j]), tmpPathssum[j] + "  SHA-1 ");
                 }
