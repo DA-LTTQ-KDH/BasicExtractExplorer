@@ -16,10 +16,11 @@ namespace BasicExtractExplorer
         List<int> fileIndex;
         string archiveName;
         string folder;
+        string pass;
         BackgroundWorker worker;
 
         #region Compress
-        public Processing(SevenZipCompressor sevenZipCompressor, List<string> paths, string archiveName)
+        public Processing(OutArchiveFormat format, bool preserveDirectoryRoot, CompressionLevel level, List<string> paths, string archiveName, string pass)
         {
             InitializeComponent();
             worker = new BackgroundWorker();
@@ -29,9 +30,15 @@ namespace BasicExtractExplorer
             //DoubleBuffered = true;
             this.Text = "Compressing";
             //thực hiện nén
-            compressor = sevenZipCompressor;
+            compressor = new SevenZipCompressor
+            {
+                ArchiveFormat = format,
+                PreserveDirectoryRoot = true,
+                CompressionLevel = level
+            };
             this.paths = paths;
             this.archiveName = archiveName;
+            this.pass = pass;
         }
         private void Worker_DoCompress(object sender, DoWorkEventArgs e)
         {
@@ -45,15 +52,16 @@ namespace BasicExtractExplorer
                 compressor.EncryptHeaders = true;
                 compressor.DefaultItemName = archiveName;
                 compressor.IncludeEmptyDirectories = true;
+                compressor.ZipEncryptionMethod = ZipEncryptionMethod.ZipCrypto;
                 try
                 {
                     if (File.GetAttributes(path).HasFlag(FileAttributes.Directory)) // là thư mục
                     {
-                        compressor.CompressDirectory(path, archiveName);
+                        compressor.CompressDirectory(path, archiveName, pass);
                     }
                     else
                     {
-                        compressor.CompressFiles(archiveName, path);
+                        compressor.CompressFiles(archiveName, path, pass);
                     }
                 }
                 catch (ThreadAbortException)
@@ -103,6 +111,7 @@ namespace BasicExtractExplorer
         public Processing(string filePath, string folder)
         {
             InitializeComponent();
+            labelArchiveName.Text = Path.GetFileName(filePath);
             worker = new BackgroundWorker();
             this.Shown += Processing_Shown;
             worker.DoWork += Worker_DoExtract;
@@ -114,6 +123,7 @@ namespace BasicExtractExplorer
         public Processing(string filePath, string folder, List<int> fileIndex)
         {
             InitializeComponent();
+            labelArchiveName.Text = Path.GetFileName(filePath);
             this.fileIndex = fileIndex;
             worker = new BackgroundWorker();
             this.Shown += Processing_Shown;
@@ -130,25 +140,41 @@ namespace BasicExtractExplorer
             {
                 SevenZipExtractor.SetLibraryPath("7z.dll");
                 var extractor = new SevenZipExtractor(archiveName);
-                if (extractor.ArchiveFileData[0].Encrypted)
+                if (!extractor.Check() || extractor.ArchiveFileData[0].Encrypted)
                 {
-                    Password p = new Password();
-                    p.StartPosition = FormStartPosition.CenterScreen;
+                    Password p = new Password
+                    {
+                        StartPosition = FormStartPosition.CenterScreen
+                    };
                     if (p.ShowDialog() == DialogResult.OK)
                     {
                         extractor = new SevenZipExtractor(archiveName, p.PasswordString);
+                        if(extractor.Check())//bug
+                        {
+                            extractor.Extracting += Extractor_Extracting;
+                            extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                            extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                            extractor.ExtractArchive(folder);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Wrong password","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                        }
+                    }
+                }
+                else
+                {
+                    if (extractor.Check())
+                    {
                         extractor.Extracting += Extractor_Extracting;
                         extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
                         extractor.ExtractionFinished += Extractor_ExtractionFinished;
                         extractor.ExtractArchive(folder);
                     }
-                }
-                else
-                {
-                    extractor.Extracting += Extractor_Extracting;
-                    extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
-                    extractor.ExtractionFinished += Extractor_ExtractionFinished;
-                    extractor.ExtractArchive(folder);
+                    else
+                    {
+                        MessageBox.Show("Unable to decompress this file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
             catch (Exception ex)
@@ -194,8 +220,10 @@ namespace BasicExtractExplorer
                 var extractor = new SevenZipExtractor(archiveName);
                 if (extractor.ArchiveFileData[0].Encrypted)
                 {
-                    Password p = new Password();
-                    p.StartPosition = FormStartPosition.CenterScreen;
+                    Password p = new Password
+                    {
+                        StartPosition = FormStartPosition.CenterScreen
+                    };
                     if (p.ShowDialog() == DialogResult.OK)
                     {
                         extractor = new SevenZipExtractor(archiveName, p.PasswordString);

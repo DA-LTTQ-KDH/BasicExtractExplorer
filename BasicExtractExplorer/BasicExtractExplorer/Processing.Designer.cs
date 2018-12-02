@@ -42,9 +42,9 @@
             this.labelArchiveName.AutoSize = true;
             this.labelArchiveName.Location = new System.Drawing.Point(3, 18);
             this.labelArchiveName.Name = "labelArchiveName";
-            this.labelArchiveName.Size = new System.Drawing.Size(100, 17);
+            this.labelArchiveName.Size = new System.Drawing.Size(93, 17);
             this.labelArchiveName.TabIndex = 0;
-            this.labelArchiveName.Text = ".......................";
+            this.labelArchiveName.Text = "archive name";
             // 
             // groupBox1
             // 
@@ -69,20 +69,21 @@
             // 
             this.labelPercent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelPercent.AutoSize = true;
-            this.labelPercent.Location = new System.Drawing.Point(471, 42);
+            this.labelPercent.Location = new System.Drawing.Point(483, 42);
             this.labelPercent.Name = "labelPercent";
-            this.labelPercent.Size = new System.Drawing.Size(24, 17);
+            this.labelPercent.Size = new System.Drawing.Size(28, 17);
             this.labelPercent.TabIndex = 3;
-            this.labelPercent.Text = "....";
+            this.labelPercent.Text = "0%";
+            this.labelPercent.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // labelFile
             // 
             this.labelFile.AutoSize = true;
             this.labelFile.Location = new System.Drawing.Point(3, 42);
             this.labelFile.Name = "labelFile";
-            this.labelFile.Size = new System.Drawing.Size(76, 17);
+            this.labelFile.Size = new System.Drawing.Size(78, 17);
             this.labelFile.TabIndex = 2;
-            this.labelFile.Text = ".................";
+            this.labelFile.Text = "Checking...";
             // 
             // button1
             // 
@@ -101,6 +102,8 @@
             this.ClientSize = new System.Drawing.Size(535, 156);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "Processing";
             this.Text = "Processing";
             this.Load += new System.EventHandler(this.Processing_Load);

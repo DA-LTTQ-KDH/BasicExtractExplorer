@@ -82,18 +82,21 @@ namespace BasicExtractExplorer
 
         private void button2_Click(object sender, EventArgs e)
         {
-            //Lấy tên archive
-            string archiveName = textBoxArchiveName.Text;
-            zipCompressor.ArchiveFormat = format;
-            zipCompressor.PreserveDirectoryRoot = true;
-            zipCompressor.CompressionLevel = level;
-            //chuyển quá trình nén qua form Processing
-            Processing processing = new Processing(zipCompressor, Paths, archiveName);
-            processing.StartPosition = FormStartPosition.CenterScreen;
-            processing.Show();
-            this.Hide();
-            processing.FormClosed += delegate { Application.Exit(); };
-
+            if(textBoxPass.Text == textBoxRePass.Text)
+            {
+                //Lấy tên archive
+                string archiveName = textBoxArchiveName.Text;
+                //chuyển quá trình nén qua form Processing
+                Processing processing = new Processing(format, true, level, Paths, archiveName, textBoxPass.Text);
+                processing.StartPosition = FormStartPosition.CenterScreen;
+                processing.Show();
+                this.Hide();
+                processing.FormClosed += delegate { Application.Exit(); };
+            }
+            else
+            {
+                MessageBox.Show("Passwords do not match", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void comboBoxLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -125,6 +128,19 @@ namespace BasicExtractExplorer
         private void button1_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void textBoxArchiveName_TextChanged(object sender, EventArgs e)
+        {
+            string[] passwordSupportFormat = { ".zip", ".7z" };
+            if(passwordSupportFormat.Contains(Path.GetExtension(textBoxArchiveName.Text)))
+            {
+                groupBox1.Enabled = true;
+            }
+            else
+            {
+                groupBox1.Enabled = false;
+            }
         }
     }
 }

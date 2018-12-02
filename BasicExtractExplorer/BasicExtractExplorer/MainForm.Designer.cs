@@ -658,6 +658,7 @@
             this.columnHeaderCRC,
             this.columnHeaderComment});
             this.listViewArchive.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewArchive.FullRowSelect = true;
             this.listViewArchive.Location = new System.Drawing.Point(0, 0);
             this.listViewArchive.Name = "listViewArchive";
             this.listViewArchive.Size = new System.Drawing.Size(1007, 506);
@@ -718,6 +719,7 @@
             this.CDate_created,
             this.CDate_modified});
             this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView.FullRowSelect = true;
             this.listView.LabelEdit = true;
             this.listView.Location = new System.Drawing.Point(0, 0);
             this.listView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1027,7 +1029,7 @@
             this.MinimumSize = new System.Drawing.Size(1077, 497);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "Basic Extract Explorer";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
