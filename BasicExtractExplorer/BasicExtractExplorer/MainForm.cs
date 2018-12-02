@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Security.Cryptography;
 using SevenZip;
 using System.Threading;
+using Microsoft.VisualBasic.FileIO;
 
 namespace BasicExtractExplorer
 {
@@ -267,34 +268,40 @@ namespace BasicExtractExplorer
             if (treeView.SelectedNode.Text == "This PC") return;
             //Tạo đường dẫn đến node đang được chọn ở treeView
             string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+            int i = 0;
+            int dem = listView.SelectedItems.Count;
 
-            
-            while (listView.SelectedItems.Count > 0)   //Kiểm tra có item nào trong listView được chọn không
+            while (i<dem)   //Kiểm tra có item nào trong listView được chọn không
             {
                 //Ghép đường dẫn đến item đang xét
-                string path =selected_node_path + listView.SelectedItems[0].SubItems[0].Text;
+                string path =selected_node_path + listView.SelectedItems[i].SubItems[0].Text;
                 //kiem tra duong dan
                 try
                 {
-                    if (listView.SelectedItems[0].SubItems[1].Text.CompareTo("Folder") == 0)
+                    if (listView.SelectedItems[i].SubItems[1].Text.CompareTo("Folder") == 0)
                     {
                         //Kiểm tra và xóa Folder
                         if (Directory.Exists(path))
-                            Directory.Delete(path, true);
+                            // Directory.Delete(path, true);
+                            FileSystem.DeleteDirectory(path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                        listView.Items.Remove(listView.SelectedItems[i]); // Xóa SelectedItems ở đầu
                     }
                     else
                     {
                         //Kiểm tra và xóa File
                         if (File.Exists(path))
-                            File.Delete(path);
+                            // File.Delete(path);
+                            FileSystem.DeleteFile(path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                        listView.Items.Remove(listView.SelectedItems[i]); // Xóa SelectedItems ở đầu
                     }
                 }
                 catch (Exception)
                 {
+                    i++;
                     MessageBox.Show("Access to "+path+" is denied", "warning");
                 }
+                dem = listView.SelectedItems.Count;
 
-                listView.Items.Remove(listView.SelectedItems[0]); // Xóa SelectedItems ở đầu
             }
             listView_Click(sender, e);
         }
@@ -460,11 +467,11 @@ namespace BasicExtractExplorer
                     string old_fileSelectedPath = old_selected_node_path + fileSelectedName[i];
                     string desItem = desPath + NewName;
                     //Tạo các Folder con 
-                    foreach (string dirPath in Directory.GetDirectories(old_fileSelectedPath, "*", SearchOption.AllDirectories))
+                    foreach (string dirPath in Directory.GetDirectories(old_fileSelectedPath, "*", System.IO.SearchOption.AllDirectories))
                         Directory.CreateDirectory(dirPath.Replace(old_fileSelectedPath, desItem));
 
                     //Tạo các File con
-                    foreach (string newPath in Directory.GetFiles(old_fileSelectedPath, "*.*", SearchOption.AllDirectories))
+                    foreach (string newPath in Directory.GetFiles(old_fileSelectedPath, "*.*", System.IO.SearchOption.AllDirectories))
                         File.Copy(newPath, newPath.Replace(old_fileSelectedPath, desItem), true);
 
                 }
@@ -1056,7 +1063,7 @@ namespace BasicExtractExplorer
             {
                 tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
                 // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0 && listViewArchive.Visible == false)
                 {
                     MessageBox.Show(CalculateMD5(tmpPathssum[j]), tmpPathssum[j] + "  MD5 ");
                 }
@@ -1085,7 +1092,7 @@ namespace BasicExtractExplorer
             {
                 tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
                 // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0 && listViewArchive.Visible == false)
                 {
                     MessageBox.Show(GetSHA256(tmpPathssum[j]), tmpPathssum[j] + "  SHA-256 ");
                 }
@@ -1114,7 +1121,7 @@ namespace BasicExtractExplorer
             {
                 tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
                 // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0 && listViewArchive.Visible == false)
                 {
                     MessageBox.Show(GetCRC32(tmpPathssum[j]), tmpPathssum[j] + "  CRC-32 ");
                 }
@@ -1148,7 +1155,7 @@ namespace BasicExtractExplorer
             {
                 tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
                 // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0 && listViewArchive.Visible == false)
                 {
                     MessageBox.Show(GetSHA1(tmpPathssum[j]), tmpPathssum[j] + "  SHA-1 ");
                 }
