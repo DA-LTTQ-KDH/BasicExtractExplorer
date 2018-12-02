@@ -140,16 +140,33 @@ namespace BasicExtractExplorer
             {
                 SevenZipExtractor.SetLibraryPath("7z.dll");
                 var extractor = new SevenZipExtractor(archiveName);
-                if (!extractor.Check() || extractor.ArchiveFileData[0].Encrypted)
+                if(extractor.Format == InArchiveFormat.SevenZip)
                 {
-                    Password p = new Password
+                    if (!extractor.Check())
                     {
-                        StartPosition = FormStartPosition.CenterScreen
-                    };
-                    if (p.ShowDialog() == DialogResult.OK)
+                        Password p = new Password
+                        {
+                            StartPosition = FormStartPosition.CenterScreen
+                        };
+                        if (p.ShowDialog() == DialogResult.OK)
+                        {
+                            extractor = new SevenZipExtractor(archiveName, p.PasswordString);
+                            if (extractor.Check())//bug
+                            {
+                                extractor.Extracting += Extractor_Extracting;
+                                extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                                extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                                extractor.ExtractArchive(folder);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Wrong password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                    else
                     {
-                        extractor = new SevenZipExtractor(archiveName, p.PasswordString);
-                        if(extractor.Check())//bug
+                        if (extractor.Check())
                         {
                             extractor.Extracting += Extractor_Extracting;
                             extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
@@ -158,24 +175,56 @@ namespace BasicExtractExplorer
                         }
                         else
                         {
-                            MessageBox.Show("Wrong password","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                            MessageBox.Show("Unable to decompress this file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
                 else
                 {
-                    if (extractor.Check())
+                    var files = new ArchiveFileInfo[extractor.ArchiveFileData.Count];
+                    extractor.ArchiveFileData.CopyTo(files, 0);
+                    if (Array.Find(files,x => !x.IsDirectory).Encrypted||!extractor.Check())
                     {
-                        extractor.Extracting += Extractor_Extracting;
-                        extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
-                        extractor.ExtractionFinished += Extractor_ExtractionFinished;
-                        extractor.ExtractArchive(folder);
+                        Password p = new Password
+                        {
+                            StartPosition = FormStartPosition.CenterScreen
+                        };
+                        if (p.ShowDialog() == DialogResult.OK)
+                        {
+                            extractor = new SevenZipExtractor(archiveName, p.PasswordString);
+                            if (extractor.Check())//bug
+                            {
+                                extractor.Extracting += Extractor_Extracting;
+                                extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                                extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                                extractor.ExtractArchive(folder);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Wrong password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
                     }
                     else
                     {
-                        MessageBox.Show("Unable to decompress this file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (extractor.Check())
+                        {
+                            extractor.Extracting += Extractor_Extracting;
+                            extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                            extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                            extractor.ExtractArchive(folder);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Unable to decompress this file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
+
+
+
+
+                
             }
             catch (Exception ex)
             {
@@ -218,32 +267,96 @@ namespace BasicExtractExplorer
             {
                 SevenZipExtractor.SetLibraryPath("7z.dll");
                 var extractor = new SevenZipExtractor(archiveName);
-                if (extractor.ArchiveFileData[0].Encrypted)
+                if (extractor.Format == InArchiveFormat.SevenZip)
                 {
-                    Password p = new Password
+                    if (!extractor.Check())
                     {
-                        StartPosition = FormStartPosition.CenterScreen
-                    };
-                    if (p.ShowDialog() == DialogResult.OK)
-                    {
-                        extractor = new SevenZipExtractor(archiveName, p.PasswordString);
-                        extractor.Extracting += Extractor_Extracting;
-                        extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
-                        extractor.ExtractionFinished += Extractor_ExtractionFinished;
-                        foreach (int i in fileIndex)
+                        Password p = new Password
                         {
-                            extractor.ExtractFiles(folder, i);
+                            StartPosition = FormStartPosition.CenterScreen
+                        };
+                        if (p.ShowDialog() == DialogResult.OK)
+                        {
+                            extractor = new SevenZipExtractor(archiveName, p.PasswordString);
+                            if (extractor.Check())//bug
+                            {
+                                extractor.Extracting += Extractor_Extracting;
+                                extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                                extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                                foreach (int i in fileIndex)
+                                {
+                                    extractor.ExtractFiles(folder, i);
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Wrong password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (extractor.Check())
+                        {
+                            extractor.Extracting += Extractor_Extracting;
+                            extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                            extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                            foreach (int i in fileIndex)
+                            {
+                                extractor.ExtractFiles(folder, i);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Unable to decompress this file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
                 else
                 {
-                    extractor.Extracting += Extractor_Extracting;
-                    extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
-                    extractor.ExtractionFinished += Extractor_ExtractionFinished;
-                    foreach (int i in fileIndex)
+                    var files = new ArchiveFileInfo[extractor.ArchiveFileData.Count];
+                    extractor.ArchiveFileData.CopyTo(files, 0);
+                    if (Array.Find(files, x => !x.IsDirectory).Encrypted || !extractor.Check())
                     {
-                        extractor.ExtractFiles(folder, i);
+                        Password p = new Password
+                        {
+                            StartPosition = FormStartPosition.CenterScreen
+                        };
+                        if (p.ShowDialog() == DialogResult.OK)
+                        {
+                            extractor = new SevenZipExtractor(archiveName, p.PasswordString);
+                            if (extractor.Check())//bug
+                            {
+                                extractor.Extracting += Extractor_Extracting;
+                                extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                                extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                                foreach (int i in fileIndex)
+                                {
+                                    extractor.ExtractFiles(folder, i);
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Wrong password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (extractor.Check())
+                        {
+                            extractor.Extracting += Extractor_Extracting;
+                            extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                            extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                            foreach (int i in fileIndex)
+                            {
+                                extractor.ExtractFiles(folder, i);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Unable to decompress this file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
             }
@@ -251,7 +364,6 @@ namespace BasicExtractExplorer
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
         #endregion Decompress
 

@@ -1260,8 +1260,6 @@ namespace BasicExtractExplorer
                     }
                         
                 }
-
-                //}
                 ShowFoldersAndFilesArchive();
                 toolStripComboBox1.Text = e.Node.FullPath;
                 e.Node.Expand();
@@ -1288,7 +1286,6 @@ namespace BasicExtractExplorer
                 }
                 for (int i = 0; i < current_path_node.nodes.Count; i++)
                 {
-                    //rootNode.Nodes.Add(pnode.nodes.ElementAt(i).Key);
                     if (!IsFile(treeViewArchive.SelectedNode.FullPath + "\\" + current_path_node.nodes.Keys.ElementAt(i)))
                     {
                         ArchiveFileInfo info = current_path_node.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
@@ -1342,85 +1339,168 @@ namespace BasicExtractExplorer
         {
             if (listViewArchive != null) listViewArchive.Items.Clear();
             if (treeViewArchive != null) treeViewArchive.Nodes.Clear();
-            SevenZip.SevenZipExtractor.SetLibraryPath("7z.dll");
-            sevenZipExtractor = new SevenZip.SevenZipExtractor(archivePath);
-            var files = sevenZipExtractor.ArchiveFileNames;
-            var filedata = sevenZipExtractor.ArchiveFileData;
-            pnode = new PathNode();
-            TreeNode rootNode = new TreeNode(Path.GetFileName(archivePath));
-            rootNode.ImageIndex = 2;
-            rootNode.SelectedImageIndex = 2;
-            treeViewArchive.Nodes.Add(rootNode);
-            treeViewArchive.SelectedNode = rootNode;
-            for (int i = 0; i < files.Count; i++)
+            try
             {
-                pnode.AddPath(files[i], filedata[i]);
-            }
-            for (int i = 0; i < pnode.nodes.Count; i++)
-            {
-
-                if (!IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
+                SevenZip.SevenZipExtractor.SetLibraryPath("7z.dll");
+                sevenZipExtractor = new SevenZip.SevenZipExtractor(archivePath);
+                //chỉ có file 7z mới có thể xác nhận mật khẩu
+                if (sevenZipExtractor.Format != InArchiveFormat.SevenZip)
                 {
-                    TreeNode treeNode = new TreeNode(pnode.nodes.ElementAt(i).Key);
-                    treeNode.ImageIndex = 0;
-                    treeNode.SelectedImageIndex = 0;
-                    rootNode.Nodes.Add(treeNode);
-                    ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
-                    string[] tmp = new string[9];
-                    tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
-                    tmp[1] = "";
-                    tmp[2] = "Folder";
-                    tmp[3] = "";
-                    tmp[4] = "";
-                    tmp[5] = "";
-                    tmp[6] = "";
-                    tmp[7] = "";
-                    tmp[8] = "";
-                    ListViewItem item = new ListViewItem(tmp);
-                    item.ImageIndex = 0;
-                    listViewArchive.Items.Add(item);
+                    #region
+                    var files = sevenZipExtractor.ArchiveFileNames;
+                    var filedata = sevenZipExtractor.ArchiveFileData;
+                    pnode = new PathNode();
+                    TreeNode rootNode = new TreeNode(Path.GetFileName(archivePath));
+                    rootNode.ImageIndex = 2;
+                    rootNode.SelectedImageIndex = 2;
+                    treeViewArchive.Nodes.Add(rootNode);
+                    treeViewArchive.SelectedNode = rootNode;
+                    for (int i = 0; i < files.Count; i++)
+                    {
+                        pnode.AddPath(files[i], filedata[i]);
+                    }
+                    for (int i = 0; i < pnode.nodes.Count; i++)
+                    {
+
+                        if (!IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
+                        {
+                            TreeNode treeNode = new TreeNode(pnode.nodes.ElementAt(i).Key);
+                            treeNode.ImageIndex = 0;
+                            treeNode.SelectedImageIndex = 0;
+                            rootNode.Nodes.Add(treeNode);
+                            ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
+                            string[] tmp = new string[9];
+                            tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
+                            tmp[1] = "";
+                            tmp[2] = "Folder";
+                            tmp[3] = "";
+                            tmp[4] = "";
+                            tmp[5] = "";
+                            tmp[6] = "";
+                            tmp[7] = "";
+                            tmp[8] = "";
+                            ListViewItem item = new ListViewItem(tmp);
+                            item.ImageIndex = 0;
+                            listViewArchive.Items.Add(item);
+                        }
+                        //listViewArchive.Items.Add(pnode.nodes.ElementAt(i).Key);
+                    }
+                    for (int i = 0; i < pnode.nodes.Count; i++)
+                    {
+                        //rootNode.Nodes.Add(pnode.nodes.ElementAt(i).Key);
+                        if (IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
+                        {
+                            ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
+                            string[] tmp = new string[9];
+                            tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
+                            tmp[1] = info.Size.ToString();
+                            tmp[2] = "File";
+                            tmp[3] = info.LastWriteTime.ToString();
+                            tmp[4] = info.CreationTime.ToString();
+                            tmp[5] = info.LastAccessTime.ToString();
+                            tmp[6] = info.Attributes.ToString();
+                            tmp[7] = info.Crc.ToString("X2");
+                            tmp[8] = info.Comment;
+                            ListViewItem item = new ListViewItem(tmp);
+                            item.ImageIndex = 1;
+                            listViewArchive.Items.Add(item);
+                        }
+                    }
+                    rootNode.Expand();
+                    #endregion
                 }
-                //listViewArchive.Items.Add(pnode.nodes.ElementAt(i).Key);
-            }
-            for (int i = 0; i < pnode.nodes.Count; i++)
-            {
-                //rootNode.Nodes.Add(pnode.nodes.ElementAt(i).Key);
-                if (IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
+                else
                 {
-                    ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
-                    string[] tmp = new string[9];
-                    tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
-                    tmp[1] = info.Size.ToString();
-                    tmp[2] = "File";
-                    tmp[3] = info.LastWriteTime.ToString();
-                    tmp[4] = info.CreationTime.ToString();
-                    tmp[5] = info.LastAccessTime.ToString();
-                    tmp[6] = info.Attributes.ToString();
-                    tmp[7] = info.Crc.ToString("X2");
-                    tmp[8] = info.Comment;
-                    ListViewItem item = new ListViewItem(tmp);
-                    item.ImageIndex = 1;
-                    listViewArchive.Items.Add(item);
+                    Password p = new Password
+                    {
+                        StartPosition = FormStartPosition.CenterScreen
+                    };
+                    if (p.ShowDialog() == DialogResult.OK)
+                    {
+                        sevenZipExtractor = new SevenZipExtractor(archivePath, p.PasswordString);
+                        #region
+                        var files = sevenZipExtractor.ArchiveFileNames;
+                        var filedata = sevenZipExtractor.ArchiveFileData;
+                        pnode = new PathNode();
+                        TreeNode rootNode = new TreeNode(Path.GetFileName(archivePath));
+                        rootNode.ImageIndex = 2;
+                        rootNode.SelectedImageIndex = 2;
+                        treeViewArchive.Nodes.Add(rootNode);
+                        treeViewArchive.SelectedNode = rootNode;
+                        for (int i = 0; i < files.Count; i++)
+                        {
+                            pnode.AddPath(files[i], filedata[i]);
+                        }
+                        for (int i = 0; i < pnode.nodes.Count; i++)
+                        {
+
+                            if (!IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
+                            {
+                                TreeNode treeNode = new TreeNode(pnode.nodes.ElementAt(i).Key);
+                                treeNode.ImageIndex = 0;
+                                treeNode.SelectedImageIndex = 0;
+                                rootNode.Nodes.Add(treeNode);
+                                ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;// lấy đường dẫn file/folder hiện tại                                                                //sevenZipExtractor.
+                                string[] tmp = new string[9];
+                                tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
+                                tmp[1] = "";
+                                tmp[2] = "Folder";
+                                tmp[3] = "";
+                                tmp[4] = "";
+                                tmp[5] = "";
+                                tmp[6] = "";
+                                tmp[7] = "";
+                                tmp[8] = "";
+                                ListViewItem item = new ListViewItem(tmp);
+                                item.ImageIndex = 0;
+                                listViewArchive.Items.Add(item);
+                            }
+                        }
+                        for (int i = 0; i < pnode.nodes.Count; i++)
+                        {
+                            if (IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
+                            {
+                                ArchiveFileInfo info = pnode.nodes.Values.ElementAt(i).Info;                                                         //sevenZipExtractor.
+                                string[] tmp = new string[9];
+                                tmp[0] = pnode.nodes.Values.ElementAt(i).Path;
+                                tmp[1] = info.Size.ToString();
+                                tmp[2] = "File";
+                                tmp[3] = info.LastWriteTime.ToString();
+                                tmp[4] = info.CreationTime.ToString();
+                                tmp[5] = info.LastAccessTime.ToString();
+                                tmp[6] = info.Attributes.ToString();
+                                tmp[7] = info.Crc.ToString("X2");
+                                tmp[8] = info.Comment;
+                                ListViewItem item = new ListViewItem(tmp);
+                                item.ImageIndex = 1;
+                                listViewArchive.Items.Add(item);
+                            }
+                        }
+                        rootNode.Expand();
+                        #endregion
+                    }
+                    else
+                    {
+                    }
                 }
             }
-
-
-            rootNode.Expand();
-            //current_path_node = pnode;
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
-
-
 
 
         #endregion
 
         private void toolStripButton7_Click(object sender, EventArgs e)
         {
-            string[] archiveExtension = { ".zip", ".rar", ".7z", ".tar", ".xz", ".bz2", ".gz", ".iso" };
+            string[] archiveExtension = { ".zip", ".rar", ".7z", ".tar", ".xz", ".bz2", ".gz"};
             if (!listViewArchive.Visible)
             {
                 if (listView.FocusedItem != null && archiveExtension.Contains(Path.GetExtension(listView.FocusedItem.Text)))
                 {
+                    #region startextract
                     string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
                     System.Diagnostics.Process process = new System.Diagnostics.Process();
                     System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
@@ -1437,7 +1517,7 @@ namespace BasicExtractExplorer
                         });
                     };
                     process.Start();
-
+                    #endregion startextract
                 }
                 else
                 {
@@ -1458,6 +1538,7 @@ namespace BasicExtractExplorer
                 //
                 if (listView.FocusedItem != null && archiveExtension.Contains(Path.GetExtension(listView.FocusedItem.Text)))
                 {
+                    #region startextract
                     string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
                     System.Diagnostics.Process process = new System.Diagnostics.Process();
                     System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
@@ -1478,6 +1559,7 @@ namespace BasicExtractExplorer
                         });
                     };
                     process.Start();
+                    #endregion startextract
 
                 }
                 else
