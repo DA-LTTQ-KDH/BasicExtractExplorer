@@ -15,13 +15,22 @@ namespace BasicExtractExplorer
     
     public partial class ExtractTo : Form
     {
-        SevenZipExtractor zipExtractor;
+        //SevenZipExtractor zipExtractor;
+        List<int> fileIndex;
+        string filePath;
         public ExtractTo(string filePath)
         {
             InitializeComponent();
-            SevenZipExtractor.SetLibraryPath("7z.dll");
-            zipExtractor = new SevenZipExtractor(filePath);
+            this.filePath = filePath;
             textBoxDestination.Text = Path.GetDirectoryName(filePath)+ "\\" + Path.GetFileNameWithoutExtension(filePath);
+            textBoxDestination.Text = textBoxDestination.Text.Replace("\\\\", "\\");
+        }
+        public ExtractTo(string filePath, List<int> fileIndex)
+        {
+            InitializeComponent();
+            this.fileIndex = fileIndex;
+            this.filePath = filePath;
+            textBoxDestination.Text = Path.GetDirectoryName(filePath) + "\\" + Path.GetFileNameWithoutExtension(filePath);
             textBoxDestination.Text = textBoxDestination.Text.Replace("\\\\", "\\");
         }
         private void btnDuyet_Click(object sender, EventArgs e)
@@ -32,24 +41,33 @@ namespace BasicExtractExplorer
             {
                 textBoxDestination.Text = folderBrowserDialog.SelectedPath;
             }
-            
-            //textBoxDestination.Text = folderBrowserDialog.SelectedPath;
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            //chuyển quá trình giải nén qua form Processing
-            if(!zipExtractor.ArchiveFileData[0].Encrypted)// nếu file bị mã hóa
+            if(fileIndex == null) //nếu không yêu cầu giải nén từng tệp chỉ định
             {
-                Processing processing = new Processing(zipExtractor, textBoxDestination.Text);
+                Processing processing = new Processing(filePath, textBoxDestination.Text);
+                processing.StartPosition = FormStartPosition.CenterScreen;
                 processing.Show();
                 this.Hide();
                 processing.FormClosed += delegate { Application.Exit(); };
             }
             else
             {
-                MessageBox.Show("Unable to decompress this file. Please enter a password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //chuyển quá trình giải nén qua form Processing
+                Processing processing = new Processing(filePath, textBoxDestination.Text, fileIndex);
+                processing.StartPosition = FormStartPosition.CenterScreen;
+                processing.Show();
+                this.Hide();
+                processing.FormClosed += delegate { Application.Exit(); };
             }
+            
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

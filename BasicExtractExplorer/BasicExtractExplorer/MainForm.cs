@@ -1417,30 +1417,76 @@ namespace BasicExtractExplorer
         private void toolStripButton7_Click(object sender, EventArgs e)
         {
             string[] archiveExtension = { ".zip", ".rar", ".7z", ".tar", ".xz", ".bz2", ".gz", ".iso" };
-            if (listView.FocusedItem != null && archiveExtension.Contains(Path.GetExtension(listView.FocusedItem.Text)))
+            if (!listViewArchive.Visible)
             {
-                string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = "BasicExtractExplorer.exe";
-                startInfo.Arguments = "extract "+  "\"" + selected_node_path + listView.FocusedItem.Text + "\" ";
-                process.StartInfo = startInfo;
-                process.EnableRaisingEvents = true;
-                process.Exited += delegate {
-                    //Refresh sau khi giải nén
-                    Invoke((MethodInvoker)delegate
-                    {
-                        toolStripButton12_Click(sender, e);
-                    });
-                };
-                process.Start();
+                if (listView.FocusedItem != null && archiveExtension.Contains(Path.GetExtension(listView.FocusedItem.Text)))
+                {
+                    string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+                    System.Diagnostics.Process process = new System.Diagnostics.Process();
+                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                    //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                    startInfo.FileName = "BasicExtractExplorer.exe";
+                    startInfo.Arguments = "extract " + "\"" + selected_node_path + listView.FocusedItem.Text + "\" ";
+                    process.StartInfo = startInfo;
+                    process.EnableRaisingEvents = true;
+                    process.Exited += delegate {
+                        //Refresh sau khi giải nén
+                        Invoke((MethodInvoker)delegate
+                        {
+                            toolStripButton12_Click(sender, e);
+                        });
+                    };
+                    process.Start();
 
+                }
+                else
+                {
+                    MessageBox.Show("Please select a file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
             else
             {
-                MessageBox.Show("Please select a file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+                PathNode _node;
+                List<int> fileIndex = new List<int>();//Danh sách chỉ số các files được chọn trong file nén
+                PathNode current_path_node = FindPathNode(treeViewArchive.SelectedNode.FullPath);
+                for(int i = 0; i < listViewArchive.SelectedItems.Count; i++)
+                {
+                    current_path_node.nodes.TryGetValue(listViewArchive.SelectedItems[i].Text, out _node);
+                    if(_node.nodes.Count == 0)
+                        fileIndex.Add(_node.Info.Index);
+                }
+                //
+                if (listView.FocusedItem != null && archiveExtension.Contains(Path.GetExtension(listView.FocusedItem.Text)))
+                {
+                    string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+                    System.Diagnostics.Process process = new System.Diagnostics.Process();
+                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                    //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                    startInfo.FileName = "BasicExtractExplorer.exe";
+                    startInfo.Arguments = "extract " + "\"" + selected_node_path + listView.FocusedItem.Text + "\" ";
+                    foreach(int index in fileIndex)
+                    {
+                        startInfo.Arguments += index + " ";
+                    }
+                    process.StartInfo = startInfo;
+                    process.EnableRaisingEvents = true;
+                    process.Exited += delegate {
+                        //Refresh sau khi giải nén
+                        Invoke((MethodInvoker)delegate
+                        {
+                            toolStripButton12_Click(sender, e);
+                        });
+                    };
+                    process.Start();
+
+                }
+                else
+                {
+                    MessageBox.Show("Please select a file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+        }
+            
         }
     }
 }

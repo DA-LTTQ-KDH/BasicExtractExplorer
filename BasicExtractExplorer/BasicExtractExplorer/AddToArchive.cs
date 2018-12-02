@@ -89,6 +89,7 @@ namespace BasicExtractExplorer
             zipCompressor.CompressionLevel = level;
             //chuyển quá trình nén qua form Processing
             Processing processing = new Processing(zipCompressor, Paths, archiveName);
+            processing.StartPosition = FormStartPosition.CenterScreen;
             processing.Show();
             this.Hide();
             processing.FormClosed += delegate { Application.Exit(); };

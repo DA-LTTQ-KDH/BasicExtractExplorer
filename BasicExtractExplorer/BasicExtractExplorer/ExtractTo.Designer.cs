@@ -34,20 +34,22 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.labelDestination = new System.Windows.Forms.Label();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxDestination
             // 
-            this.textBoxDestination.Location = new System.Drawing.Point(10, 36);
-            this.textBoxDestination.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxDestination.Location = new System.Drawing.Point(7, 42);
+            this.textBoxDestination.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxDestination.Name = "textBoxDestination";
-            this.textBoxDestination.Size = new System.Drawing.Size(275, 22);
+            this.textBoxDestination.Size = new System.Drawing.Size(364, 22);
             this.textBoxDestination.TabIndex = 0;
             // 
             // btnDuyet
             // 
-            this.btnDuyet.Location = new System.Drawing.Point(292, 35);
-            this.btnDuyet.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnDuyet.Location = new System.Drawing.Point(379, 41);
+            this.btnDuyet.Margin = new System.Windows.Forms.Padding(4);
             this.btnDuyet.Name = "btnDuyet";
             this.btnDuyet.Size = new System.Drawing.Size(79, 24);
             this.btnDuyet.TabIndex = 1;
@@ -57,8 +59,8 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(163, 395);
-            this.btnOk.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnOk.Location = new System.Drawing.Point(268, 398);
+            this.btnOk.Margin = new System.Windows.Forms.Padding(4);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(100, 28);
             this.btnOk.TabIndex = 2;
@@ -68,38 +70,50 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(271, 395);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCancel.Location = new System.Drawing.Point(376, 398);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(4);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(100, 28);
             this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // labelDestination
             // 
             this.labelDestination.AutoSize = true;
-            this.labelDestination.Location = new System.Drawing.Point(7, 12);
+            this.labelDestination.Location = new System.Drawing.Point(4, 18);
             this.labelDestination.Name = "labelDestination";
-            this.labelDestination.Size = new System.Drawing.Size(112, 17);
+            this.labelDestination.Size = new System.Drawing.Size(115, 17);
             this.labelDestination.TabIndex = 4;
-            this.labelDestination.Text = "Destination Path";
+            this.labelDestination.Text = "Destination path:";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.labelDestination);
+            this.groupBox1.Controls.Add(this.textBoxDestination);
+            this.groupBox1.Controls.Add(this.btnDuyet);
+            this.groupBox1.Location = new System.Drawing.Point(8, 0);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(465, 391);
+            this.groupBox1.TabIndex = 5;
+            this.groupBox1.TabStop = false;
             // 
             // ExtractTo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 436);
-            this.Controls.Add(this.labelDestination);
+            this.ClientSize = new System.Drawing.Size(482, 436);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
-            this.Controls.Add(this.btnDuyet);
-            this.Controls.Add(this.textBoxDestination);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ExtractTo";
             this.Text = "ExtractTo";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -111,5 +125,6 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label labelDestination;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

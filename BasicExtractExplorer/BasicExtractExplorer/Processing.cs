@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using SevenZip;
 
@@ -15,17 +11,21 @@ namespace BasicExtractExplorer
 {
     public partial class Processing : Form
     {
-        Thread t;
         SevenZipCompressor compressor;
-        SevenZipExtractor extractor;
         List<string> paths;
+        List<int> fileIndex;
         string archiveName;
         string folder;
-        bool isCancel = false;
+        BackgroundWorker worker;
+
+        #region Compress
         public Processing(SevenZipCompressor sevenZipCompressor, List<string> paths, string archiveName)
         {
             InitializeComponent();
-            this.Shown += Processing_Compress;
+            worker = new BackgroundWorker();
+            this.Shown += Processing_Shown;
+            worker.DoWork += Worker_DoCompress;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
             //DoubleBuffered = true;
             this.Text = "Compressing";
             //thực hiện nén
@@ -33,32 +33,14 @@ namespace BasicExtractExplorer
             this.paths = paths;
             this.archiveName = archiveName;
         }
-        public Processing(SevenZipExtractor sevenZipExtractor, string folder)
+        private void Worker_DoCompress(object sender, DoWorkEventArgs e)
         {
-            InitializeComponent();
-            this.Shown += Processing_Extract;
-            this.Text = "Extracting";
-            extractor = sevenZipExtractor;
-            this.archiveName = extractor.FileName;
-            this.folder = folder;
-            //Thực hiện giải nén
-        }
-        public void DoCompress()
-        {
-            Invoke((MethodInvoker)delegate
-            {
-                Refresh();
-                labelArchiveName.Text = archiveName;
-            });
             compressor.Compressing += ZipCompressor_Compressing;
             compressor.CompressionFinished += ZipCompressor_CompressionFinished;
             compressor.FileCompressionStarted += SevenZipCompressor_FileCompressionStarted;
-            compressor.FileCompressionFinished += SevenZipCompressor_FileCompressionFinished;
-            //if (File.Exists(archiveName)) File.Delete(archiveName);
             foreach (string path in paths)
             {
                 compressor.CompressionMode = File.Exists(archiveName) ? SevenZip.CompressionMode.Append : SevenZip.CompressionMode.Create;
-                //FileStream archive = new FileStream(archiveName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
                 compressor.DirectoryStructure = true;
                 compressor.EncryptHeaders = true;
                 compressor.DefaultItemName = archiveName;
@@ -74,147 +56,193 @@ namespace BasicExtractExplorer
                         compressor.CompressFiles(archiveName, path);
                     }
                 }
-                catch(ThreadAbortException)
+                catch (ThreadAbortException)
                 {
                     MessageBox.Show("Aborted");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
-                
+
             }
-            Invoke((MethodInvoker)delegate
-            {
-                Close();
-            });
-        }
-        public void DoExtract()
-        {
-            Invoke((MethodInvoker)delegate
-            {
-                Refresh();
-                labelArchiveName.Text = archiveName;
-            //});
-            extractor.Extracting += Extractor_Extracting;
-            extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
-            extractor.ExtractionFinished += Extractor_ExtractionFinished;
-            extractor.ExtractArchive(folder);
-            //Invoke((MethodInvoker)delegate
-            //{
-                Close();
-            });
-        }
-
-        private void Extractor_ExtractionFinished(object sender, EventArgs e)
-        {
-            this.Invoke((MethodInvoker)delegate
-            {
-                //Nén xong đóng form
-                progressBarTotal.Value = 100;
-                //Refresh();
-                //this.Close();
-            });
-        }
-
-        private void Extractor_FileExtractionStarted(object sender, FileInfoEventArgs e)
-        {
-            this.Invoke((MethodInvoker)delegate
-            {
-                labelFile.Text = Path.GetFileName(e.FileInfo.FileName);
-                progressBarTotal.Value = e.PercentDone;
-                labelPercent.Text = e.PercentDone.ToString() + "%";
-                e.Cancel = isCancel;
-                Refresh();
-
-            });
-        }
-
-        private void Extractor_Extracting(object sender, ProgressEventArgs e)
-        {
-            this.Invoke((MethodInvoker)delegate
-            {
-                //hiện quá trình nén
-                progressBarTotal.Value = e.PercentDone;
-                groupBox1.Refresh();
-            });
-        }
-
-        private void SevenZipCompressor_FileCompressionFinished(object sender, EventArgs e)
-        {
-            //Refresh();
         }
 
         private void SevenZipCompressor_FileCompressionStarted(object sender, FileNameEventArgs e)
         {
-            this.Invoke((MethodInvoker)delegate
-            {
+            Invoke((MethodInvoker)delegate {
+                Refresh();
+                labelArchiveName.Text = archiveName;
                 labelFile.Text = e.FileName;
                 progressBarTotal.Value = e.PercentDone;
                 labelPercent.Text = e.PercentDone.ToString() + "%";
-                e.Cancel = isCancel;
-                Refresh();
-
             });
-           
         }
 
-        
         private void ZipCompressor_CompressionFinished(object sender, EventArgs e)
         {
-            this.Invoke((MethodInvoker)delegate
+            Invoke((MethodInvoker)delegate
             {
-                //Nén xong đóng form
                 progressBarTotal.Value = 100;
-                //Refresh();
-                //this.Close();
+                Refresh();
             });
         }
 
         private void ZipCompressor_Compressing(object sender, SevenZip.ProgressEventArgs e)
         {
-            this.Invoke((MethodInvoker)delegate
+            Invoke((MethodInvoker)delegate
             {
-                //hiện quá trình nén
+                Refresh();
                 progressBarTotal.Value = e.PercentDone;
-                groupBox1.Refresh();
             });
         }
-        private void Processing_Compress(object sender, EventArgs e)
+
+        #endregion Compress
+
+        #region Decompress
+        public Processing(string filePath, string folder)
         {
-            t = new Thread(new ThreadStart(DoCompress));
-            //DoCompress();
-            t.Start();
+            InitializeComponent();
+            worker = new BackgroundWorker();
+            this.Shown += Processing_Shown;
+            worker.DoWork += Worker_DoExtract;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            this.Text = "Extracting";
+            this.archiveName = filePath;
+            this.folder = folder;
         }
-        private void Processing_Extract(object sender, EventArgs e)
+        public Processing(string filePath, string folder, List<int> fileIndex)
         {
-            t = new Thread(new ThreadStart(DoExtract));  
-            t.Start();
+            InitializeComponent();
+            this.fileIndex = fileIndex;
+            worker = new BackgroundWorker();
+            this.Shown += Processing_Shown;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            worker.DoWork += Worker_DoExtractFiles;
+            this.Text = "Extracting";
+            this.archiveName = filePath;
+            this.folder = folder;
         }
+
+        private void Worker_DoExtract(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                SevenZipExtractor.SetLibraryPath("7z.dll");
+                var extractor = new SevenZipExtractor(archiveName);
+                if (extractor.ArchiveFileData[0].Encrypted)
+                {
+                    Password p = new Password();
+                    p.StartPosition = FormStartPosition.CenterScreen;
+                    if (p.ShowDialog() == DialogResult.OK)
+                    {
+                        extractor = new SevenZipExtractor(archiveName, p.PasswordString);
+                        extractor.Extracting += Extractor_Extracting;
+                        extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                        extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                        extractor.ExtractArchive(folder);
+                    }
+                }
+                else
+                {
+                    extractor.Extracting += Extractor_Extracting;
+                    extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                    extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                    extractor.ExtractArchive(folder);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
+        }
+        private void Extractor_ExtractionFinished(object sender, EventArgs e)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                Refresh();
+                labelPercent.Text = "100%";
+                progressBarTotal.Value = 100;
+            });
+        }
+        private void Extractor_FileExtractionStarted(object sender, FileInfoEventArgs e)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                Refresh();
+                labelArchiveName.Text = archiveName;
+                labelFile.Text = Path.GetFileName(e.FileInfo.FileName);
+                progressBarTotal.Value = e.PercentDone;
+                labelPercent.Text = e.PercentDone.ToString() + "%";
+
+            });
+        }
+        private void Extractor_Extracting(object sender, ProgressEventArgs e)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                Refresh();
+                progressBarTotal.Value = e.PercentDone;
+            });
+        }
+        private void Worker_DoExtractFiles(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                SevenZipExtractor.SetLibraryPath("7z.dll");
+                var extractor = new SevenZipExtractor(archiveName);
+                if (extractor.ArchiveFileData[0].Encrypted)
+                {
+                    Password p = new Password();
+                    p.StartPosition = FormStartPosition.CenterScreen;
+                    if (p.ShowDialog() == DialogResult.OK)
+                    {
+                        extractor = new SevenZipExtractor(archiveName, p.PasswordString);
+                        extractor.Extracting += Extractor_Extracting;
+                        extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                        extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                        foreach (int i in fileIndex)
+                        {
+                            extractor.ExtractFiles(folder, i);
+                        }
+                    }
+                }
+                else
+                {
+                    extractor.Extracting += Extractor_Extracting;
+                    extractor.FileExtractionStarted += Extractor_FileExtractionStarted;
+                    extractor.ExtractionFinished += Extractor_ExtractionFinished;
+                    foreach (int i in fileIndex)
+                    {
+                        extractor.ExtractFiles(folder, i);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+        #endregion Decompress
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (t.ThreadState == ThreadState.Suspended)
-                t.Resume();
-            t.Abort();
-            compressor = null;
-            this.Close();
+            Close();
+        }
+        private void Processing_Shown(object sender, EventArgs e)
+        {
+            worker.RunWorkerAsync();
+        }
+        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Processing_Load(object sender, EventArgs e)
         {
-            if (t.ThreadState != ThreadState.Suspended)
-            {
-                
-                button2.Text = "Resume";
-                t.Suspend();
-            }
-            else
-            {
-                button2.Text = "Pause";
-                t.Resume();
-            }
-                
+
         }
     }
 }

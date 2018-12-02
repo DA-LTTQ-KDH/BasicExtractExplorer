@@ -34,7 +34,6 @@
             this.labelPercent = new System.Windows.Forms.Label();
             this.labelFile = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -95,26 +94,16 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(300, 114);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(104, 34);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "Pause";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // Processing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(535, 156);
-            this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox1);
             this.Name = "Processing";
             this.Text = "Processing";
+            this.Load += new System.EventHandler(this.Processing_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -129,6 +118,5 @@
         private System.Windows.Forms.Label labelPercent;
         private System.Windows.Forms.Label labelFile;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
     }
 }
