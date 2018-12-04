@@ -170,7 +170,7 @@ namespace BasicExtractExplorer
             }
             catch (System.UnauthorizedAccessException)
             {
-                MessageBox.Show("Access is denied");
+                MessageBox.Show("Access is denied", "Stop", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
             toolStripStatusLabel1.Text = listView.Items.Count.ToString() + " items";
             if (isBacking) return;
@@ -1164,12 +1164,42 @@ namespace BasicExtractExplorer
         private void listViewArchive_DoubleClick(object sender, EventArgs e)
         {
             string tmpNode = listViewArchive.SelectedItems[0].SubItems[0].Text;
-            //string fullpath = treeViewArchive.SelectedNode.FullPath;
-            string str = "";
-            str += listViewArchive.SelectedItems[0].SubItems[0].Text;
-            foreach (TreeNode node in treeViewArchive.SelectedNode.Nodes)
+            if(listViewArchive.FocusedItem.SubItems[2].Text == "Folder")
             {
-                if (node.Text.Equals(tmpNode)) treeViewArchive.SelectedNode = node;
+                foreach (TreeNode node in treeViewArchive.SelectedNode.Nodes)
+                {
+                    if (node.Text.Equals(tmpNode)) treeViewArchive.SelectedNode = node;
+                }
+            }
+            else
+            {
+                List<int> fileIndex = new List<int>();//Danh sách chỉ số các files được chọn trong file nén
+                PathNode current_path_node = FindPathNode(treeViewArchive.SelectedNode.FullPath);
+                current_path_node.nodes.TryGetValue(listViewArchive.FocusedItem.Text, out PathNode _node);
+                if (_node.nodes.Count == 0)
+                    fileIndex.Add(_node.Info.Index);
+                if (listView.FocusedItem != null)
+                {
+                    string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+                    //Xóa file cũ
+                    if (File.Exists(Path.GetTempPath() + sevenZipExtractor.ArchiveFileData[fileIndex[0]].FileName))
+                    {
+                        File.SetAttributes(Path.GetTempPath() + sevenZipExtractor.ArchiveFileData[fileIndex[0]].FileName,FileAttributes.Normal);
+                        File.Delete(Path.GetTempPath() + sevenZipExtractor.ArchiveFileData[fileIndex[0]].FileName);
+                    }
+
+                    Processing processing = new Processing(selected_node_path + listView.FocusedItem.Text,Path.GetTempPath(),fileIndex);
+                    processing.Text = "Opening...";
+                    processing.StartPosition = FormStartPosition.CenterScreen;
+                    processing.FormClosing += delegate {
+                        if(File.Exists(Path.GetTempPath()+sevenZipExtractor.ArchiveFileData[fileIndex[0]].FileName))
+                        {
+                            File.SetAttributes(Path.GetTempPath() + sevenZipExtractor.ArchiveFileData[fileIndex[0]].FileName, FileAttributes.ReadOnly);//Chỉ đọc
+                            System.Diagnostics.Process.Start(Path.GetTempPath() + sevenZipExtractor.ArchiveFileData[fileIndex[0]].FileName);
+                        }
+                    };
+                    processing.Show();
+                }
             }
         }
         private PathNode FindPathNode(string treeNodePath)
