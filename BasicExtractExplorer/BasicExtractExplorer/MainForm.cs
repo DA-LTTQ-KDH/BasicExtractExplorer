@@ -43,7 +43,6 @@ namespace BasicExtractExplorer
         {
             listViewArchive.Visible = false;
             ComponentResourceManager resources = new ComponentResourceManager(typeof(MainForm));
-
             listView_ImageList.ColorDepth = ColorDepth.Depth32Bit;
             listView_ImageList.ImageSize = new Size(20, 20);
             listView.SmallImageList = listView_ImageList;
@@ -62,8 +61,6 @@ namespace BasicExtractExplorer
             archiveView_ImageList.Images.Add(IconHelper.Extract(IconHelper.Shell32, 3, true));//load folder icon
             archiveView_ImageList.Images.Add(IconHelper.Extract(IconHelper.Shell32, 0, true));//load file icon
             archiveView_ImageList.Images.Add(IconHelper.Extract(IconHelper.Shell32, 2, true));
-
-
             //Đảm bảo treeView trống
             if (treeView != null)
                 treeView.Nodes.Clear();
@@ -87,20 +84,14 @@ namespace BasicExtractExplorer
             ThisPC.Expand();
 
             isCopying = 0; //không đang copy hay cut
-            
             fileSelectedName = new List<string>();
             typeSelectedFile = new List<string>();
-
             toolStripStatusLabel1.Text = "";
             toolStripStatusLabel2.Text = "";
             toolStripStatusLabel3.Text = "";
-
             pathBack.Add(ThisPC.FullPath);
             isBacking = false;
-
             enableButtonInit();
-
-
         } 
 
         private void enableButtonInit()
@@ -111,7 +102,6 @@ namespace BasicExtractExplorer
             selectAllCrltAToolStripMenuItem.Enabled = false;
             renameToolStripMenuItem.Enabled = false;
             deleteDelToolStripMenuItem.Enabled = false;
-
             folderToolStripMenuItem.Enabled = false;
             itemToolStripMenuItem.Enabled = false;
         }
@@ -134,7 +124,6 @@ namespace BasicExtractExplorer
                 listViewArchive.Visible = false;
                 treeViewArchive.Nodes.Clear();
             }
-
             try
             {
                 if (e.Node.Text.CompareTo("This PC") != 0)
@@ -166,7 +155,6 @@ namespace BasicExtractExplorer
                     }
 
                     e.Node.Expand();
-
                 }
                 else
                 {
@@ -175,7 +163,6 @@ namespace BasicExtractExplorer
                     folderToolStripMenuItem.Enabled = false;
                     itemToolStripMenuItem.Enabled = false;
                 }
-
             }
             catch (DirectoryNotFoundException)
             {
@@ -185,9 +172,7 @@ namespace BasicExtractExplorer
             {
                 MessageBox.Show("Access is denied");
             }
-
             toolStripStatusLabel1.Text = listView.Items.Count.ToString() + " items";
-
             if (isBacking) return;
             if (treeView.SelectedNode.Text == "This PC") return;
             pathBack.Add(treeView.SelectedNode.FullPath);
@@ -257,9 +242,7 @@ namespace BasicExtractExplorer
             {
                 MessageBox.Show("Something went wrong!");
             }
-            
         }
-
 
         #region các hàm Delete
         private void toolStripButton4_Click(object sender, EventArgs e)
@@ -605,7 +588,7 @@ namespace BasicExtractExplorer
         //Up
         private void toolStripButton10_Click(object sender, EventArgs e)
         {
-            if(!listViewArchive.Visible)
+            if(!listViewArchive.Visible) //nếu không ở chế độ xem trước file nén
             {
                 if (treeView.SelectedNode.Text == "This PC") return;
                 treeView.SelectedNode = treeView.SelectedNode.Parent;
@@ -615,9 +598,11 @@ namespace BasicExtractExplorer
             }
             else
             {
-                if (treeViewArchive.SelectedNode == treeViewArchive.Nodes[0]) return;
-                treeViewArchive.SelectedNode = treeViewArchive.SelectedNode.Parent;
-                //listView_Click(sender, e);
+                if (treeViewArchive.SelectedNode == treeViewArchive.Nodes[0])
+                    toolStripButton12_Click(sender, e);
+                else
+                    treeViewArchive.SelectedNode = treeViewArchive.SelectedNode.Parent;
+
             }
 
             enableButton();
@@ -958,7 +943,7 @@ namespace BasicExtractExplorer
 
         private void listView_DoubleClick(object sender, EventArgs e)
         {
-            string[] archiveExtension = { ".zip", ".rar", ".7z", ".tar", ".xz", ".bz2", ".gz", ".iso" };
+            string[] archiveExtension = { ".zip", ".rar", ".7z", ".tar", ".xz", ".bz2", ".gz"};
             String tmpNode = listView.SelectedItems[0].SubItems[0].Text;
             string fullpath = treeView.SelectedNode.FullPath;
             string str = GetPath(fullpath);
@@ -1331,7 +1316,6 @@ namespace BasicExtractExplorer
                 }
                 for (int i = 0; i < pnode.nodes.Count; i++)
                 {
-
                     if (!IsFile(rootNode.FullPath + "\\" + pnode.nodes.Keys.ElementAt(i)))
                     {
                         TreeNode treeNode = new TreeNode(pnode.nodes.ElementAt(i).Key);
@@ -1376,15 +1360,12 @@ namespace BasicExtractExplorer
                 }
                 rootNode.Expand();
                 #endregion
-                
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
         #endregion
         //button Add
         private void toolStripButton6_Click(object sender, EventArgs e)
@@ -1417,7 +1398,6 @@ namespace BasicExtractExplorer
                     ExtractTo extractTo = new ExtractTo(selected_node_path + listView.FocusedItem.Text);
                     extractTo.FormClosing += delegate { toolStripButton12_Click(sender, e); };
                     extractTo.Show();
-
                 }
                 else
                 {
@@ -1426,12 +1406,11 @@ namespace BasicExtractExplorer
             }
             else
             {
-                PathNode _node;
                 List<int> fileIndex = new List<int>();//Danh sách chỉ số các files được chọn trong file nén
                 PathNode current_path_node = FindPathNode(treeViewArchive.SelectedNode.FullPath);
                 for(int i = 0; i < listViewArchive.SelectedItems.Count; i++)
                 {
-                    current_path_node.nodes.TryGetValue(listViewArchive.SelectedItems[i].Text, out _node);
+                    current_path_node.nodes.TryGetValue(listViewArchive.SelectedItems[i].Text, out PathNode _node);
                     if(_node.nodes.Count == 0)
                         fileIndex.Add(_node.Info.Index);
                 }
@@ -1446,8 +1425,7 @@ namespace BasicExtractExplorer
                 {
                     MessageBox.Show("Please select a file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-        }
-            
+            }
         }
     }
 }
