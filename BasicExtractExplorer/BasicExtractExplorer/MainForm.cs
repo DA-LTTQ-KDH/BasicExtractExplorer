@@ -994,40 +994,7 @@ namespace BasicExtractExplorer
             listView_Click(sender, e);
         }
 
-        //button Add
-        private void toolStripButton6_Click(object sender, EventArgs e)
-        {
-            if(listView.SelectedItems.Count > 0)
-            {
-                string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = "BasicExtractExplorer.exe";
-                startInfo.Arguments = "compress ";
-                foreach (ListViewItem item in listView.SelectedItems)
-                {
-                    startInfo.Arguments +="\"" + selected_node_path + item.Text + "\" ";
-                }
-                
-                process.StartInfo = startInfo;
-                process.EnableRaisingEvents = true;
-                process.Exited += delegate {
-                    //Refresh sau khi nén
-                    Invoke((MethodInvoker)delegate 
-                    {
-                        toolStripButton12_Click(sender, e);
-                    });
-                };
-                process.Start();
-                
-            }
-            else
-            {
-                MessageBox.Show("Please select a folder", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
 
-        }
 
         //enter Address Bar
         private void toolStripComboBox1_KeyDown(object sender, KeyEventArgs e)
@@ -1419,7 +1386,26 @@ namespace BasicExtractExplorer
 
 
         #endregion
-
+        //button Add
+        private void toolStripButton6_Click(object sender, EventArgs e)
+        {
+            if (listView.SelectedItems.Count > 0)
+            {
+                string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+                List<string> ls = new List<string>();
+                foreach (ListViewItem item in listView.SelectedItems)
+                {
+                    ls.Add(selected_node_path + item.Text);
+                }
+                AddToArchive addToArchive = new AddToArchive(ls);
+                addToArchive.FormClosing += delegate { toolStripButton12_Click(sender, e); };
+                addToArchive.Show();
+            }
+            else
+            {
+                MessageBox.Show("Please select a file/folder", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
         private void toolStripButton7_Click(object sender, EventArgs e)
         {
             string[] archiveExtension = { ".zip", ".rar", ".7z", ".tar", ".xz", ".bz2", ".gz"};
@@ -1427,24 +1413,11 @@ namespace BasicExtractExplorer
             {
                 if (listView.FocusedItem != null && archiveExtension.Contains(Path.GetExtension(listView.FocusedItem.Text)))
                 {
-                    #region startextract
                     string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
-                    System.Diagnostics.Process process = new System.Diagnostics.Process();
-                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                    //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                    startInfo.FileName = "BasicExtractExplorer.exe";
-                    startInfo.Arguments = "extract " + "\"" + selected_node_path + listView.FocusedItem.Text + "\" ";
-                    process.StartInfo = startInfo;
-                    process.EnableRaisingEvents = true;
-                    process.Exited += delegate {
-                        //Refresh sau khi giải nén
-                        Invoke((MethodInvoker)delegate
-                        {
-                            toolStripButton12_Click(sender, e);
-                        });
-                    };
-                    process.Start();
-                    #endregion startextract
+                    ExtractTo extractTo = new ExtractTo(selected_node_path + listView.FocusedItem.Text);
+                    extractTo.FormClosing += delegate { toolStripButton12_Click(sender, e); };
+                    extractTo.Show();
+
                 }
                 else
                 {
@@ -1462,38 +1435,17 @@ namespace BasicExtractExplorer
                     if(_node.nodes.Count == 0)
                         fileIndex.Add(_node.Info.Index);
                 }
-                //
                 if (listView.FocusedItem != null && archiveExtension.Contains(Path.GetExtension(listView.FocusedItem.Text)))
                 {
-                    #region startextract
                     string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
-                    System.Diagnostics.Process process = new System.Diagnostics.Process();
-                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                    //startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                    startInfo.FileName = "BasicExtractExplorer.exe";
-                    startInfo.Arguments = "extract " + "\"" + selected_node_path + listView.FocusedItem.Text + "\" ";
-                    foreach(int index in fileIndex)
-                    {
-                        startInfo.Arguments += index + " ";
-                    }
-                    process.StartInfo = startInfo;
-                    process.EnableRaisingEvents = true;
-                    process.Exited += delegate {
-                        //Refresh sau khi giải nén
-                        Invoke((MethodInvoker)delegate
-                        {
-                            toolStripButton12_Click(sender, e);
-                        });
-                    };
-                    process.Start();
-                    #endregion startextract
-
+                    ExtractTo extractTo = new ExtractTo(selected_node_path + listView.FocusedItem.Text, fileIndex);
+                    extractTo.FormClosing += delegate { toolStripButton12_Click(sender, e); };
+                    extractTo.Show();
                 }
                 else
                 {
                     MessageBox.Show("Please select a file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-
         }
             
         }

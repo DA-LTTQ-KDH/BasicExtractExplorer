@@ -84,7 +84,7 @@ namespace BasicExtractExplorer
                 processing.StartPosition = FormStartPosition.CenterScreen;
                 processing.Show();
                 this.Hide();
-                processing.FormClosed += delegate { Application.Exit(); };
+                processing.FormClosed += delegate { Close(); };
             }
             else
             {

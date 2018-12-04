@@ -15,23 +15,20 @@ namespace BasicExtractExplorer
     
     public partial class ExtractTo : Form
     {
-        //SevenZipExtractor zipExtractor;
-        List<int> fileIndex;
+        List<int> fileIndexes;
         string filePath;
-        public ExtractTo(string filePath)
+        public ExtractTo(string path)
         {
             InitializeComponent();
-            this.filePath = filePath;
-            textBoxDestination.Text = Path.GetDirectoryName(filePath)+ "\\" + Path.GetFileNameWithoutExtension(filePath);
-            textBoxDestination.Text = textBoxDestination.Text.Replace("\\\\", "\\");
+            filePath = path;
+            textBoxDestination.Text = GetPathWithoutExtension(filePath);
         }
-        public ExtractTo(string filePath, List<int> fileIndex)
+        public ExtractTo(string path, List<int> indexes)
         {
             InitializeComponent();
-            this.fileIndex = fileIndex;
-            this.filePath = filePath;
-            textBoxDestination.Text = Path.GetDirectoryName(filePath) + "\\" + Path.GetFileNameWithoutExtension(filePath);
-            textBoxDestination.Text = textBoxDestination.Text.Replace("\\\\", "\\");
+            fileIndexes = indexes;
+            filePath = path;
+            textBoxDestination.Text = GetPathWithoutExtension(filePath);
         }
         private void btnDuyet_Click(object sender, EventArgs e)
         {
@@ -42,29 +39,32 @@ namespace BasicExtractExplorer
                 textBoxDestination.Text = folderBrowserDialog.SelectedPath;
             }
         }
+        private string GetPathWithoutExtension(string filepath)
+        {
+            var result = Path.GetDirectoryName(filepath) + "\\" + Path.GetFileNameWithoutExtension(filepath);
+            return result.Replace("\\\\", "\\");
+        }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            if(fileIndex == null) //nếu không yêu cầu giải nén từng tệp chỉ định
+            if(fileIndexes == null) //nếu không yêu cầu giải nén từng tệp chỉ định
             {
                 Processing processing = new Processing(filePath, textBoxDestination.Text);
                 processing.StartPosition = FormStartPosition.CenterScreen;
                 processing.Show();
-                this.Hide();
-                processing.FormClosed += delegate { Application.Exit(); };
+                Hide();
+                processing.FormClosed += delegate { Close(); };
             }
             else
             {
-                //chuyển quá trình giải nén qua form Processing
-                Processing processing = new Processing(filePath, textBoxDestination.Text, fileIndex);
+                Processing processing = new Processing(filePath, textBoxDestination.Text, fileIndexes);
                 processing.StartPosition = FormStartPosition.CenterScreen;
                 processing.Show();
-                this.Hide();
-                processing.FormClosed += delegate { Application.Exit(); };
+                Hide();
+                processing.FormClosed += delegate { Close(); };
             }
             
         }
-
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
