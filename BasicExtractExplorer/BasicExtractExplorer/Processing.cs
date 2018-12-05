@@ -18,12 +18,13 @@ namespace BasicExtractExplorer
         string folder;
         string pass;
         BackgroundWorker worker;
-
+        bool isCancel = false;
         #region Compress
         public Processing(OutArchiveFormat format, bool preserveDirectoryRoot, CompressionLevel level, List<string> paths, string archiveName, string pass)
         {
             InitializeComponent();
             worker = new BackgroundWorker();
+            worker.WorkerSupportsCancellation = true;
             this.Shown += Processing_Shown;
             worker.DoWork += Worker_DoCompress;
             worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
@@ -35,7 +36,10 @@ namespace BasicExtractExplorer
                 ArchiveFormat = format,
                 PreserveDirectoryRoot = true,
                 CompressionLevel = level,
-            };
+                IncludeEmptyDirectories = true,
+                DirectoryStructure = true,
+                EncryptHeaders = true,
+        };
             this.paths = paths;
             this.archiveName = archiveName;
             this.pass = pass;
@@ -48,10 +52,6 @@ namespace BasicExtractExplorer
             foreach (string path in paths)
             {
                 compressor.CompressionMode = File.Exists(archiveName) ? SevenZip.CompressionMode.Append : SevenZip.CompressionMode.Create;
-                compressor.DirectoryStructure = true;
-                compressor.EncryptHeaders = true;
-                compressor.IncludeEmptyDirectories = true;
-                //compressor.ZipEncryptionMethod = ZipEncryptionMethod.ZipCrypto;
                 try
                 {
                     if (File.GetAttributes(path).HasFlag(FileAttributes.Directory)) // là thư mục
@@ -77,31 +77,41 @@ namespace BasicExtractExplorer
 
         private void SevenZipCompressor_FileCompressionStarted(object sender, FileNameEventArgs e)
         {
-            Invoke((MethodInvoker)delegate {
-                Refresh();
-                labelArchiveName.Text = archiveName;
-                labelFile.Text = e.FileName;
-                progressBarTotal.Value = e.PercentDone;
-                labelPercent.Text = e.PercentDone.ToString() + "%";
-            });
+            if (InvokeRequired)
+            {
+                Invoke((MethodInvoker)delegate
+                {
+                    Refresh();
+                    labelArchiveName.Text = archiveName;
+                    labelFile.Text = e.FileName;
+                    progressBarTotal.Value = e.PercentDone;
+                    labelPercent.Text = e.PercentDone.ToString() + "%";
+                });
+            }
         }
 
         private void ZipCompressor_CompressionFinished(object sender, EventArgs e)
         {
-            Invoke((MethodInvoker)delegate
+            if (InvokeRequired)
             {
-                progressBarTotal.Value = 100;
-                Refresh();
-            });
+                Invoke((MethodInvoker)delegate
+                {
+                    progressBarTotal.Value = 100;
+                    Refresh();
+                });
+            }
         }
 
         private void ZipCompressor_Compressing(object sender, SevenZip.ProgressEventArgs e)
         {
-            Invoke((MethodInvoker)delegate
+            if(InvokeRequired)
             {
-                Refresh();
-                progressBarTotal.Value = e.PercentDone;
-            });
+                Invoke((MethodInvoker)delegate
+                {
+                    Refresh();
+                    progressBarTotal.Value = e.PercentDone;
+                });
+            }
         }
 
         #endregion Compress
@@ -112,6 +122,7 @@ namespace BasicExtractExplorer
             InitializeComponent();
             labelArchiveName.Text = Path.GetFileName(filePath);
             worker = new BackgroundWorker();
+            worker.WorkerSupportsCancellation = true;
             this.Shown += Processing_Shown;
             worker.DoWork += Worker_DoExtract;
             worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
@@ -125,6 +136,7 @@ namespace BasicExtractExplorer
             labelArchiveName.Text = Path.GetFileName(filePath);
             this.fileIndex = fileIndex;
             worker = new BackgroundWorker();
+            worker.WorkerSupportsCancellation = true;
             this.Shown += Processing_Shown;
             worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
             worker.DoWork += Worker_DoExtractFiles;
@@ -172,32 +184,42 @@ namespace BasicExtractExplorer
         }
         private void Extractor_ExtractionFinished(object sender, EventArgs e)
         {
-            Invoke((MethodInvoker)delegate
+            if(InvokeRequired)
             {
-                Refresh();
-                labelPercent.Text = "100%";
-                progressBarTotal.Value = 100;
-            });
+                Invoke((MethodInvoker)delegate
+                {
+                    Refresh();
+                    labelPercent.Text = "100%";
+                    progressBarTotal.Value = 100;
+                });
+            }
         }
         private void Extractor_FileExtractionStarted(object sender, FileInfoEventArgs e)
         {
-            Invoke((MethodInvoker)delegate
+            e.Cancel = isCancel;
+            if (InvokeRequired)
             {
-                Refresh();
-                labelArchiveName.Text = archiveName;
-                labelFile.Text = Path.GetFileName(e.FileInfo.FileName);
-                progressBarTotal.Value = e.PercentDone;
-                labelPercent.Text = e.PercentDone.ToString() + "%";
+                Invoke((MethodInvoker)delegate
+                {
+                    Refresh();
+                    labelArchiveName.Text = archiveName;
+                    labelFile.Text = Path.GetFileName(e.FileInfo.FileName);
+                    progressBarTotal.Value = e.PercentDone;
+                    labelPercent.Text = e.PercentDone.ToString() + "%";
 
-            });
+                });
+            }
         }
         private void Extractor_Extracting(object sender, ProgressEventArgs e)
         {
-            Invoke((MethodInvoker)delegate
+            if (InvokeRequired)
             {
-                Refresh();
-                progressBarTotal.Value = e.PercentDone;
-            });
+                Invoke((MethodInvoker)delegate
+                {
+                    Refresh();
+                    progressBarTotal.Value = e.PercentDone;
+                });
+            }
         }
         private void Worker_DoExtractFiles(object sender, DoWorkEventArgs e)
         {
@@ -245,6 +267,8 @@ namespace BasicExtractExplorer
 
         private void button1_Click(object sender, EventArgs e)
         {
+            isCancel = true;
+            worker.CancelAsync();
             Close();
         }
         private void Processing_Shown(object sender, EventArgs e)

@@ -4,13 +4,10 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
 using System.Security.Cryptography;
 using SevenZip;
-using System.Threading;
 using Microsoft.VisualBasic.FileIO;
 
 namespace BasicExtractExplorer
@@ -116,13 +113,22 @@ namespace BasicExtractExplorer
             }
             return result;
         }
+        private void CloseArchive()
+        {
+            listViewArchive.Visible = false;
+            treeViewArchive.Nodes.Clear();
+        }
+        private void OpenArchive(string str)
+        {
+            listViewArchive.Visible = true;
+            ShowArchiveFiles(str);
+        }
 
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (listViewArchive.Visible)
             {
-                listViewArchive.Visible = false;
-                treeViewArchive.Nodes.Clear();
+                CloseArchive();
             }
             try
             {
@@ -220,7 +226,7 @@ namespace BasicExtractExplorer
                 {
                     listView_ImageList.Images.Add(Icon.ExtractAssociatedIcon(file));
                 }
-                    //Thêm các tệp vào listView
+                 //Thêm các tệp vào listView
                 foreach (string file in files)
                 {
                     FileInfo info = new FileInfo(file);
@@ -355,29 +361,76 @@ namespace BasicExtractExplorer
         #region Các hàm Copy
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            if (listView.SelectedItems.Count == 0) return;
-
-            if (isCopying != 2) isCopying = 1; // Xác định xem đang copy hay cut
-            old_selected_node_path = GetPath(treeView.SelectedNode.FullPath);
-            if (!(Directory.Exists(old_selected_node_path))) //Kiểm tra đường dẫn tồn tại
+            if(!listViewArchive.Visible) // nếu không đang mở file nén
             {
-                isCopying = 0;
-                return;
+                if (listView.SelectedItems.Count == 0) return;
+
+                if (isCopying != 2) isCopying = 1; // Xác định xem đang copy hay cut
+                old_selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+                if (!(Directory.Exists(old_selected_node_path))) //Kiểm tra đường dẫn tồn tại
+                {
+                    isCopying = 0;
+                    return;
+                }
+
+                fileSelectedName.Clear();
+                typeSelectedFile.Clear();
+
+                for (int i = 0; i < listView.SelectedItems.Count; i++)
+                {
+                    fileSelectedName.Add(listView.SelectedItems[i].SubItems[0].Text);
+                    typeSelectedFile.Add(listView.SelectedItems[i].SubItems[1].Text);
+
+                }
+
+                pasteCrltVToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                if (listViewArchive.SelectedItems.Count == 0) return;
+                fileSelectedName.Clear();
+                typeSelectedFile.Clear();
+                List<int> fileIndexes = new List<int>();//Danh sách chỉ số các files được chọn trong file nén
+                PathNode current_path_node = FindPathNode(treeViewArchive.SelectedNode.FullPath);
+                //Add vào list index của tệp/thư mục cần giải nén
+                foreach(ListViewItem item in listViewArchive.SelectedItems)
+                {
+                    current_path_node.nodes.TryGetValue(item.Text, out PathNode _node);
+                    GetFileIndexes(_node, ref fileIndexes);
+                }
+                if (listView.FocusedItem != null)
+                {
+                    string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+                    //Giải nén files vào thư mục tạm C:\Users\<username>\AppData\Local\Temp\BEE_temp\
+                    Processing processing = new Processing(selected_node_path + listView.FocusedItem.Text, Path.GetTempPath() + "BEE_temp\\", fileIndexes);
+                    processing.Text = "Copy";
+                    processing.StartPosition = FormStartPosition.CenterScreen;
+                    processing.FormClosing += delegate {
+                        old_selected_node_path = (Path.GetTempPath() + "BEE_temp\\" + Path.GetDirectoryName(sevenZipExtractor.ArchiveFileNames[fileIndexes[0]]) + "\\").Replace("\\\\", "\\");
+                        foreach (ListViewItem item in listViewArchive.SelectedItems)
+                        {
+                            if(Directory.Exists(old_selected_node_path + item.Text) || File.Exists(old_selected_node_path + item.Text))
+                            {
+                                fileSelectedName.Add(item.Text);
+                                typeSelectedFile.Add(item.SubItems[2].Text);
+                                isCopying = 1;
+                            }
+                        }
+                        pasteCrltVToolStripMenuItem.Enabled = true;
+                    };
+                    processing.Show();
+                }
             }
 
-            fileSelectedName.Clear();
-            typeSelectedFile.Clear();
-
-            for (int i = 0; i < listView.SelectedItems.Count; i++)
-            {
-                fileSelectedName.Add(listView.SelectedItems[i].SubItems[0].Text);
-                typeSelectedFile.Add(listView.SelectedItems[i].SubItems[1].Text);
-
-            }
-
-            pasteCrltVToolStripMenuItem.Enabled = true;
         }
-
+        private void GetFileIndexes(PathNode p, ref List<int> indexes)
+        {
+            indexes.Add(p.Info.Index);
+            foreach(PathNode subnode in p.nodes.Values)
+            {
+                GetFileIndexes(subnode, ref indexes);
+            }
+        }
         private void copyCrltCToolStripMenuItem_Click(object sender, EventArgs e)
         {
             toolStripButton1_Click(sender, e);
@@ -493,11 +546,14 @@ namespace BasicExtractExplorer
                     //Copy File tới địa chỉ mới
                     try
                     {
+                        Console.WriteLine(old_selected_node_path + fileSelectedName[i]);
+                        Console.WriteLine(desPath + NewName);
                         File.Copy(old_selected_node_path + fileSelectedName[i], desPath + NewName);
                     }
                     catch
                     {
                         MessageBox.Show("Access is denied","Warning");
+                        return;
                     }
                     
                 }
@@ -617,13 +673,23 @@ namespace BasicExtractExplorer
         //Select All items
         private void selectAllCrltAToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            listView.SelectedItems.Clear();
-            //listView.FullRowSelect = true;
-            
-            foreach (ListViewItem item in listView.Items)
+            if(!listViewArchive.Visible)
             {
-                item.Selected = true;
+                listView.SelectedItems.Clear();
+                foreach (ListViewItem item in listView.Items)
+                {
+                    item.Selected = true;
+                }
             }
+            else
+            {
+                listViewArchive.SelectedItems.Clear();
+                foreach(ListViewItem item in listViewArchive.Items)
+                {
+                    item.Selected = true;
+                }
+            }
+
         }
 
         //Go to Path
@@ -698,7 +764,7 @@ namespace BasicExtractExplorer
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             About ab = new About();
-            ab.Show();
+            ab.ShowDialog();
         }
 
         //New folder
@@ -954,8 +1020,7 @@ namespace BasicExtractExplorer
                 {
                     if (archiveExtension.Contains(Path.GetExtension(str)))
                     {
-                        listViewArchive.Visible = true;
-                        ShowArchiveFiles(str);
+                        OpenArchive(str);
                     }
                     else
                     {
@@ -1145,7 +1210,7 @@ namespace BasicExtractExplorer
                         child = new PathNode
                         {
                             Path = part,
-                            Info = info
+                            Info = new ArchiveFileInfo() { IsDirectory = true }
                         };
 
                         // Add to the dictionary.
@@ -1155,6 +1220,7 @@ namespace BasicExtractExplorer
                     // Set the current to the child.
                     current = child;
                 }
+                current.Info = info;
             }
         }
 
@@ -1216,7 +1282,7 @@ namespace BasicExtractExplorer
         private bool IsFile(string treeNodePath)
         {
             PathNode pathNode = FindPathNode(treeNodePath);
-            if(pathNode.nodes.Count.Equals(0))
+            if(!pathNode.Info.IsDirectory)
             {
                 return true;
             }
@@ -1436,18 +1502,18 @@ namespace BasicExtractExplorer
             }
             else
             {
-                List<int> fileIndex = new List<int>();//Danh sách chỉ số các files được chọn trong file nén
+                List<int> fileIndexes = new List<int>();//Danh sách chỉ số các files được chọn trong file nén
                 PathNode current_path_node = FindPathNode(treeViewArchive.SelectedNode.FullPath);
-                for(int i = 0; i < listViewArchive.SelectedItems.Count; i++)
+                //Add vào list index của tệp/thư mục cần giải nén
+                foreach (ListViewItem item in listViewArchive.SelectedItems)
                 {
-                    current_path_node.nodes.TryGetValue(listViewArchive.SelectedItems[i].Text, out PathNode _node);
-                    if(_node.nodes.Count == 0)
-                        fileIndex.Add(_node.Info.Index);
+                    current_path_node.nodes.TryGetValue(item.Text, out PathNode _node);
+                    GetFileIndexes(_node, ref fileIndexes);
                 }
                 if (listView.FocusedItem != null && archiveExtension.Contains(Path.GetExtension(listView.FocusedItem.Text)))
                 {
                     string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
-                    ExtractTo extractTo = new ExtractTo(selected_node_path + listView.FocusedItem.Text, fileIndex);
+                    ExtractTo extractTo = new ExtractTo(selected_node_path + listView.FocusedItem.Text, fileIndexes);
                     extractTo.FormClosing += delegate { toolStripButton12_Click(sender, e); };
                     extractTo.Show();
                 }
