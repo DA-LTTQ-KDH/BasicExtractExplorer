@@ -93,9 +93,9 @@ namespace BasicExtractExplorer
 
         private void enableButtonInit()
         {
-            pasteCrltVToolStripMenuItem.Enabled = false;
+            pasteCtrlVToolStripMenuItem.Enabled = false;
             copyCrltCToolStripMenuItem.Enabled = false;
-            cutCrltXToolStripMenuItem.Enabled = false;
+            cutCtrlXToolStripMenuItem.Enabled = false;
             selectAllCrltAToolStripMenuItem.Enabled = false;
             renameToolStripMenuItem.Enabled = false;
             deleteDelToolStripMenuItem.Enabled = false;
@@ -116,12 +116,26 @@ namespace BasicExtractExplorer
         private void CloseArchive()
         {
             listViewArchive.Visible = false;
+            toolStripButton2.Visible = true;
+            toolStripButton3.Visible = true;
+            toolStripButton4.Visible = true;
+            toolStripButton5.Visible = true;
+            toolStripButton6.Visible = true;
+            toolStripButton12.Text = "Refresh";
             treeViewArchive.Nodes.Clear();
+            listView.Focus();
         }
         private void OpenArchive(string str)
         {
             listViewArchive.Visible = true;
+            toolStripButton2.Visible = false;
+            toolStripButton3.Visible = false;
+            toolStripButton4.Visible = false;
+            toolStripButton5.Visible = false;
+            toolStripButton6.Visible = false;
+            toolStripButton12.Text = "Close";
             ShowArchiveFiles(str);
+            listViewArchive.Focus();
         }
 
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
@@ -383,7 +397,7 @@ namespace BasicExtractExplorer
 
                 }
 
-                pasteCrltVToolStripMenuItem.Enabled = true;
+                pasteCtrlVToolStripMenuItem.Enabled = true;
             }
             else
             {
@@ -416,7 +430,7 @@ namespace BasicExtractExplorer
                                 isCopying = 1;
                             }
                         }
-                        pasteCrltVToolStripMenuItem.Enabled = true;
+                        pasteCtrlVToolStripMenuItem.Enabled = true;
                     };
                     processing.Show();
                 }
@@ -461,7 +475,7 @@ namespace BasicExtractExplorer
             string desPath = selected_node_path; //Địa chỉ đích
             if (desPath == old_selected_node_path && isCopying == 2) //Nếu Cut và Paste tại cùng thư mục thì thoát
             {
-                pasteCrltVToolStripMenuItem.Enabled = false;
+                pasteCtrlVToolStripMenuItem.Enabled = false;
                 isCopying = 0;
                 return;
             }
@@ -575,7 +589,7 @@ namespace BasicExtractExplorer
                         File.Delete(old_selected_node_path + fileSelectedName[i]);
                     }
                 isCopying = 0;
-                pasteCrltVToolStripMenuItem.Enabled = false;
+                pasteCtrlVToolStripMenuItem.Enabled = false;
             }
 
         }
@@ -992,7 +1006,7 @@ namespace BasicExtractExplorer
             if (listView.SelectedItems.Count > 0)
             {
                 copyCrltCToolStripMenuItem.Enabled = true;
-                cutCrltXToolStripMenuItem.Enabled = true;
+                cutCtrlXToolStripMenuItem.Enabled = true;
                 selectAllCrltAToolStripMenuItem.Enabled = true;
                 renameToolStripMenuItem.Enabled = true;
                 deleteDelToolStripMenuItem.Enabled = true;
@@ -1000,7 +1014,7 @@ namespace BasicExtractExplorer
             else
             {
                 copyCrltCToolStripMenuItem.Enabled = false;
-                cutCrltXToolStripMenuItem.Enabled = false;
+                cutCtrlXToolStripMenuItem.Enabled = false;
                 selectAllCrltAToolStripMenuItem.Enabled = false;
                 renameToolStripMenuItem.Enabled = false;
                 deleteDelToolStripMenuItem.Enabled = false;
@@ -1079,9 +1093,9 @@ namespace BasicExtractExplorer
             {
                 tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
                 // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0 && listViewArchive.Visible == false)
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
                 {
-                    MessageBox.Show(CalculateMD5(tmpPathssum[j]), tmpPathssum[j] + "  MD5 ");
+                    MessageBox.Show(CalculateMD5(tmpPathssum[j]), tmpPathssum[j] + " ");
                 }
             }
         }
@@ -1108,7 +1122,7 @@ namespace BasicExtractExplorer
             {
                 tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
                 // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0 && listViewArchive.Visible == false)
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
                 {
                     MessageBox.Show(GetSHA256(tmpPathssum[j]), tmpPathssum[j] + "  SHA-256 ");
                 }
@@ -1137,7 +1151,7 @@ namespace BasicExtractExplorer
             {
                 tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
                 // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0 && listViewArchive.Visible == false)
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
                 {
                     MessageBox.Show(GetCRC32(tmpPathssum[j]), tmpPathssum[j] + "  CRC-32 ");
                 }
@@ -1171,7 +1185,7 @@ namespace BasicExtractExplorer
             {
                 tmpPathssum[j] = currentPath + items[j].SubItems[0].Text;
                 // textBox1.Text += tmpPathsNen[j];
-                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0 && listViewArchive.Visible == false)
+                if (Path.GetExtension(tmpPathssum[j]).CompareTo("") != 0)
                 {
                     MessageBox.Show(GetSHA1(tmpPathssum[j]), tmpPathssum[j] + "  SHA-1 ");
                 }
@@ -1522,6 +1536,21 @@ namespace BasicExtractExplorer
                     MessageBox.Show("Please select a file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
+        }
+
+        private void extractHereToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void extractToToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toolStripButton7_Click(sender, e);
+        }
+
+        private void toolStripDropDownButton1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

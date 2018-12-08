@@ -267,8 +267,6 @@ namespace BasicExtractExplorer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            isCancel = true;
-            worker.CancelAsync();
             Close();
         }
         private void Processing_Shown(object sender, EventArgs e)
@@ -283,6 +281,12 @@ namespace BasicExtractExplorer
         private void Processing_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void Processing_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            isCancel = true;
+            worker.CancelAsync();
         }
     }
 }

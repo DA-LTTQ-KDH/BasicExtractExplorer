@@ -106,6 +106,7 @@
             this.MaximizeBox = false;
             this.Name = "Processing";
             this.Text = "Processing";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Processing_FormClosing);
             this.Load += new System.EventHandler(this.Processing_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
