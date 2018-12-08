@@ -116,16 +116,12 @@
             this.dfsToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.shortCutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
-            this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.addToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addToToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.extractHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extractToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -134,7 +130,6 @@
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-            this.propertiesToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
@@ -473,28 +468,28 @@
             // mD5ToolStripMenuItem
             // 
             this.mD5ToolStripMenuItem.Name = "mD5ToolStripMenuItem";
-            this.mD5ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.mD5ToolStripMenuItem.Size = new System.Drawing.Size(143, 26);
             this.mD5ToolStripMenuItem.Text = "MD5";
             this.mD5ToolStripMenuItem.Click += new System.EventHandler(this.mD5ToolStripMenuItem_Click);
             // 
             // sHA256ToolStripMenuItem
             // 
             this.sHA256ToolStripMenuItem.Name = "sHA256ToolStripMenuItem";
-            this.sHA256ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.sHA256ToolStripMenuItem.Size = new System.Drawing.Size(143, 26);
             this.sHA256ToolStripMenuItem.Text = "SHA-256";
             this.sHA256ToolStripMenuItem.Click += new System.EventHandler(this.sHA256ToolStripMenuItem_Click);
             // 
             // sHA1ToolStripMenuItem
             // 
             this.sHA1ToolStripMenuItem.Name = "sHA1ToolStripMenuItem";
-            this.sHA1ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.sHA1ToolStripMenuItem.Size = new System.Drawing.Size(143, 26);
             this.sHA1ToolStripMenuItem.Text = "SHA-1";
             this.sHA1ToolStripMenuItem.Click += new System.EventHandler(this.sHA1ToolStripMenuItem_Click);
             // 
             // cRC32ToolStripMenuItem
             // 
             this.cRC32ToolStripMenuItem.Name = "cRC32ToolStripMenuItem";
-            this.cRC32ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.cRC32ToolStripMenuItem.Size = new System.Drawing.Size(143, 26);
             this.cRC32ToolStripMenuItem.Text = "CRC-32";
             this.cRC32ToolStripMenuItem.Click += new System.EventHandler(this.cRC32ToolStripMenuItem_Click);
             // 
@@ -736,6 +731,7 @@
             this.listView.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView_ItemSelectionChanged);
             this.listView.Click += new System.EventHandler(this.listView_Click);
             this.listView.DoubleClick += new System.EventHandler(this.listView_DoubleClick);
+            this.listView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_KeyDown);
             this.listView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listView_MouseDown);
             // 
             // CName
@@ -803,10 +799,9 @@
             this.pasteToolStripMenuItem,
             this.dfsToolStripMenuItem,
             this.newToolStripMenuItem,
-            this.dToolStripMenuItem,
-            this.propertiesToolStripMenuItem});
+            this.dToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(146, 142);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(128, 118);
             // 
             // viewToolStripMenuItem1
             // 
@@ -874,10 +869,9 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.folderToolStripMenuItem1,
-            this.shortCutToolStripMenuItem});
+            this.folderToolStripMenuItem1});
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(145, 24);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(127, 24);
             this.newToolStripMenuItem.Text = "New";
             // 
             // folderToolStripMenuItem1
@@ -887,23 +881,10 @@
             this.folderToolStripMenuItem1.Text = "Folder";
             this.folderToolStripMenuItem1.Click += new System.EventHandler(this.folderToolStripMenuItem1_Click);
             // 
-            // shortCutToolStripMenuItem
-            // 
-            this.shortCutToolStripMenuItem.Name = "shortCutToolStripMenuItem";
-            this.shortCutToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
-            this.shortCutToolStripMenuItem.Text = "File";
-            this.shortCutToolStripMenuItem.Click += new System.EventHandler(this.shortCutToolStripMenuItem_Click);
-            // 
             // dToolStripMenuItem
             // 
             this.dToolStripMenuItem.Name = "dToolStripMenuItem";
             this.dToolStripMenuItem.Size = new System.Drawing.Size(142, 6);
-            // 
-            // propertiesToolStripMenuItem
-            // 
-            this.propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
-            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(145, 24);
-            this.propertiesToolStripMenuItem.Text = "Properties";
             // 
             // contextMenuStrip2
             // 
@@ -912,9 +893,7 @@
             this.openToolStripMenuItem,
             this.toolStripSeparator5,
             this.addToToolStripMenuItem,
-            this.addToToolStripMenuItem1,
             this.toolStripSeparator6,
-            this.extractHereToolStripMenuItem,
             this.extractToToolStripMenuItem,
             this.toolStripSeparator7,
             this.cutToolStripMenuItem,
@@ -922,10 +901,9 @@
             this.toolStripSeparator8,
             this.deleteToolStripMenuItem,
             this.renameToolStripMenuItem1,
-            this.toolStripSeparator9,
-            this.propertiesToolStripMenuItem1});
+            this.toolStripSeparator9});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(185, 274);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(185, 202);
             // 
             // openToolStripMenuItem
             // 
@@ -946,23 +924,10 @@
             this.addToToolStripMenuItem.Text = "Add to archive...";
             this.addToToolStripMenuItem.Click += new System.EventHandler(this.addToToolStripMenuItem_Click_1);
             // 
-            // addToToolStripMenuItem1
-            // 
-            this.addToToolStripMenuItem1.Name = "addToToolStripMenuItem1";
-            this.addToToolStripMenuItem1.Size = new System.Drawing.Size(184, 24);
-            this.addToToolStripMenuItem1.Text = "Add to ";
-            // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(181, 6);
-            // 
-            // extractHereToolStripMenuItem
-            // 
-            this.extractHereToolStripMenuItem.Name = "extractHereToolStripMenuItem";
-            this.extractHereToolStripMenuItem.Size = new System.Drawing.Size(184, 24);
-            this.extractHereToolStripMenuItem.Text = "Extract here";
-            this.extractHereToolStripMenuItem.Click += new System.EventHandler(this.extractHereToolStripMenuItem_Click);
             // 
             // extractToToolStripMenuItem
             // 
@@ -1013,12 +978,6 @@
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
             this.toolStripSeparator9.Size = new System.Drawing.Size(181, 6);
-            // 
-            // propertiesToolStripMenuItem1
-            // 
-            this.propertiesToolStripMenuItem1.Name = "propertiesToolStripMenuItem1";
-            this.propertiesToolStripMenuItem1.Size = new System.Drawing.Size(184, 24);
-            this.propertiesToolStripMenuItem1.Text = "Properties";
             // 
             // MainForm
             // 
@@ -1135,16 +1094,12 @@
         private System.Windows.Forms.ToolStripSeparator dfsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem folderToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem shortCutToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator dToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem propertiesToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem addToToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem addToToolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.ToolStripMenuItem extractHereToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem extractToToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
@@ -1153,7 +1108,6 @@
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-        private System.Windows.Forms.ToolStripMenuItem propertiesToolStripMenuItem1;
         private System.Windows.Forms.ListView listViewArchive;
         private System.Windows.Forms.ColumnHeader columnHeaderName;
         private System.Windows.Forms.ColumnHeader columnHeaderSize;

@@ -884,7 +884,7 @@ namespace BasicExtractExplorer
                     contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(viewToolStripMenuItem1)].Enabled = true;
                     contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(refreshToolStripMenuItem)].Enabled = true;
                     contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(newToolStripMenuItem)].Enabled = true;
-                    contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(propertiesToolStripMenuItem)].Enabled = true;
+                   
                     contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(pasteToolStripMenuItem)].Enabled = (isCopying != 0);
                     contextMenuStrip1.Show(Cursor.Position);
                 }
@@ -1551,6 +1551,12 @@ namespace BasicExtractExplorer
         private void toolStripDropDownButton1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void listView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.A && e.Control == true)
+                selectAllCrltAToolStripMenuItem_Click(sender, e);
         }
     }
 }
