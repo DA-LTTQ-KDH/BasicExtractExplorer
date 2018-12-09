@@ -28,8 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddToArchive));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBoxPass = new System.Windows.Forms.TextBox();
+            this.textBoxRePass = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.comboBoxLevel = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.buttonBrowse = new System.Windows.Forms.Button();
@@ -40,11 +46,6 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBoxPass = new System.Windows.Forms.TextBox();
-            this.textBoxRePass = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -76,6 +77,53 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Archive";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.textBoxPass);
+            this.groupBox1.Controls.Add(this.textBoxRePass);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Location = new System.Drawing.Point(8, 105);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(360, 122);
+            this.groupBox1.TabIndex = 15;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Encryption";
+            // 
+            // textBoxPass
+            // 
+            this.textBoxPass.Location = new System.Drawing.Point(7, 41);
+            this.textBoxPass.Name = "textBoxPass";
+            this.textBoxPass.Size = new System.Drawing.Size(347, 22);
+            this.textBoxPass.TabIndex = 12;
+            this.textBoxPass.UseSystemPasswordChar = true;
+            // 
+            // textBoxRePass
+            // 
+            this.textBoxRePass.Location = new System.Drawing.Point(7, 89);
+            this.textBoxRePass.Name = "textBoxRePass";
+            this.textBoxRePass.Size = new System.Drawing.Size(347, 22);
+            this.textBoxRePass.TabIndex = 14;
+            this.textBoxRePass.UseSystemPasswordChar = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(110, 17);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Enter password:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(7, 68);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(127, 17);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "Reenter password:";
             // 
             // comboBoxLevel
             // 
@@ -173,53 +221,6 @@
             // 
             this.saveFileDialog.Title = "Find Archive";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 20);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(110, 17);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "Enter password:";
-            // 
-            // textBoxPass
-            // 
-            this.textBoxPass.Location = new System.Drawing.Point(7, 41);
-            this.textBoxPass.Name = "textBoxPass";
-            this.textBoxPass.Size = new System.Drawing.Size(347, 22);
-            this.textBoxPass.TabIndex = 12;
-            this.textBoxPass.UseSystemPasswordChar = true;
-            // 
-            // textBoxRePass
-            // 
-            this.textBoxRePass.Location = new System.Drawing.Point(7, 89);
-            this.textBoxRePass.Name = "textBoxRePass";
-            this.textBoxRePass.Size = new System.Drawing.Size(347, 22);
-            this.textBoxRePass.TabIndex = 14;
-            this.textBoxRePass.UseSystemPasswordChar = true;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 68);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(127, 17);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "Reenter password:";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.textBoxPass);
-            this.groupBox1.Controls.Add(this.textBoxRePass);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Location = new System.Drawing.Point(8, 105);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(360, 122);
-            this.groupBox1.TabIndex = 15;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Encryption";
-            // 
             // AddToArchive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -230,6 +231,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "AddToArchive";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

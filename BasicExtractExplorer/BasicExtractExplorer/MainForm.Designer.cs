@@ -811,7 +811,7 @@
             this.listToolStripMenuItem2,
             this.detailsToolStripMenuItem2});
             this.viewToolStripMenuItem1.Name = "viewToolStripMenuItem1";
-            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(145, 24);
+            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(127, 24);
             this.viewToolStripMenuItem1.Text = "View";
             // 
             // largeIconsToolStripMenuItem
@@ -845,26 +845,26 @@
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(145, 24);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(127, 24);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click_1);
             // 
             // sdgToolStripMenuItem
             // 
             this.sdgToolStripMenuItem.Name = "sdgToolStripMenuItem";
-            this.sdgToolStripMenuItem.Size = new System.Drawing.Size(142, 6);
+            this.sdgToolStripMenuItem.Size = new System.Drawing.Size(124, 6);
             // 
             // pasteToolStripMenuItem
             // 
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(145, 24);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(127, 24);
             this.pasteToolStripMenuItem.Text = "Paste";
             this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click_1);
             // 
             // dfsToolStripMenuItem
             // 
             this.dfsToolStripMenuItem.Name = "dfsToolStripMenuItem";
-            this.dfsToolStripMenuItem.Size = new System.Drawing.Size(142, 6);
+            this.dfsToolStripMenuItem.Size = new System.Drawing.Size(124, 6);
             // 
             // newToolStripMenuItem
             // 
@@ -884,7 +884,7 @@
             // dToolStripMenuItem
             // 
             this.dToolStripMenuItem.Name = "dToolStripMenuItem";
-            this.dToolStripMenuItem.Size = new System.Drawing.Size(142, 6);
+            this.dToolStripMenuItem.Size = new System.Drawing.Size(124, 6);
             // 
             // contextMenuStrip2
             // 
@@ -990,6 +990,7 @@
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(1077, 497);

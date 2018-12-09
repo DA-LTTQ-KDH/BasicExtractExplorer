@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtractTo));
             this.textBoxDestination = new System.Windows.Forms.TextBox();
             this.btnDuyet = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
@@ -108,6 +109,7 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "ExtractTo";
