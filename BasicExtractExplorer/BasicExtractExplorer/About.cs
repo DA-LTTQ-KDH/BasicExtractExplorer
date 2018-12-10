@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -26,6 +25,11 @@ namespace BasicExtractExplorer
         private void About_MouseClick(object sender, MouseEventArgs e)
         {
             this.Close();
+        }
+
+        private void About_Load(object sender, EventArgs e)
+        {
+            label7.Text += Application.ProductVersion;
         }
     }
 }

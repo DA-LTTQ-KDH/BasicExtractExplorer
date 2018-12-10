@@ -50,6 +50,7 @@
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton7 = new System.Windows.Forms.ToolStripButton();
@@ -301,7 +302,8 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem});
+            this.aboutToolStripMenuItem,
+            this.checkForUpdateToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.helpToolStripMenuItem.Text = "Help";
@@ -309,9 +311,16 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(125, 26);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(199, 26);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // checkForUpdateToolStripMenuItem
+            // 
+            this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
+            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(199, 26);
+            this.checkForUpdateToolStripMenuItem.Text = "Check for Update";
+            this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
             // 
             // toolStrip1
             // 
@@ -661,35 +670,37 @@
             // columnHeaderName
             // 
             this.columnHeaderName.Text = "Name";
-            this.columnHeaderName.Width = 163;
+            this.columnHeaderName.Width = 215;
             // 
             // columnHeaderSize
             // 
             this.columnHeaderSize.Text = "Size";
-            this.columnHeaderSize.Width = 92;
+            this.columnHeaderSize.Width = 105;
             // 
             // columnHeaderType
             // 
             this.columnHeaderType.Text = "Type";
+            this.columnHeaderType.Width = 97;
             // 
             // columnHeaderModified
             // 
             this.columnHeaderModified.Text = "Modified";
-            this.columnHeaderModified.Width = 93;
+            this.columnHeaderModified.Width = 110;
             // 
             // columnHeaderCreated
             // 
             this.columnHeaderCreated.Text = "Created";
-            this.columnHeaderCreated.Width = 73;
+            this.columnHeaderCreated.Width = 95;
             // 
             // columnHeaderAccessed
             // 
             this.columnHeaderAccessed.Text = "Accessed";
-            this.columnHeaderAccessed.Width = 61;
+            this.columnHeaderAccessed.Width = 118;
             // 
             // columnHeaderAttributes
             // 
             this.columnHeaderAttributes.Text = "Attributes";
+            this.columnHeaderAttributes.Width = 98;
             // 
             // columnHeaderCRC
             // 
@@ -1113,6 +1124,7 @@
         private System.Windows.Forms.ColumnHeader columnHeaderType;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdateToolStripMenuItem;
     }
 }
 
