@@ -417,28 +417,28 @@
             // largeIconToolStripMenuItem1
             // 
             this.largeIconToolStripMenuItem1.Name = "largeIconToolStripMenuItem1";
-            this.largeIconToolStripMenuItem1.Size = new System.Drawing.Size(181, 26);
+            this.largeIconToolStripMenuItem1.Size = new System.Drawing.Size(159, 26);
             this.largeIconToolStripMenuItem1.Text = "Large icons";
             this.largeIconToolStripMenuItem1.Click += new System.EventHandler(this.largeIconToolStripMenuItem1_Click);
             // 
             // smallIconsToolStripMenuItem
             // 
             this.smallIconsToolStripMenuItem.Name = "smallIconsToolStripMenuItem";
-            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
             this.smallIconsToolStripMenuItem.Text = "Small icons";
             this.smallIconsToolStripMenuItem.Click += new System.EventHandler(this.smallIconsToolStripMenuItem_Click);
             // 
             // listToolStripMenuItem1
             // 
             this.listToolStripMenuItem1.Name = "listToolStripMenuItem1";
-            this.listToolStripMenuItem1.Size = new System.Drawing.Size(181, 26);
+            this.listToolStripMenuItem1.Size = new System.Drawing.Size(159, 26);
             this.listToolStripMenuItem1.Text = "List";
             this.listToolStripMenuItem1.Click += new System.EventHandler(this.listToolStripMenuItem1_Click);
             // 
             // detailsToolStripMenuItem1
             // 
             this.detailsToolStripMenuItem1.Name = "detailsToolStripMenuItem1";
-            this.detailsToolStripMenuItem1.Size = new System.Drawing.Size(181, 26);
+            this.detailsToolStripMenuItem1.Size = new System.Drawing.Size(159, 26);
             this.detailsToolStripMenuItem1.Text = "Details";
             this.detailsToolStripMenuItem1.Click += new System.EventHandler(this.detailsToolStripMenuItem1_Click);
             // 
@@ -459,28 +459,28 @@
             // mD5ToolStripMenuItem
             // 
             this.mD5ToolStripMenuItem.Name = "mD5ToolStripMenuItem";
-            this.mD5ToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.mD5ToolStripMenuItem.Size = new System.Drawing.Size(143, 26);
             this.mD5ToolStripMenuItem.Text = "MD5";
             this.mD5ToolStripMenuItem.Click += new System.EventHandler(this.mD5ToolStripMenuItem_Click);
             // 
             // sHA256ToolStripMenuItem
             // 
             this.sHA256ToolStripMenuItem.Name = "sHA256ToolStripMenuItem";
-            this.sHA256ToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.sHA256ToolStripMenuItem.Size = new System.Drawing.Size(143, 26);
             this.sHA256ToolStripMenuItem.Text = "SHA-256";
             this.sHA256ToolStripMenuItem.Click += new System.EventHandler(this.sHA256ToolStripMenuItem_Click);
             // 
             // sHA1ToolStripMenuItem
             // 
             this.sHA1ToolStripMenuItem.Name = "sHA1ToolStripMenuItem";
-            this.sHA1ToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.sHA1ToolStripMenuItem.Size = new System.Drawing.Size(143, 26);
             this.sHA1ToolStripMenuItem.Text = "SHA-1";
             this.sHA1ToolStripMenuItem.Click += new System.EventHandler(this.sHA1ToolStripMenuItem_Click);
             // 
             // cRC32ToolStripMenuItem
             // 
             this.cRC32ToolStripMenuItem.Name = "cRC32ToolStripMenuItem";
-            this.cRC32ToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.cRC32ToolStripMenuItem.Size = new System.Drawing.Size(143, 26);
             this.cRC32ToolStripMenuItem.Text = "CRC-32";
             this.cRC32ToolStripMenuItem.Click += new System.EventHandler(this.cRC32ToolStripMenuItem_Click);
             // 
