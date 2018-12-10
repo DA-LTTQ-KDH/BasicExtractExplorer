@@ -22,9 +22,10 @@ namespace BasicExtractExplorer
             System.Diagnostics.Process.Start("https://goo.gl/forms/LvKxPYxRE7mqRatJ3");
         }
 
-        private void About_MouseDoubleClick(object sender, MouseEventArgs e)
+        
+        private void About_MouseClick(object sender, MouseEventArgs e)
         {
-            Application.Exit();
+            this.Close();
         }
     }
 }

@@ -137,7 +137,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "About";
             this.TopMost = true;
-            this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.About_MouseDoubleClick);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.About_MouseClick);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
