@@ -962,7 +962,7 @@ namespace BasicExtractExplorer
         {
             string status1;
             string status2;
-            string status3;
+            //string status3;
             //status1
             if (listView.Items.Count == 1) status1 = " item";
             else status1 = " items";
