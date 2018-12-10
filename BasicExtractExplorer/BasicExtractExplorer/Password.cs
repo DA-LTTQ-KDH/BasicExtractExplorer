@@ -24,5 +24,13 @@ namespace BasicExtractExplorer
             PasswordString = textBoxPassword.Text;
             DialogResult = DialogResult.OK;
         }
+
+        private void textBoxPassword_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.KeyData == Keys.Enter)
+            {
+                button1_Click(sender, null);
+            }
+        }
     }
 }

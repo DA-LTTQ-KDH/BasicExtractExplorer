@@ -43,9 +43,8 @@
             this.labelArchiveName.AutoSize = true;
             this.labelArchiveName.Location = new System.Drawing.Point(3, 18);
             this.labelArchiveName.Name = "labelArchiveName";
-            this.labelArchiveName.Size = new System.Drawing.Size(93, 17);
+            this.labelArchiveName.Size = new System.Drawing.Size(0, 17);
             this.labelArchiveName.TabIndex = 0;
-            this.labelArchiveName.Text = "archive name";
             // 
             // groupBox1
             // 

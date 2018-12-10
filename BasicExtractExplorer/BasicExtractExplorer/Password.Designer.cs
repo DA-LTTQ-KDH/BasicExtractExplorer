@@ -41,6 +41,7 @@
             this.textBoxPassword.Size = new System.Drawing.Size(359, 22);
             this.textBoxPassword.TabIndex = 8;
             this.textBoxPassword.UseSystemPasswordChar = true;
+            this.textBoxPassword.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxPassword_KeyUp);
             // 
             // label1
             // 

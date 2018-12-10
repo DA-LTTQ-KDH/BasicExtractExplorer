@@ -63,13 +63,11 @@ namespace BasicExtractExplorer
                         compressor.CompressFilesEncrypted(archiveName,pass,path);
                     }
                 }
-                catch (ThreadAbortException)
-                {
-                    MessageBox.Show("Aborted");
-                }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
+                    if (File.Exists(archiveName))
+                        File.Delete(archiveName);
                 }
 
             }
@@ -77,15 +75,17 @@ namespace BasicExtractExplorer
 
         private void SevenZipCompressor_FileCompressionStarted(object sender, FileNameEventArgs e)
         {
+            e.Cancel = isCancel;
             if (InvokeRequired)
             {
-                Invoke((MethodInvoker)delegate
+                BeginInvoke((MethodInvoker)delegate
                 {
                     Refresh();
                     labelArchiveName.Text = archiveName;
                     labelFile.Text = e.FileName;
                     progressBarTotal.Value = e.PercentDone;
                     labelPercent.Text = e.PercentDone.ToString() + "%";
+
                 });
             }
         }
