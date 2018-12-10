@@ -30,6 +30,10 @@ namespace BasicExtractExplorer
         int Back; //vị trí node trong stack dùng cho back
         bool isBacking;//Đang Back
 
+        List<string> pathForward = new List<string>(); //stack Forward
+        int Forward; //vị trí node trong stack dùng cho Forward
+        bool isForwarding;//Đang Forwarding
+
         public MainForm()
         {
             InitializeComponent();
@@ -86,8 +90,14 @@ namespace BasicExtractExplorer
             toolStripStatusLabel1.Text = "";
             toolStripStatusLabel2.Text = "";
             toolStripStatusLabel3.Text = "";
+
             pathBack.Add(ThisPC.FullPath);
             isBacking = false;
+            isForwarding = false;
+            Back = 0;
+            Forward = -1;
+            toolStripButton9.Enabled = false;
+
             enableButtonInit();
         } 
 
@@ -100,7 +110,28 @@ namespace BasicExtractExplorer
             renameToolStripMenuItem.Enabled = false;
             deleteDelToolStripMenuItem.Enabled = false;
             folderToolStripMenuItem.Enabled = false;
-            itemToolStripMenuItem.Enabled = false;
+        }
+
+
+        //Enable buttons
+        private void enableButton()
+        {
+            if (listView.SelectedItems.Count > 0)
+            {
+                copyCrltCToolStripMenuItem.Enabled = true;
+                cutCtrlXToolStripMenuItem.Enabled = true;
+                selectAllCrltAToolStripMenuItem.Enabled = true;
+                renameToolStripMenuItem.Enabled = true;
+                deleteDelToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                copyCrltCToolStripMenuItem.Enabled = false;
+                cutCtrlXToolStripMenuItem.Enabled = false;
+                selectAllCrltAToolStripMenuItem.Enabled = false;
+                renameToolStripMenuItem.Enabled = false;
+                deleteDelToolStripMenuItem.Enabled = false;
+            }
         }
 
         private string GetPath(string treeNodePath) //Lấy đường dẫn từ treeNodePath
@@ -149,7 +180,6 @@ namespace BasicExtractExplorer
                 if (e.Node.Text.CompareTo("This PC") != 0)
                 {
                     folderToolStripMenuItem.Enabled = true;
-                    itemToolStripMenuItem.Enabled = true;
                     //Xóa các node con cũ của node được chọn
                     if (e.Node != null)
                         e.Node.Nodes.Clear();
@@ -181,7 +211,6 @@ namespace BasicExtractExplorer
                     if (treeView.SelectedNode.Text == "This PC") listView.Items.Clear();
                     toolStripComboBox1.Text = "This PC";
                     folderToolStripMenuItem.Enabled = false;
-                    itemToolStripMenuItem.Enabled = false;
                 }
             }
             catch (DirectoryNotFoundException)
@@ -193,10 +222,17 @@ namespace BasicExtractExplorer
                 MessageBox.Show("Access is denied", "Stop", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
             toolStripStatusLabel1.Text = listView.Items.Count.ToString() + " items";
-            if (isBacking) return;
-            if (treeView.SelectedNode.Text == "This PC") return;
-            pathBack.Add(treeView.SelectedNode.FullPath);
-            Back++;
+            
+            if (isBacking == false && isForwarding == false)
+            {
+                if (treeView.SelectedNode.Text == "This PC") return;
+                pathBack.Add(treeView.SelectedNode.FullPath);
+                Back++;
+                pathForward.Clear();
+                Forward = -1;
+                toolStripButton9.Enabled = false;
+
+            }
         }
 
         private void ShowFilesAndFolders()
@@ -718,6 +754,10 @@ namespace BasicExtractExplorer
                 else
                     path = pathBack[Back];
             }
+            if (isForwarding)
+            {
+                path = pathForward[Forward];
+            }
 
             string[] nodes = path.Split('\\'); //Cắt lấy từng phần folder
             path = "";
@@ -769,9 +809,27 @@ namespace BasicExtractExplorer
             isBacking = false;
             if (Back > 0)
             {
+                pathForward.Add(pathBack[pathBack.Count - 1]);
+                Forward++;
+                toolStripButton9.Enabled = true;
                 pathBack.RemoveAt(pathBack.Count - 1);
                 Back--;
             }
+        }
+
+        //Forward
+        private void toolStripButton9_Click(object sender, EventArgs e)
+        {
+            isForwarding = true;
+            toolStripButton11_Click(sender, e);
+            isForwarding = false;
+
+            pathBack.Add(pathForward[pathForward.Count - 1]);
+            Back++;
+            pathForward.RemoveAt(pathForward.Count - 1);
+            Forward--;
+
+            if (Forward < 0) toolStripButton9.Enabled = false;
         }
 
         //About
@@ -820,46 +878,80 @@ namespace BasicExtractExplorer
             folderToolStripMenuItem_Click(sender, e);
         }
 
-        //New File
-        private void itemToolStripMenuItem_Click(object sender, EventArgs e)
+        //enter Address Bar
+        private void toolStripComboBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (treeView.SelectedNode.Text == "This PC") return;
-            int count = 0;
-            foreach (ListViewItem item in listView.Items)
-                if (item.Text == "New file")
-                {
-                    count++;
-                    break;
-                }
-            string fileName = toolStripComboBox1.Text + "\\New file";
-            if (count > 0)
+            if (e.KeyCode == Keys.Enter)
+                toolStripButton11_Click(sender, e);
+        }
+
+        //button Add
+        private void toolStripButton6_Click(object sender, EventArgs e)
+        {
+            if (listView.SelectedItems.Count > 0)
             {
-                while (Directory.Exists(fileName + "(" + count.ToString() + ")"))
+                string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+                List<string> ls = new List<string>();
+                foreach (ListViewItem item in listView.SelectedItems)
                 {
-                    count++;
+                    ls.Add(selected_node_path + item.Text);
                 }
-                fileName += "(" + count.ToString() + ")";
+                AddToArchive addToArchive = new AddToArchive(ls);
+                addToArchive.FormClosing += delegate { toolStripButton12_Click(sender, e); };
+                addToArchive.Show();
             }
-
-            File.Create(fileName);
-            toolStripButton12_Click(sender, e); //refresh
-
-            ListViewItem tmp = null;
-            foreach (ListViewItem item in listView.Items)
-                if ((count>0 && item.Text == "New file(" + count.ToString() + ")") || (item.Text=="New file"))
-                {
-                    tmp = item;
-                    break;
-                }
-            if (tmp != null)
-                tmp.BeginEdit();
+            else
+            {
+                MessageBox.Show("Please select a file/folder", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
-        private void shortCutToolStripMenuItem_Click(object sender, EventArgs e)
+        //button Extract
+        private void toolStripButton7_Click(object sender, EventArgs e)
         {
-            itemToolStripMenuItem_Click(sender, e);
+            string[] archiveExtension = { ".zip", ".rar", ".7z", ".tar", ".xz", ".bz2", ".gz" };
+            if (!listViewArchive.Visible)
+            {
+                if (listView.FocusedItem != null && archiveExtension.Contains(Path.GetExtension(listView.FocusedItem.Text)))
+                {
+                    string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+                    ExtractTo extractTo = new ExtractTo(selected_node_path + listView.FocusedItem.Text);
+                    extractTo.FormClosing += delegate { toolStripButton12_Click(sender, e); };
+                    extractTo.Show();
+                }
+                else
+                {
+                    MessageBox.Show("Please select a file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                List<int> fileIndexes = new List<int>();//Danh sách chỉ số các files được chọn trong file nén
+                PathNode current_path_node = FindPathNode(treeViewArchive.SelectedNode.FullPath);
+                //Add vào list index của tệp/thư mục cần giải nén
+                foreach (ListViewItem item in listViewArchive.SelectedItems)
+                {
+                    current_path_node.nodes.TryGetValue(item.Text, out PathNode _node);
+                    GetFileIndexes(_node, ref fileIndexes);
+                }
+                if (listView.FocusedItem != null && archiveExtension.Contains(Path.GetExtension(listView.FocusedItem.Text)))
+                {
+                    string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
+                    ExtractTo extractTo = new ExtractTo(selected_node_path + listView.FocusedItem.Text, fileIndexes);
+                    extractTo.FormClosing += delegate { toolStripButton12_Click(sender, e); };
+                    extractTo.Show();
+                }
+                else
+                {
+                    MessageBox.Show("Please select a file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
         }
 
+        private void extractToToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toolStripButton7_Click(sender, e);
+        }
         #endregion
 
         #region Right Click Menu
@@ -884,7 +976,6 @@ namespace BasicExtractExplorer
                     contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(viewToolStripMenuItem1)].Enabled = true;
                     contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(refreshToolStripMenuItem)].Enabled = true;
                     contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(newToolStripMenuItem)].Enabled = true;
-                   
                     contextMenuStrip1.Items[contextMenuStrip1.Items.IndexOf(pasteToolStripMenuItem)].Enabled = (isCopying != 0);
                     contextMenuStrip1.Show(Cursor.Position);
                 }
@@ -894,7 +985,6 @@ namespace BasicExtractExplorer
                 }
             }
         }
-
 
         private void refreshToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
@@ -957,6 +1047,7 @@ namespace BasicExtractExplorer
         }
         #endregion
 
+        #region Other Events
         //Hiện status bar
         private void listView_Click(object sender, EventArgs e)
         {
@@ -1000,30 +1091,9 @@ namespace BasicExtractExplorer
             enableButton();
         }
 
-        //Enable buttons
-        private void enableButton()
-        {
-            if (listView.SelectedItems.Count > 0)
-            {
-                copyCrltCToolStripMenuItem.Enabled = true;
-                cutCtrlXToolStripMenuItem.Enabled = true;
-                selectAllCrltAToolStripMenuItem.Enabled = true;
-                renameToolStripMenuItem.Enabled = true;
-                deleteDelToolStripMenuItem.Enabled = true;
-            }
-            else
-            {
-                copyCrltCToolStripMenuItem.Enabled = false;
-                cutCtrlXToolStripMenuItem.Enabled = false;
-                selectAllCrltAToolStripMenuItem.Enabled = false;
-                renameToolStripMenuItem.Enabled = false;
-                deleteDelToolStripMenuItem.Enabled = false;
-            }
-        }
-
         private void listView_DoubleClick(object sender, EventArgs e)
         {
-            string[] archiveExtension = { ".zip", ".rar", ".7z", ".tar", ".xz", ".bz2", ".gz"};
+            string[] archiveExtension = { ".zip", ".rar", ".7z", ".tar", ".xz", ".bz2", ".gz" };
             String tmpNode = listView.SelectedItems[0].SubItems[0].Text;
             string fullpath = treeView.SelectedNode.FullPath;
             string str = GetPath(fullpath);
@@ -1058,15 +1128,13 @@ namespace BasicExtractExplorer
             listView_Click(sender, e);
         }
 
-
-
-        //enter Address Bar
-        private void toolStripComboBox1_KeyDown(object sender, KeyEventArgs e)
+        private void listView_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-                toolStripButton11_Click(sender, e);
+            if (e.KeyCode == Keys.A && e.Control == true)
+                selectAllCrltAToolStripMenuItem_Click(sender, e);
         }
 
+        #endregion
 
         #region CheckSum
         private static string CalculateMD5(string fileName)
@@ -1193,6 +1261,7 @@ namespace BasicExtractExplorer
         }
 
         #endregion
+
         #region Path
         //https://stackoverflow.com/questions/10870443/how-to-create-hierarchical-structure-with-list-of-path
         public class PathNode
@@ -1477,86 +1546,14 @@ namespace BasicExtractExplorer
             }
         }
         #endregion
-        //button Add
-        private void toolStripButton6_Click(object sender, EventArgs e)
-        {
-            if (listView.SelectedItems.Count > 0)
-            {
-                string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
-                List<string> ls = new List<string>();
-                foreach (ListViewItem item in listView.SelectedItems)
-                {
-                    ls.Add(selected_node_path + item.Text);
-                }
-                AddToArchive addToArchive = new AddToArchive(ls);
-                addToArchive.FormClosing += delegate { toolStripButton12_Click(sender, e); };
-                addToArchive.Show();
-            }
-            else
-            {
-                MessageBox.Show("Please select a file/folder", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-        private void toolStripButton7_Click(object sender, EventArgs e)
-        {
-            string[] archiveExtension = { ".zip", ".rar", ".7z", ".tar", ".xz", ".bz2", ".gz"};
-            if (!listViewArchive.Visible)
-            {
-                if (listView.FocusedItem != null && archiveExtension.Contains(Path.GetExtension(listView.FocusedItem.Text)))
-                {
-                    string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
-                    ExtractTo extractTo = new ExtractTo(selected_node_path + listView.FocusedItem.Text);
-                    extractTo.FormClosing += delegate { toolStripButton12_Click(sender, e); };
-                    extractTo.Show();
-                }
-                else
-                {
-                    MessageBox.Show("Please select a file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
-            else
-            {
-                List<int> fileIndexes = new List<int>();//Danh sách chỉ số các files được chọn trong file nén
-                PathNode current_path_node = FindPathNode(treeViewArchive.SelectedNode.FullPath);
-                //Add vào list index của tệp/thư mục cần giải nén
-                foreach (ListViewItem item in listViewArchive.SelectedItems)
-                {
-                    current_path_node.nodes.TryGetValue(item.Text, out PathNode _node);
-                    GetFileIndexes(_node, ref fileIndexes);
-                }
-                if (listView.FocusedItem != null && archiveExtension.Contains(Path.GetExtension(listView.FocusedItem.Text)))
-                {
-                    string selected_node_path = GetPath(treeView.SelectedNode.FullPath);
-                    ExtractTo extractTo = new ExtractTo(selected_node_path + listView.FocusedItem.Text, fileIndexes);
-                    extractTo.FormClosing += delegate { toolStripButton12_Click(sender, e); };
-                    extractTo.Show();
-                }
-                else
-                {
-                    MessageBox.Show("Please select a file", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
-        }
 
-        private void extractHereToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void extractToToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            toolStripButton7_Click(sender, e);
-        }
+        
+        
+        
 
         private void toolStripDropDownButton1_Click(object sender, EventArgs e)
         {
 
-        }
-
-        private void listView_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.A && e.Control == true)
-                selectAllCrltAToolStripMenuItem_Click(sender, e);
         }
     }
 }
