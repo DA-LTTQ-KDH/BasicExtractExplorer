@@ -1562,8 +1562,8 @@ namespace BasicExtractExplorer
 
         private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UpdaterUI updaterUI = new UpdaterUI(manager, SynchronizationContext.Current);
-            updaterUI.ShowUserInterface();
+            UpdaterUI updaterUi = new UpdaterUI(manager, null);
+            updaterUi.ShowUserInterface();
         }
     }
 }
