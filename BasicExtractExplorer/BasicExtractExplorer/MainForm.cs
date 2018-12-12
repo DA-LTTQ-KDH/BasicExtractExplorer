@@ -17,7 +17,6 @@ namespace BasicExtractExplorer
     public partial class MainForm : Form
     {
         UpdateManager manager;
-        UpdaterUI updater;
         ImageList listView_ImageList = new ImageList();
         ImageList treeView_ImageList = new ImageList();
         ImageList archiveView_ImageList = new ImageList();
@@ -43,7 +42,6 @@ namespace BasicExtractExplorer
             InitializeComponent();
             initialization();
             manager = new UpdateManager(new Uri("http://static.realapps.xyz/BasicExtractExplorer/updates.json"), "<RSAKeyValue><Modulus>8XLionI5Lxw177Z3viTOUvxXoltwWH/pRgw5oAMpMLSl60COlKxZh6XW7vSC0WxmZiqekbVv7v9ubEJCg8UNu6ytecJpIH21eEZvg9TwfRVzc5i6H66KWa2icmR3Z/Ggfsryw1FvFmiVhknTw2gveZjG4hYhlfK1rOP8Md8ZFIhzT1hYkGO5K3UHjEDZ1u9NNg00vqSx7U6tMQl1tjJ/eDIZbSA2gGXveCeYWFNuTuU3L9DeCKSr34/AOiAT42aWn8eVH3VpbbDK6JEm+0Y5IXdTFywrXauP4HPsdYeybQNR5MRpO1Ob5xJqNT1BFAMXh4FCkd11HQqjo0Tz5b8xLs/FAWe16ygCIlKDUwncmMZ22SKsAsLGklfMO9gCkSKx0hggoZGptDA65i9nV82tbdSd6/fIUXrdSwh8aw18HEHJzoRHr/gIqwQWyehgE9zsYQrIKyohpyaw2BZqXZpIS3AqBoHcvKpMXv/bbpt3/Hx3GoKYpFhNCMkzOW6D7HjDhVytKNJ0KELM7Ca7olUSCfDzjHUttzKVXEGupko49FVwuqHXUVnt5z5DeGa2FK09r8RYeX+7m7YOJInW2EFPsXH0y2obFHm0MQ0U3X04q+vXLIvmicN3GkUzBWicwD5f83Jg9EwhzivdNL89C1mJPzRfhxzzfhgZNIpU78xHtDwCCgiOTdtN1OmYdPRaKwdvVT8o22ptvW0fPkXCoulblQBXy13e9+CJFFOaVlVL8LpM9C8o+nlzimRtV0v5CExpcMSoRct72J35jf1dLUO3TpAfQ+e6CpQ2PU2jd1HBDB/zDfRZgRDTzolW4Q8on9LVtXybyshRoyzptmWmGYnY/vWA863VW/jcD+w5OldVk/HiAuQm/HD/QvgTzpJ5LM+9WGBOhBem4B7/yQjyBTkad2Te2VCYaDpyvja5rgsDeia19PHQN7tbBtq6MZdTHbGI8qE54Ll3dPmniTOgAPPIYv5SgiY/My4caw3k+GwySA8U8pvLLdrmownzLgiwmcaO1p4BspWeljSYf+H/pUdYFxpjwSeNnDQ9WCqZ0GbCK5x38Umg0wpV6goS1kBJF8sD7D0UqBAtD6tUr0Rrw2qC3oT/I5N0y9iWSBLa10GjZ4V1sCqhUIEAau8QHvkafkleM+IeTLqziTVaTaxwJICC3YcRQJJpmDqEKci5nN+LtQX2kxZ3boYtizxA78YNy7yeJF/tBPZYlE2NQ6BuCMfqLkdTjaGWZVbPNWd1deBDI6EvbPk/mfHPLNkfc7Oqb3CM5u4tvEntdIZC9JbSqij+2KH440gnM5LjXqSJ60e/Yd42LyMSgcE1chnUr79RZZAM/37fU6GWHOVCtn2PWClDFQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>", new CultureInfo("en"));
-            updater = new UpdaterUI(manager,null);
         }
 
         private void initialization() //Khởi tạo form
@@ -1564,7 +1562,8 @@ namespace BasicExtractExplorer
 
         private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            updater.ShowUserInterface();
+            UpdaterUI updaterUi = new UpdaterUI(manager, null);
+            updaterUi.ShowUserInterface();
         }
     }
 }
